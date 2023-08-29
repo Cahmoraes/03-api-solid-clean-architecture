@@ -1,6 +1,12 @@
-# Demonstração de Arquitetura Limpa
+# API SOLID Clean Architecture - Demonstração de Arquitetura Limpa
 
 Este repositório contém a recriação do projeto API SOLID do módulo 03 de backend da Rocketseat, refeita com princípios de DDD e clean architecture.
+
+Marcos implementados:
+
+- Criação de um container de injeção de dependências utilizando os padrões Singleton e Registry.
+- 100% testes de unidade.
+- docker compose
 
 ## Requisitos
 
@@ -21,7 +27,6 @@ Instale as dependências:
 ```sh
   npm install
 ```
-
 
 ## Uso
 
