@@ -1,8 +1,7 @@
 import { Routes } from './routes'
 import { CreateUserController } from './users/create-user.controller'
 import { HTTPMethodTypes, HttpServer } from '../servers/http-server'
-import { CreateUserUseCase } from '@/application/use-cases/create-user'
-import { inject } from '@/application/registry'
+import { AuthenticateController } from './users/authenticate.controller'
 
 export class HttpController {
   constructor(private readonly httpServer: HttpServer) {
@@ -11,6 +10,7 @@ export class HttpController {
 
   private init(): void {
     this.handleCreateUser()
+    this.handleAuthenticate()
   }
 
   private handleCreateUser(): void {
@@ -18,6 +18,14 @@ export class HttpController {
       HTTPMethodTypes.POST,
       Routes.USERS,
       new CreateUserController().handleRequest,
+    )
+  }
+
+  private handleAuthenticate(): void {
+    this.httpServer.on(
+      HTTPMethodTypes.POST,
+      Routes.AUTHENTICATE,
+      new AuthenticateController().handleRequest,
     )
   }
 }

@@ -2,6 +2,7 @@ type Constructor = { new (): unknown }
 export enum DependencyTypes {
   'createUserUseCase',
   'usersRepository',
+  'authenticateUseCase',
 }
 type DependencyType = keyof typeof DependencyTypes
 
