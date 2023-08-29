@@ -1,0 +1,37 @@
+{
+  "name": "03-api-solid",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node build/main.js",
+    "dev": "tsx watch ./src/main.ts",
+    "build": "tsup src --out-dir build",
+    "test": "npx vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rocketseat/eslint-config": "2.1.0",
+    "@types/bcrypt": "5.0.0",
+    "@types/node": "20.5.4",
+    "eslint-plugin-vitest-globals": "1.4.0",
+    "prisma": "5.2.0",
+    "tsup": "7.2.0",
+    "tsx": "3.12.7",
+    "typescript": "5.1.6",
+    "vitest": "0.34.3",
+    "vitest-mock-extended": "1.2.0",
+    "vitest-tsconfig-paths": "3.4.1"
+  },
+  "dependencies": {
+    "@cahmoraes93/either": "1.0.3",
+    "@cahmoraes93/extended-set": "1.1.2",
+    "@prisma/client": "5.2.0",
+    "bcrypt": "5.1.1",
+    "dotenv": "16.3.1",
+    "fastify": "4.21.0",
+    "zod": "3.22.2"
+  }
+}
