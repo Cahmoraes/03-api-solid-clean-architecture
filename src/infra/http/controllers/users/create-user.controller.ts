@@ -6,12 +6,12 @@ import { CreateUserUseCase } from '@/application/use-cases/create-user'
 import { User } from '@/application/entities/user'
 import { inject } from '@/application/registry'
 
-const registerBodySchema = z.object({
+const CreateUserBodySchema = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string().min(6),
 })
-type RegisterBodyDto = z.infer<typeof registerBodySchema>
+type CreateUserBodyDto = z.infer<typeof CreateUserBodySchema>
 type UserControllerOutput = EitherType<
   FailResponse<unknown>,
   SuccessResponse<User>
@@ -25,7 +25,7 @@ export class CreateUserController {
     this.bindMethod()
   }
 
-  private bindMethod() {
+  private bindMethod(): void {
     this.handleRequest = this.handleRequest.bind(this)
   }
 
@@ -38,7 +38,7 @@ export class CreateUserController {
     }
   }
 
-  private parseBodyOrThrow(body: unknown): RegisterBodyDto {
-    return registerBodySchema.parse(body)
+  private parseBodyOrThrow(body: unknown): CreateUserBodyDto {
+    return CreateUserBodySchema.parse(body)
   }
 }
