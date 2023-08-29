@@ -1,4 +1,4 @@
-# API SOLID Clean Architecture - Demonstração de Arquitetura Limpa
+# API SOLID Clean Architecture
 
 Este repositório contém a recriação do projeto API SOLID do módulo 03 de backend da Rocketseat, refeita com princípios de DDD e clean architecture.
 
