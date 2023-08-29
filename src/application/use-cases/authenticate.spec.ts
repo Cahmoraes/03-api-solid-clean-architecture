@@ -38,7 +38,22 @@ describe('CreateUser use case', () => {
     expect(value.data?.name).toBe(name)
   })
 
-  it('should not be able to authenticate an user with incorrectly password', async () => {
+  it('should not be able to authenticate a non-existing user', async () => {
+    const email = 'johm@doe.com'
+    const password = '123456'
+
+    const result = await sut.execute({
+      email,
+      password,
+    })
+
+    expect(result.isRight()).toBeFalsy()
+    expect(result.isLeft()).toBeTruthy()
+    expect(result.value.status).toBe(401)
+    expect(result.value.data).toBe('Invalid credentials')
+  })
+
+  it('should not be able to authenticate an user with wrong password', async () => {
     const passwordHash = new PasswordHash()
     const name = 'John Doe'
     const email = 'johm@doe.com'
