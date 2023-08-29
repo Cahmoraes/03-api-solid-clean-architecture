@@ -1,4 +1,4 @@
 export enum Routes {
   USERS = '/users',
-  AUTHENTICATE = '/authenticate',
+  SESSIONS = '/sessions',
 }

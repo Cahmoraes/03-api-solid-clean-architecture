@@ -24,7 +24,7 @@ export class HttpController {
   private handleAuthenticate(): void {
     this.httpServer.on(
       HTTPMethodTypes.POST,
-      Routes.AUTHENTICATE,
+      Routes.SESSIONS,
       new AuthenticateController().handleRequest,
     )
   }
