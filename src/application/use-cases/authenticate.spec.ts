@@ -1,0 +1,63 @@
+import { provide } from '../registry'
+import { InMemoryUsersRepository } from 'tests/repositories/in-memory-users-repository'
+import { SuccessResponse } from '@/infra/http/entities/success-response'
+import { User } from '../entities/user'
+import { AuthenticateUseCase } from './authenticate'
+import { PasswordHash } from '@/core/entities/password-hash'
+
+describe('CreateUser use case', () => {
+  let usersRepository: InMemoryUsersRepository
+  let sut: AuthenticateUseCase
+
+  beforeEach(() => {
+    usersRepository = new InMemoryUsersRepository()
+    provide('usersRepository', usersRepository)
+    sut = new AuthenticateUseCase()
+  })
+
+  it('should be able to authenticate an user', async () => {
+    const passwordHash = new PasswordHash()
+    const name = 'John Doe'
+    const email = 'johm@doe.com'
+    const password = '123456'
+
+    await usersRepository.create({
+      name,
+      email,
+      password_hash: await passwordHash.createHash(password),
+    })
+
+    const result = await sut.execute({
+      email,
+      password,
+    })
+
+    expect(result.isRight()).toBe(true)
+    const value = result.value as SuccessResponse<User>
+    expect(value.data?.email).toBe(email)
+    expect(value.data?.name).toBe(name)
+  })
+
+  it('should not be able to authenticate an user with incorrectly password', async () => {
+    const passwordHash = new PasswordHash()
+    const name = 'John Doe'
+    const email = 'johm@doe.com'
+    const password = '123456'
+
+    await usersRepository.create({
+      name,
+      email,
+      password_hash: await passwordHash.createHash('invalid-password'),
+    })
+
+    const result = await sut.execute({
+      email,
+      password,
+    })
+
+    expect(result.isRight()).toBeFalsy()
+    expect(result.isLeft()).toBeTruthy()
+    expect(result.value.status).toBe(401)
+    expect(result.value.data).toBe('Invalid credentials')
+  })
+})

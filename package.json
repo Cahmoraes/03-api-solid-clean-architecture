@@ -7,7 +7,8 @@
     "start": "node build/main.js",
     "dev": "tsx watch ./src/main.ts",
     "build": "tsup src --out-dir build",
-    "test": "npx vitest"
+    "test": "npx vitest",
+    "test:cov": "npx vitest --coverage"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,7 @@
     "@rocketseat/eslint-config": "2.1.0",
     "@types/bcrypt": "5.0.0",
     "@types/node": "20.5.4",
+    "@vitest/coverage-v8": "0.34.3",
     "eslint-plugin-vitest-globals": "1.4.0",
     "prisma": "5.2.0",
     "tsup": "7.2.0",

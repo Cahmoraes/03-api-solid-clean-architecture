@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { FailResponse } from '../../entities/fail-response'
-import { CreateUser } from '@/application/use-cases/create-user'
+import { CreateUserUseCase } from '@/application/use-cases/create-user'
 import { User } from '@/application/entities/user'
 import { inject } from '@/application/registry'
 
@@ -18,7 +18,9 @@ type UserControllerOutput = EitherType<
 >
 
 export class CreateUserController {
-  private readonly createUserUseCase = inject<CreateUser>('createUserUseCase')
+  private readonly createUserUseCase =
+    inject<CreateUserUseCase>('createUserUseCase')
+
   constructor() {
     this.bindMethod()
   }

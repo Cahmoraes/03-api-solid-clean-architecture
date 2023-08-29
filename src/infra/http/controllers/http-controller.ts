@@ -1,7 +1,7 @@
 import { Routes } from './routes'
 import { CreateUserController } from './users/create-user.controller'
 import { HTTPMethodTypes, HttpServer } from '../servers/http-server'
-import { CreateUser } from '@/application/use-cases/create-user'
+import { CreateUserUseCase } from '@/application/use-cases/create-user'
 import { inject } from '@/application/registry'
 
 export class HttpController {
