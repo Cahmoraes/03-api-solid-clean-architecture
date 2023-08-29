@@ -1,13 +1,23 @@
 import { InMemoryUsersRepository } from 'tests/repositories/in-memory-users-repository'
-import { inject, provide } from './registry'
+import {
+  injectTesting,
+  provideTesting,
+  clearDependenciesTesting,
+} from './registry'
 
 describe('Registry', () => {
+  beforeEach(() => {
+    clearDependenciesTesting()
+  })
   it('should provide a dependency', () => {
-    provide('usersRepository', InMemoryUsersRepository)
-    expect(inject('usersRepository')).toBe(InMemoryUsersRepository)
+    const inMemoryRepository = new InMemoryUsersRepository()
+    provideTesting('usersRepository', inMemoryRepository)
+    expect(injectTesting('usersRepository')).toBe(inMemoryRepository)
   })
 
   it('should throw error when inject an un registry dependency', () => {
-    expect(() => inject('createUserUseCase')).toThrow()
+    expect(() => injectTesting('usersRepository')).toThrow(
+      `Dependency usersRepository not found`,
+    )
   })
 })

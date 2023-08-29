@@ -7,10 +7,10 @@ export enum DependencyTypes {
 type DependencyType = keyof typeof DependencyTypes
 
 class Registry {
-  private readonly dependencies = new Map<DependencyTypes, unknown>()
+  protected readonly dependencies = new Map<DependencyTypes, unknown>()
   static instance: Registry
 
-  private constructor() {}
+  protected constructor() {}
 
   static getInstance(): Registry {
     if (!Registry.instance) Registry.instance = new Registry()
@@ -44,3 +44,21 @@ class Registry {
 const registry = Registry.getInstance()
 export const provide = registry.provide.bind(registry)
 export const inject = registry.inject.bind(registry)
+
+export class TestingRegistry extends Registry {
+  static getInstance(): TestingRegistry {
+    return new TestingRegistry()
+  }
+
+  public clearDependencies() {
+    for (const [key] of this.dependencies) {
+      this.dependencies.delete(key)
+    }
+  }
+}
+
+const registryTesting = TestingRegistry.getInstance()
+export const provideTesting = registryTesting.provide.bind(registryTesting)
+export const injectTesting = registryTesting.inject.bind(registryTesting)
+export const clearDependenciesTesting =
+  registryTesting.clearDependencies.bind(registryTesting)
