@@ -1,10 +1,6 @@
 import ExtendedSet from '@cahmoraes93/extended-set'
 import { CheckIn } from '@/application/entities/check-in'
-import {
-  CheckInCreateInput,
-  CheckInsRepository,
-} from '@/application/repositories/check-ins-repository'
-import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
+import { CheckInsRepository } from '@/application/repositories/check-ins-repository'
 import { DateHelper } from '@/infra/date/date-helper'
 
 export class InMemoryCheckInsRepository implements CheckInsRepository {
@@ -12,13 +8,9 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
 
   constructor(private dateHelper: DateHelper) {}
 
-  async create(aCheckInCreateInput: CheckInCreateInput): Promise<CheckIn> {
-    const checkIn = CheckIn.create({
-      gymId: new UniqueIdentity(aCheckInCreateInput.gymId),
-      userId: new UniqueIdentity(aCheckInCreateInput.userId),
-    })
-    this.data.add(checkIn)
-    return checkIn
+  async create(aCheckIn: CheckIn): Promise<CheckIn> {
+    this.data.add(aCheckIn)
+    return aCheckIn
   }
 
   async checkInByUserIdOnDate(

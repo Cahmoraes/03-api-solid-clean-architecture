@@ -7,6 +7,7 @@ import { CheckInsRepository } from '../repositories/check-ins-repository'
 import { GymsRepository } from '../repositories/gyms-repository'
 import { DistanceCalculator } from '../entities/distance-calculator'
 import { Location } from '../entities/value-objects/location'
+import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
 
 export interface CheckInUseCaseInput {
   userId: string
@@ -50,7 +51,11 @@ export class CheckInUseCase {
     if (checkInOnSameDay) {
       return Either.left(FailResponse.bad('Already checked in'))
     }
-    const checkIn = await this.checkInsRepository.create({ gymId, userId })
+    const checkIn = CheckIn.create({
+      gymId,
+      userId,
+    })
+    await this.checkInsRepository.create(checkIn)
     return Either.right(SuccessResponse.ok(checkIn))
   }
 

@@ -7,7 +7,7 @@ interface GymProps {
   latitude: number
   longitude: number
   phone?: string
-  description?: string
+  description?: string | null
 }
 
 type GymInternalProps = Omit<GymProps, 'latitude' | 'longitude'> & {
@@ -34,7 +34,7 @@ export class Gym extends Entity<GymInternalProps> {
     return this.props.title
   }
 
-  get description(): string | undefined {
+  get description(): string | null | undefined {
     return this.props.description
   }
 

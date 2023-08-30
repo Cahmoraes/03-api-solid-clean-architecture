@@ -3,17 +3,25 @@ import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
 import { Optional } from '@/core/types/optional'
 
 export interface CheckInProps {
-  userId: UniqueIdentity
-  gymId: UniqueIdentity
+  userId: string
+  gymId: string
   createdAt: Date
   validatedAt?: Date
 }
 
-export class CheckIn extends Entity<CheckInProps> {
+type CheckInInternalProps = Omit<CheckInProps, 'userId' | 'gymId'> & {
+  userId: UniqueIdentity
+  gymId: UniqueIdentity
+}
+
+export class CheckIn extends Entity<CheckInInternalProps> {
   static create(props: Optional<CheckInProps, 'createdAt'>) {
+    const { gymId, userId, ...rest } = props
     return new CheckIn({
       createdAt: new Date(),
-      ...props,
+      ...rest,
+      gymId: new UniqueIdentity(gymId),
+      userId: new UniqueIdentity(userId),
     })
   }
 

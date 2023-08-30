@@ -20,12 +20,12 @@ describe('CreateUser use case', () => {
     const name = 'John Doe'
     const email = 'johm@doe.com'
     const password = '123456'
-
-    await usersRepository.create({
+    const user = User.create({
       name,
       email,
-      password_hash: await passwordHash.createHash(password),
+      passwordHash: await passwordHash.createHash(password),
     })
+    await usersRepository.create(user)
 
     const result = await sut.execute({
       email,
@@ -58,12 +58,13 @@ describe('CreateUser use case', () => {
     const name = 'John Doe'
     const email = 'johm@doe.com'
     const password = '123456'
-
-    await usersRepository.create({
+    const user = User.create({
       name,
       email,
-      password_hash: await passwordHash.createHash('invalid-password'),
+      passwordHash: await passwordHash.createHash('invalid-password'),
     })
+
+    await usersRepository.create(user)
 
     const result = await sut.execute({
       email,

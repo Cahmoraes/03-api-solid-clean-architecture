@@ -38,11 +38,12 @@ export class CreateUserUseCase {
     aCreateUserInput: CreateUserUseCaseInput,
   ): Promise<User> {
     const passwordHashed = await this.hashPassword(aCreateUserInput.password)
-    return this.usersRepository.create({
+    const user = User.create({
       name: aCreateUserInput.name,
       email: aCreateUserInput.email,
-      password_hash: passwordHashed,
+      passwordHash: passwordHashed,
     })
+    return this.usersRepository.create(user)
   }
 
   private hashPassword(aPassword: string): Promise<string> {

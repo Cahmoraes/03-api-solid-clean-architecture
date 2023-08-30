@@ -1,13 +1,6 @@
 import { Gym } from '../entities/gym'
 
-export interface GymCreateInput {
-  title: string
-  latitude: number
-  longitude: number
-  phone?: string
-  description?: string
-}
-
 export interface GymsRepository {
+  create(aGym: Gym): Promise<Gym>
   gymOfId(anId: string): Promise<Gym | null>
 }
