@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto'
+import { ValueObject } from './value-object'
 
-export class UniqueIdentity {
+export class UniqueIdentity implements ValueObject {
   private readonly _value: string
 
   constructor(aString?: UniqueIdentity | string) {
