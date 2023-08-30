@@ -39,7 +39,7 @@ describe('GetUserProfile use case', () => {
 
   it('should not be able to get user by wrong id', async () => {
     const result = await sut.execute({
-      userId: 'invalid-id',
+      userId: 'non-existing-id',
     })
 
     expect(result.isLeft()).toBe(true)
