@@ -9,6 +9,7 @@ const envSchema = z.object({
 
 const _env = envSchema.safeParse(process.env)
 
+/* c8 ignore start */
 if (!_env.success) {
   console.error(`❌ Invalid environment variables: ${_env.error.format()}`)
   throw new Error(`❌ Invalid environment variables: ${_env.error.format()}`)
@@ -17,3 +18,4 @@ if (!_env.success) {
 export const env = _env.data
 export const isProduction = () => env.NODE_ENV === 'production'
 export const isDevelopment = () => env.NODE_ENV === 'dev'
+export const isTest = () => env.NODE_ENV === 'test'

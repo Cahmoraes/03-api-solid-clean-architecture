@@ -21,7 +21,19 @@ describe('CheckIn use case', () => {
       userId,
       gymId,
     })
+    expect(result.isRight()).toBeTruthy()
+    const value = result.value as SuccessResponse<CheckIn>
+    expect(value.data?.gymId.toString()).toEqual(gymId)
+    expect(value.data?.userId.toString()).toEqual(userId)
+  })
 
+  it('should be able to check in', async () => {
+    const userId = 'user-01'
+    const gymId = 'gym-01'
+    const result = await sut.execute({
+      userId,
+      gymId,
+    })
     expect(result.isRight()).toBeTruthy()
     const value = result.value as SuccessResponse<CheckIn>
     expect(value.data?.gymId.toString()).toEqual(gymId)

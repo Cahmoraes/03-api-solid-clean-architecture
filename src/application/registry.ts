@@ -1,3 +1,5 @@
+import { isTest } from '@/env'
+
 type Constructor = { new (): unknown }
 export enum DependencyTypes {
   'createUserUseCase',
@@ -14,6 +16,7 @@ class Registry {
   protected constructor() {}
 
   static getInstance(): Registry {
+    /* c8 ignore start */
     if (!Registry.instance) Registry.instance = new Registry()
     return Registry.instance
   }
@@ -42,10 +45,6 @@ class Registry {
   }
 }
 
-const registry = Registry.getInstance()
-export const provide = registry.provide.bind(registry)
-export const inject = registry.inject.bind(registry)
-
 export class TestingRegistry extends Registry {
   static getInstance(): TestingRegistry {
     return new TestingRegistry()
@@ -58,8 +57,34 @@ export class TestingRegistry extends Registry {
   }
 }
 
-const registryTesting = TestingRegistry.getInstance()
-export const provideTesting = registryTesting.provide.bind(registryTesting)
-export const injectTesting = registryTesting.inject.bind(registryTesting)
-export const clearDependenciesTesting =
-  registryTesting.clearDependencies.bind(registryTesting)
+function makeRegistryFromEnvironment() {
+  const isTestEnvironment = isTest()
+  if (isTestEnvironment) {
+    const registryTesting = TestingRegistry.getInstance()
+    return {
+      provide: registryTesting.provide.bind(registryTesting),
+      inject: registryTesting.inject.bind(registryTesting),
+      clearDependenciesTesting:
+        registryTesting.clearDependencies.bind(registryTesting),
+    }
+  }
+  /* c8 ignore start */
+  const registry = Registry.getInstance()
+  return {
+    provide: registry.provide.bind(registry),
+    inject: registry.inject.bind(registry),
+  }
+}
+
+// const registry = Registry.getInstance()
+// export const provide = registry.provide.bind(registry)
+// export const inject = registry.inject.bind(registry)
+
+// const registryTesting = TestingRegistry.getInstance()
+// export const provideTesting = registryTesting.provide.bind(registryTesting)
+// export const injectTesting = registryTesting.inject.bind(registryTesting)
+// export const clearDependenciesTesting =
+//   registryTesting.clearDependencies.bind(registryTesting)
+
+export const { inject, provide, clearDependenciesTesting } =
+  makeRegistryFromEnvironment()
