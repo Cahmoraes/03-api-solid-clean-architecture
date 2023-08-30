@@ -16,7 +16,7 @@ describe('CheckIn use case', () => {
   const latitude = -27.2092052
   const longitude = -49.6401091
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.useFakeTimers()
     checkInsRepository = new InMemoryCheckInsRepository(new DayjsAdapter())
     gymsRepository = new InMemoryGymsRepository()
@@ -34,7 +34,7 @@ describe('CheckIn use case', () => {
       },
       gymId,
     )
-    gymsRepository.data.add(gym)
+    await gymsRepository.create(gym)
   })
 
   afterEach(() => {
@@ -112,7 +112,7 @@ describe('CheckIn use case', () => {
       },
       gymId,
     )
-    gymsRepository.data.add(gym)
+    await gymsRepository.create(gym)
 
     const result = await sut.execute({
       userId,
