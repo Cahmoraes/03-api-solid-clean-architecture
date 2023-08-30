@@ -42,13 +42,13 @@ export class CheckInUseCase {
         gym.location,
       )
     ) {
-      return Either.left(FailResponse.bad('User is too far from gym'))
+      return Either.left(FailResponse.bad('Max distance reached.'))
     }
 
     const checkInOnSameDay =
       await this.checkInsRepository.checkInByUserIdOnDate(userId, new Date())
     if (checkInOnSameDay) {
-      return Either.left(FailResponse.bad('Already checked in'))
+      return Either.left(FailResponse.bad('Max number of check-ins reached.'))
     }
     const checkIn = CheckIn.create({
       gymId,
