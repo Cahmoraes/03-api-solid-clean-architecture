@@ -9,5 +9,5 @@ export interface UserCreateInput {
 export interface UsersRepository {
   userOfId(anId: string): Promise<User | null>
   userOfEmail(anEmail: string): Promise<User | null>
-  create(aUser: UserCreateInput): Promise<User>
+  create(aUserCreateInput: UserCreateInput): Promise<User>
 }
