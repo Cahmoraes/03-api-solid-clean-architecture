@@ -3,7 +3,7 @@ import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { inject } from '../registry'
 import { UsersRepository } from '../repositories/users-repository'
-import { User } from '../entities/user'
+import { User } from '../entities/user.entity'
 
 export interface GetUserProfileUseCaseInput {
   userId: string

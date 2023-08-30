@@ -1,9 +1,9 @@
 import { provide } from '../registry'
 import { InMemoryUsersRepository } from 'tests/repositories/in-memory-users-repository'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
-import { User } from '../entities/user'
+import { User } from '../entities/user.entity'
 import { PasswordHash } from '@/core/entities/password-hash'
-import { GetUserProfileUseCase } from './get-user-profile'
+import { GetUserProfileUseCase } from './get-user-profile.usecase'
 
 describe('GetUserProfile use case', () => {
   let usersRepository: InMemoryUsersRepository

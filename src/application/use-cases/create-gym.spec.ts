@@ -1,8 +1,8 @@
 import { provide } from '../registry'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
-import { CreateGymUseCase } from './create-gym'
+import { CreateGymUseCase } from './create-gym.usecase'
 import { InMemoryGymsRepository } from 'tests/repositories/in-memory-gyms-repository'
-import { Gym } from '../entities/gym'
+import { Gym } from '../entities/gym.entity'
 
 describe('CreateGym use case', () => {
   let gymsRepository: InMemoryGymsRepository

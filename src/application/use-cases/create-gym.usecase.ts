@@ -1,7 +1,7 @@
 import { FailResponse } from '@/infra/http/entities/fail-response'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { Either, EitherType } from '@cahmoraes93/either'
-import { Gym } from '../entities/gym'
+import { Gym } from '../entities/gym.entity'
 import { inject } from '../registry'
 import { GymsRepository } from '../repositories/gyms-repository'
 

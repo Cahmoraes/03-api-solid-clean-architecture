@@ -1,5 +1,5 @@
 import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
-import { User } from './user'
+import { User } from './user.entity'
 
 describe('User Entity', () => {
   const name = 'John Doe'

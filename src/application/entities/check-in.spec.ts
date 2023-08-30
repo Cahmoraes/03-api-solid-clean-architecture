@@ -1,5 +1,5 @@
 import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
-import { CheckIn } from './check-in'
+import { CheckIn } from './check-in.entity'
 
 describe('CheckIn Entity', () => {
   const userId = new UniqueIdentity('user-01')

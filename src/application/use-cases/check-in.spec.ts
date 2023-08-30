@@ -1,11 +1,11 @@
 import { DayjsAdapter } from '@/infra/date/dayjs-adapter'
-import { CheckIn } from '../entities/check-in'
+import { CheckIn } from '../entities/check-in.entity'
 import { provide } from '../registry'
-import { CheckInUseCase } from './check-in'
+import { CheckInUseCase } from './check-in.usecase'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { InMemoryCheckInsRepository } from 'tests/repositories/in-memory-check-ins-repository'
 import { InMemoryGymsRepository } from '../../../tests/repositories/in-memory-gyms-repository'
-import { Gym } from '../entities/gym'
+import { Gym } from '../entities/gym.entity'
 
 describe('CheckIn use case', () => {
   let checkInsRepository: InMemoryCheckInsRepository
