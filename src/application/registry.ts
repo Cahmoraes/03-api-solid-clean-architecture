@@ -15,8 +15,8 @@ class Registry {
 
   protected constructor() {}
 
+  /* c8 ignore start */
   static getInstance(): Registry {
-    /* c8 ignore start */
     if (!Registry.instance) Registry.instance = new Registry()
     return Registry.instance
   }
@@ -57,6 +57,7 @@ export class TestingRegistry extends Registry {
   }
 }
 
+/* c8 ignore start */
 function makeRegistryFromEnvironment() {
   const isTestEnvironment = isTest()
   if (isTestEnvironment) {
@@ -68,7 +69,6 @@ function makeRegistryFromEnvironment() {
         registryTesting.clearDependencies.bind(registryTesting),
     }
   }
-  /* c8 ignore start */
   const registry = Registry.getInstance()
   return {
     provide: registry.provide.bind(registry),
