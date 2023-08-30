@@ -6,6 +6,6 @@ export interface CheckInCreateInput {
 }
 
 export interface CheckInsRepository {
-  // checkInOfId(anId: string): Promise<CheckIn | null>
   create(aCheckInCreateInput: CheckInCreateInput): Promise<CheckIn>
+  checkInByUserIdOnDate(userId: string, aDate: Date): Promise<CheckIn | null>
 }

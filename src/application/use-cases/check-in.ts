@@ -22,6 +22,11 @@ export class CheckInUseCase {
     userId,
     gymId,
   }: CheckInUseCaseInput): Promise<CheckInUseCaseOutput> {
+    const checkInOnSameDay =
+      await this.checkInsRepository.checkInByUserIdOnDate(userId, new Date())
+    if (checkInOnSameDay) {
+      return Either.left(FailResponse.bad('Already checked in'))
+    }
     const checkIn = await this.checkInsRepository.create({ gymId, userId })
     return Either.right(SuccessResponse.ok(checkIn))
   }
