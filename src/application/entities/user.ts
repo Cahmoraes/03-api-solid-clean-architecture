@@ -23,15 +23,19 @@ export class User extends Entity<UserProps> {
     )
   }
 
-  get name() {
+  get name(): string {
     return this.props.name
   }
 
-  get email() {
+  get email(): string {
     return this.props.email
   }
 
-  get passwordHash() {
+  get passwordHash(): string {
     return this.props.passwordHash
+  }
+
+  get createdAt(): Date {
+    return this.props.createdAt
   }
 }
