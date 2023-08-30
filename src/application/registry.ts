@@ -18,18 +18,18 @@ class Registry {
   }
 
   public provide<T extends Constructor>(
-    aDependency: DependencyType,
-    dependency: InstanceType<T>,
+    aDependencyName: DependencyType,
+    aDependencyInstance: InstanceType<T>,
   ) {
-    this.dependencies.set(DependencyTypes[aDependency], dependency)
+    this.dependencies.set(DependencyTypes[aDependencyName], aDependencyInstance)
   }
 
   public inject<Type extends InstanceType<Constructor>>(
-    aDependency: DependencyType,
+    aDependencyName: DependencyType,
   ): NonNullable<Type> {
-    const dependency = this.dependencies.get(DependencyTypes[aDependency])
+    const dependency = this.dependencies.get(DependencyTypes[aDependencyName])
     if (!this.isValidDependency<Type>(dependency)) {
-      throw new Error(`Dependency ${aDependency} not found`)
+      throw new Error(`Dependency ${aDependencyName} not found`)
     }
     return dependency
   }
