@@ -6,6 +6,7 @@ export enum DependencyTypes {
   'authenticateUseCase',
   'usersRepository',
   'checkInsRepository',
+  'gymsRepository',
 }
 type DependencyType = keyof typeof DependencyTypes
 
