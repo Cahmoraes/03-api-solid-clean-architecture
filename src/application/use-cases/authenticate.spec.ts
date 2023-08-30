@@ -25,7 +25,7 @@ describe('CreateUser use case', () => {
       email,
       passwordHash: await passwordHash.createHash(password),
     })
-    await usersRepository.create(user)
+    await usersRepository.save(user)
 
     const result = await sut.execute({
       email,
@@ -64,7 +64,7 @@ describe('CreateUser use case', () => {
       passwordHash: await passwordHash.createHash('invalid-password'),
     })
 
-    await usersRepository.create(user)
+    await usersRepository.save(user)
 
     const result = await sut.execute({
       email,

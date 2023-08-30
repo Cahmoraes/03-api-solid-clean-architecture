@@ -7,7 +7,6 @@ import { CheckInsRepository } from '../repositories/check-ins-repository'
 import { GymsRepository } from '../repositories/gyms-repository'
 import { DistanceCalculator } from '../entities/distance-calculator.service'
 import { Location } from '../entities/value-objects/location'
-import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
 
 export interface CheckInUseCaseInput {
   userId: string
@@ -55,7 +54,7 @@ export class CheckInUseCase {
       gymId,
       userId,
     })
-    await this.checkInsRepository.create(checkIn)
+    await this.checkInsRepository.save(checkIn)
     return Either.right(SuccessResponse.ok(checkIn))
   }
 

@@ -8,7 +8,7 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
 
   constructor(private dateHelper: DateHelper) {}
 
-  async create(aCheckIn: CheckIn): Promise<CheckIn> {
+  async save(aCheckIn: CheckIn): Promise<CheckIn> {
     this.data.add(aCheckIn)
     return aCheckIn
   }

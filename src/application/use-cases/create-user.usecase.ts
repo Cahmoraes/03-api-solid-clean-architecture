@@ -43,7 +43,7 @@ export class CreateUserUseCase {
       email: aCreateUserInput.email,
       passwordHash: passwordHashed,
     })
-    return this.usersRepository.create(user)
+    return this.usersRepository.save(user)
   }
 
   private hashPassword(aPassword: string): Promise<string> {

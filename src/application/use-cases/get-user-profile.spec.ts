@@ -21,7 +21,7 @@ describe('GetUserProfile use case', () => {
     const email = 'johm@doe.com'
     const password = '123456'
 
-    const { id } = await usersRepository.create(
+    const { id } = await usersRepository.save(
       User.create({
         name,
         email,

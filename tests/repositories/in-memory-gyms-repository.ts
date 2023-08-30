@@ -5,7 +5,7 @@ import { Gym } from '@/application/entities/gym'
 export class InMemoryGymsRepository implements GymsRepository {
   public data: ExtendedSet<Gym> = new ExtendedSet()
 
-  async create(aGym: Gym): Promise<Gym> {
+  async save(aGym: Gym): Promise<Gym> {
     this.data.add(aGym)
     return aGym
   }

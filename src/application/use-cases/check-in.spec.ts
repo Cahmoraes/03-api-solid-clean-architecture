@@ -34,7 +34,7 @@ describe('CheckIn use case', () => {
       },
       gymId,
     )
-    await gymsRepository.create(gym)
+    await gymsRepository.save(gym)
   })
 
   afterEach(() => {
@@ -112,7 +112,7 @@ describe('CheckIn use case', () => {
       },
       gymId,
     )
-    await gymsRepository.create(gym)
+    await gymsRepository.save(gym)
 
     const result = await sut.execute({
       userId,

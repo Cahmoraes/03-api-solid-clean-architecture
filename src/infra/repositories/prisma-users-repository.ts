@@ -40,7 +40,7 @@ export class PrismaUsersRepository implements UsersRepository {
     return this.createUserFromDto(existingUser)
   }
 
-  async create(aUser: UserCreateInput): Promise<User> {
+  async save(aUser: UserCreateInput): Promise<User> {
     const userDto = await this.prisma.user.create({
       data: aUser,
     })
