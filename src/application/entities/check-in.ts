@@ -12,9 +12,8 @@ export interface CheckInProps {
 export class CheckIn extends Entity<CheckInProps> {
   static create(props: Optional<CheckInProps, 'createdAt'>) {
     return new CheckIn({
-      gymId: props.gymId,
-      userId: props.userId,
       createdAt: new Date(),
+      ...props,
     })
   }
 
