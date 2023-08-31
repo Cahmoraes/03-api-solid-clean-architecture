@@ -7,7 +7,7 @@ describe('DistanceCalculator', () => {
     const location2 = new Location(34.052235, -118.243683)
     const calculator = new DistanceCalculator()
     const distance = calculator.calculate(location1, location2)
-    expect(distance).toBe(3935.5562431002922) // The expected distance is in kilometers
+    expect(distance).toBe(3935.5562431002922)
   })
 
   it('should return 0 when locations is the same', () => {

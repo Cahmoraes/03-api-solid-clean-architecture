@@ -1,10 +1,7 @@
-import {
-  UserCreateInput,
-  UsersRepository,
-} from '@/application/repositories/users-repository'
+import { UsersRepository } from '@/application/repositories/users-repository'
 import { prisma } from '../connection/prisma'
-import { User } from '@/application/entities/user'
 import { User as UserPrismaDto } from '@prisma/client'
+import { User } from '@/application/entities/user.entity'
 
 export class PrismaUsersRepository implements UsersRepository {
   private prisma = prisma
@@ -40,9 +37,15 @@ export class PrismaUsersRepository implements UsersRepository {
     return this.createUserFromDto(existingUser)
   }
 
-  async save(aUser: UserCreateInput): Promise<User> {
+  async save(aUser: User): Promise<User> {
     const userDto = await this.prisma.user.create({
-      data: aUser,
+      data: {
+        email: aUser.email,
+        name: aUser.name,
+        password_hash: aUser.passwordHash,
+        id: aUser.id.toString(),
+        created_at: aUser.createdAt,
+      },
     })
     return this.createUserFromDto(userDto)
   }
