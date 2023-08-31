@@ -14,4 +14,12 @@ export class DateHelper {
       targetDateDayJs.isBefore(endOfTheDay)
     )
   }
+
+  public startOfTheDay(aDate: Date): Date {
+    return dayjs(aDate).startOf('date').toDate()
+  }
+
+  public endOfTheDay(aDate: Date): Date {
+    return dayjs(aDate).endOf('date').toDate()
+  }
 }

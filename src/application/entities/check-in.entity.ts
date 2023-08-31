@@ -8,7 +8,7 @@ export interface CheckInProps {
   userId: string
   gymId: string
   createdAt: Date
-  validatedAt?: Date
+  validatedAt?: Date | null
 }
 
 type CheckInInternalProps = Omit<CheckInProps, 'userId' | 'gymId'> & {
@@ -47,7 +47,7 @@ export class CheckIn extends Entity<CheckInInternalProps> {
     return this.props.createdAt
   }
 
-  get validatedAt(): Date | undefined {
+  get validatedAt(): Date | undefined | null {
     return this.props.validatedAt
   }
 

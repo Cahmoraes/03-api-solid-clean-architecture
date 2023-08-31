@@ -1,29 +1,29 @@
 import { UsersRepository } from '@/application/repositories/users-repository'
 import { prisma } from '../connection/prisma'
-import { User as UserPrismaDto } from '@prisma/client'
+import { User as PrismaUser } from '@prisma/client'
 import { User } from '@/application/entities/user.entity'
 
 export class PrismaUsersRepository implements UsersRepository {
-  private prisma = prisma
+  private readonly prisma = prisma
 
   async userOfId(anId: string): Promise<User | null> {
-    const existingUser = await this.prisma.user.findUnique({
+    const prismaUser = await this.prisma.user.findUnique({
       where: {
         id: anId,
       },
     })
-    if (!existingUser) return null
-    return this.createUserFromDto(existingUser)
+    if (!prismaUser) return null
+    return this.createUserFromPrisma(prismaUser)
   }
 
-  private createUserFromDto(anUserDto: UserPrismaDto) {
+  private createUserFromPrisma(aPrismaUser: PrismaUser) {
     return User.create(
       {
-        email: anUserDto.email,
-        name: anUserDto.name,
-        passwordHash: anUserDto.password_hash,
+        email: aPrismaUser.email,
+        name: aPrismaUser.name,
+        passwordHash: aPrismaUser.password_hash,
       },
-      anUserDto.id,
+      aPrismaUser.id,
     )
   }
 
@@ -34,7 +34,7 @@ export class PrismaUsersRepository implements UsersRepository {
       },
     })
     if (!existingUser) return null
-    return this.createUserFromDto(existingUser)
+    return this.createUserFromPrisma(existingUser)
   }
 
   async save(aUser: User): Promise<User> {
@@ -47,6 +47,6 @@ export class PrismaUsersRepository implements UsersRepository {
         created_at: aUser.createdAt,
       },
     })
-    return this.createUserFromDto(userDto)
+    return this.createUserFromPrisma(userDto)
   }
 }
