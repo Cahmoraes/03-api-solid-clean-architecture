@@ -77,15 +77,5 @@ function makeRegistryFromEnvironment() {
   }
 }
 
-// const registry = Registry.getInstance()
-// export const provide = registry.provide.bind(registry)
-// export const inject = registry.inject.bind(registry)
-
-// const registryTesting = TestingRegistry.getInstance()
-// export const provideTesting = registryTesting.provide.bind(registryTesting)
-// export const injectTesting = registryTesting.inject.bind(registryTesting)
-// export const clearDependenciesTesting =
-//   registryTesting.clearDependencies.bind(registryTesting)
-
 export const { inject, provide, clearDependenciesTesting } =
   makeRegistryFromEnvironment()
