@@ -1,8 +1,6 @@
 import ExtendedSet from '@cahmoraes93/extended-set'
 import { GymsRepository } from '@/application/repositories/gyms-repository'
 import { Gym } from '@/application/entities/gym.entity'
-import { itemsPerPage } from '@/core/helpers/items-per-page'
-
 export class InMemoryGymsRepository implements GymsRepository {
   public data: ExtendedSet<Gym> = new ExtendedSet()
 
@@ -24,6 +22,6 @@ export class InMemoryGymsRepository implements GymsRepository {
     return this.data
       .filter((gym) => gym.title.includes(query))
       .toArray()
-      .slice(...itemsPerPage(page))
+      .slice((page - 1) * 20, page * 20)
   }
 }
