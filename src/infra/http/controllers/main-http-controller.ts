@@ -1,9 +1,9 @@
-import { Routes } from './routes'
+import { Routes } from './routes.enum'
 import { CreateUserController } from './users/create-user.controller'
 import { HTTPMethodTypes, HttpServer } from '../servers/http-server'
 import { AuthenticateController } from './users/authenticate.controller'
 
-export class HttpController {
+export class MainHttpController {
   constructor(private readonly httpServer: HttpServer) {
     this.init()
   }
