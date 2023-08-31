@@ -18,10 +18,14 @@ export interface JwtHandlers {
   verify: JwtVerify
 }
 
+export interface HttpHandlerParams {
+  body: unknown
+  params: unknown
+  jwtHandler: JwtHandlers
+}
+
 export type HttpHandler = (
-  body: unknown,
-  params: unknown,
-  jwtHandler: JwtHandlers,
+  httpHandlerParams: HttpHandlerParams,
 ) => Promise<EitherType<FailResponse<unknown>, SuccessResponse<unknown>>>
 
 export interface HttpServer {

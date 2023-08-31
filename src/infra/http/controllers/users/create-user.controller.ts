@@ -5,6 +5,7 @@ import { FailResponse } from '../../entities/fail-response'
 import { User } from '@/application/entities/user.entity'
 import { CreateUserUseCase } from '@/application/use-cases/create-user.usecase'
 import { inject } from '@/infra/dependency-inversion/registry'
+import { HttpHandlerParams } from '../../servers/http-server'
 
 const CreateUserBodySchema = z.object({
   name: z.string(),
@@ -29,7 +30,9 @@ export class CreateUserController {
     this.handleRequest = this.handleRequest.bind(this)
   }
 
-  public async handleRequest(body: unknown): Promise<UserControllerOutput> {
+  public async handleRequest({
+    body,
+  }: HttpHandlerParams): Promise<UserControllerOutput> {
     try {
       const { name, email, password } = this.parseBodyOrThrow(body)
       return this.createUserUseCase.execute({ name, email, password })

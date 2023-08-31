@@ -66,11 +66,11 @@ export class FastifyAdapter implements HttpServer {
     handler: HttpHandler,
   ): void {
     this.httpServer[method](route, async (request, reply) => {
-      const response = await handler(
-        request.body,
-        request.params,
-        this.jwtHandler(request, reply),
-      )
+      const response = await handler({
+        body: request.body,
+        params: request.params,
+        jwtHandler: this.jwtHandler(request, reply),
+      })
       if (response.isLeft()) {
         return reply.status(response.value.status).send(response.value.toDto())
       }
