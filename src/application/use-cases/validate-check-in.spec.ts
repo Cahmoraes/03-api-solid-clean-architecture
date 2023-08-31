@@ -49,7 +49,7 @@ describe('Validate Check-in use case', () => {
     expect(result.value.data).toBe('Resource not found')
   })
 
-  it.only('should not be able to validate the check-in after 20 minutes of its creation', async () => {
+  it('should not be able to validate the check-in after 20 minutes of its creation', async () => {
     vi.setSystemTime(new Date(2023, 0, 1, 13, 40))
 
     const createdCheckIn = CheckIn.create({
@@ -66,6 +66,13 @@ describe('Validate Check-in use case', () => {
       checkInId: createdCheckIn.id.toString(),
     })
 
+    expect(result.isLeft()).toBeTruthy()
+  })
+
+  it('should not be able to validate the inexistent check-in', async () => {
+    const result = await sut.execute({
+      checkInId: 'inexistent-check-in-id',
+    })
     expect(result.isLeft()).toBeTruthy()
   })
 })
