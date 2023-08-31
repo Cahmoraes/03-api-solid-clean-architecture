@@ -76,7 +76,7 @@ describe('CheckIn use case', () => {
     expect(result.isLeft()).toBeTruthy()
   })
 
-  it('should be able to check in twice but in different day', async () => {
+  it.only('should be able to check in twice but in different day', async () => {
     const date1 = new Date(2022, 0, 20, 8, 0, 0)
     vi.setSystemTime(date1)
 

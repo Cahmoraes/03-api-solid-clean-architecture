@@ -32,10 +32,7 @@ export class CheckInUseCase {
     userLongitude,
   }: CheckInUseCaseInput): Promise<CheckInUseCaseOutput> {
     const gym = await this.gymsRepository.gymOfId(gymId)
-    if (!gym) {
-      return Either.left(FailResponse.notFound('Resource not found'))
-    }
-
+    if (!gym) return Either.left(FailResponse.notFound('Resource not found'))
     if (
       this.distanceBetweenUserAndGymIsMoreThanOneHundredMeters(
         new Location(userLatitude, userLongitude),
@@ -44,10 +41,7 @@ export class CheckInUseCase {
     ) {
       return Either.left(FailResponse.bad('Max distance reached.'))
     }
-
-    const checkInOnSameDay =
-      await this.checkInsRepository.checkInByUserIdOnDate(userId, new Date())
-    if (checkInOnSameDay) {
+    if (await this.hasCheckInOnSameDay(userId)) {
       return Either.left(FailResponse.bad('Max number of check-ins reached.'))
     }
     const checkIn = CheckIn.create({
@@ -67,5 +61,13 @@ export class CheckInUseCase {
       distanceCalculator.calculate(userLocation, gymLocation) >
       this.MAX_DISTANCE_IN_KILOMETERS
     )
+  }
+
+  private async hasCheckInOnSameDay(userId: string) {
+    const result = await this.checkInsRepository.checkInByUserIdOnDate(
+      userId,
+      new Date(),
+    )
+    return Boolean(result)
   }
 }
