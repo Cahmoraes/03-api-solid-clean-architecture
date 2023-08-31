@@ -10,8 +10,13 @@ export const enum HTTPMethodTypes {
   DELETE = 'delete',
 }
 
+export interface VerifyUser {
+  sub: string
+  iat: number
+}
+
 type JwtSignIn = (payload: object, options: object) => Promise<string>
-type JwtVerify = (options?: object) => Promise<any>
+type JwtVerify = (options?: object) => Promise<VerifyUser>
 
 export interface JwtHandlers {
   sign: JwtSignIn

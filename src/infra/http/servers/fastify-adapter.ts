@@ -2,8 +2,10 @@ import Fastify, { FastifyReply, FastifyRequest } from 'fastify'
 import {
   HTTPMethodTypes,
   HttpHandler,
+  HttpHandlerParams,
   HttpServer,
   JwtHandlers,
+  VerifyUser,
 } from './http-server'
 import { env, isProduction } from '@/env'
 import { ZodError } from 'zod'
@@ -66,16 +68,23 @@ export class FastifyAdapter implements HttpServer {
     handler: HttpHandler,
   ): void {
     this.httpServer[method](route, async (request, reply) => {
-      const response = await handler({
-        body: request.body,
-        params: request.params,
-        jwtHandler: this.jwtHandler(request, reply),
-      })
+      const response = await handler(this.httpHandlerParams(request, reply))
       if (response.isLeft()) {
         return reply.status(response.value.status).send(response.value.toDto())
       }
       reply.status(response.value.status).send(response.value.data)
     })
+  }
+
+  private httpHandlerParams(
+    fastifyRequest: FastifyRequest,
+    fastifyReply: FastifyReply,
+  ): HttpHandlerParams {
+    return {
+      body: fastifyRequest.body,
+      params: fastifyRequest.params,
+      jwtHandler: this.jwtHandler(fastifyRequest, fastifyReply),
+    }
   }
 
   private jwtHandler(
@@ -87,8 +96,9 @@ export class FastifyAdapter implements HttpServer {
       async sign(payload, options) {
         return fastifyJwtSign(payload, options)
       },
-      async verify(payload) {
-        return fastifyRequest.jwtVerify(payload)
+      async verify(payload): Promise<VerifyUser> {
+        await fastifyRequest.jwtVerify(payload)
+        return fastifyRequest.user as VerifyUser
       },
     }
   }
