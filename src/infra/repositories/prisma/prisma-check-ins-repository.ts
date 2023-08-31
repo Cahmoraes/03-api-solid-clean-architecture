@@ -1,7 +1,7 @@
 import { CheckIn as PrismaCheckIn } from '@prisma/client'
 import { CheckIn } from '@/application/entities/check-in.entity'
 import { CheckInsRepository } from '@/application/repositories/check-ins-repository'
-import { prisma } from '../connection/prisma'
+import { prisma } from '../../connection/prisma'
 import { DateHelper } from '@/application/entities/services/date-helper'
 
 export class PrismaCheckInsRepository implements CheckInsRepository {

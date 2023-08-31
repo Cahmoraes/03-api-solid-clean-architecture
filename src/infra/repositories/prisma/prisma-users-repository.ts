@@ -1,7 +1,7 @@
 import { UsersRepository } from '@/application/repositories/users-repository'
-import { prisma } from '../connection/prisma'
 import { User as PrismaUser } from '@prisma/client'
 import { User } from '@/application/entities/user.entity'
+import { prisma } from '@/infra/connection/prisma'
 
 export class PrismaUsersRepository implements UsersRepository {
   private readonly prisma = prisma
