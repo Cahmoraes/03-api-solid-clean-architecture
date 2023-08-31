@@ -15,7 +15,7 @@ type FetchUserCheckInsHistoryOutput = EitherType<
   SuccessResponse<CheckIn[]>
 >
 
-export class FetchUserCheckInsHistory {
+export class FetchUserCheckInsHistoryUseCase {
   private checkInsRepository = inject<CheckInsRepository>('checkInsRepository')
 
   async execute({

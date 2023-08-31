@@ -4,12 +4,12 @@ import { provide } from '../registry'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { InMemoryCheckInsRepository } from 'tests/repositories/in-memory-check-ins-repository'
 import { InMemoryGymsRepository } from '../../../tests/repositories/in-memory-gyms-repository'
-import { FetchUserCheckInsHistory } from './fetch-user-check-ins-history.usecase'
+import { FetchUserCheckInsHistoryUseCase } from './fetch-user-check-ins-history.usecase'
 
 describe('Fetch User Check-in history use case', () => {
   let checkInsRepository: InMemoryCheckInsRepository
   let gymsRepository: InMemoryGymsRepository
-  let sut: FetchUserCheckInsHistory
+  let sut: FetchUserCheckInsHistoryUseCase
   const userId = 'user-01'
 
   beforeEach(async () => {
@@ -17,7 +17,7 @@ describe('Fetch User Check-in history use case', () => {
     gymsRepository = new InMemoryGymsRepository()
     provide('checkInsRepository', checkInsRepository)
     provide('gymsRepository', gymsRepository)
-    sut = new FetchUserCheckInsHistory()
+    sut = new FetchUserCheckInsHistoryUseCase()
   })
 
   it('should be able to fetch check-in history', async () => {

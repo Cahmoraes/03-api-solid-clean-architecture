@@ -10,6 +10,7 @@
     "no-useless-constructor": "off",
     "no-new": "off",
     "@typescript-eslint/no-empty-function": "off",
-    "no-use-before-define": "off"
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-non-null-assertion": "off"
   }
 }
