@@ -5,9 +5,9 @@ import { AuthenticateUseCase } from './application/use-cases/authenticate.usecas
 import { provide } from './infra/dependency-inversion/registry'
 import { PrismaUsersRepository } from './infra/repositories/prisma/prisma-users-repository'
 
-const httpServer = new FastifyAdapter()
 provide('usersRepository', new PrismaUsersRepository())
 provide('createUserUseCase', new CreateUserUseCase())
 provide('authenticateUseCase', new AuthenticateUseCase())
+const httpServer = new FastifyAdapter()
 new MainHttpController(httpServer)
 httpServer.listen()
