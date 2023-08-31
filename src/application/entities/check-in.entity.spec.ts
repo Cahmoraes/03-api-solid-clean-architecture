@@ -1,3 +1,4 @@
+import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
 import { CheckIn } from './check-in.entity'
 
 describe('CheckIn Entity', () => {
@@ -29,5 +30,27 @@ describe('CheckIn Entity', () => {
     expect(checkIn.createAt).toBeInstanceOf(Date)
     expect(checkIn.validatedAt).toBeInstanceOf(Date)
     expect(checkIn.validatedAt?.getTime()).toEqual(validatedAt.getTime())
+  })
+
+  it('should create a check-in with specific ID', () => {
+    const specificId = 'check-in-01'
+    const checkIn1 = CheckIn.create(
+      {
+        userId,
+        gymId,
+      },
+      specificId,
+    )
+    expect(checkIn1.id.toString()).toBe(specificId)
+
+    const specificUniqueIdentity = new UniqueIdentity(specificId)
+    const checkIn2 = CheckIn.create(
+      {
+        userId,
+        gymId,
+      },
+      specificUniqueIdentity,
+    )
+    expect(checkIn2.id.equals(specificUniqueIdentity)).toBeTruthy()
   })
 })

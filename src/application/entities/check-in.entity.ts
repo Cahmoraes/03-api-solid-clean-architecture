@@ -19,14 +19,20 @@ type CheckInInternalProps = Omit<CheckInProps, 'userId' | 'gymId'> & {
 export class CheckIn extends Entity<CheckInInternalProps> {
   private MINUTES = 20
 
-  static create(props: Optional<CheckInProps, 'createdAt'>) {
+  static create(
+    props: Optional<CheckInProps, 'createdAt'>,
+    anId?: string | UniqueIdentity,
+  ) {
     const { gymId, userId, ...rest } = props
-    return new CheckIn({
-      createdAt: new Date(),
-      ...rest,
-      gymId: new UniqueIdentity(gymId),
-      userId: new UniqueIdentity(userId),
-    })
+    return new CheckIn(
+      {
+        createdAt: new Date(),
+        ...rest,
+        gymId: new UniqueIdentity(gymId),
+        userId: new UniqueIdentity(userId),
+      },
+      anId,
+    )
   }
 
   get userId(): UniqueIdentity {
