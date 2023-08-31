@@ -5,7 +5,7 @@ import { FailResponse } from '../../entities/fail-response'
 import { User } from '@/application/entities/user.entity'
 import { AuthenticateUseCase } from '@/application/use-cases/authenticate.usecase'
 import { inject } from '@/infra/dependency-inversion/registry'
-import { HttpHandlerParams, JwtHandlers } from '../../servers/http-server'
+import { HttpHandlerParams } from '../../servers/http-server'
 
 const profileBodySchema = z.object({
   email: z.string().email(),

@@ -64,7 +64,9 @@ export class FastifyAdapter implements HttpServer {
     handler: HttpHandler,
   ): void {
     this.httpServer[method](route, async (request, reply) => {
-      const response = await handler(this.httpHandlerParams(request, reply))
+      const response = await handler(
+        this.createHttpHandlerParams(request, reply),
+      )
       if (response.isLeft()) {
         return reply.status(response.value.status).send(response.value.toDto())
       }
@@ -72,7 +74,7 @@ export class FastifyAdapter implements HttpServer {
     })
   }
 
-  private httpHandlerParams(
+  private createHttpHandlerParams(
     fastifyRequest: FastifyRequest,
     fastifyReply: FastifyReply,
   ): HttpHandlerParams {
