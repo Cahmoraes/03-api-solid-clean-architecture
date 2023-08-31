@@ -42,6 +42,19 @@ describe('CheckIn use case', () => {
   })
 
   it('should be able to check in', async () => {
+    await gymsRepository.deleteById(gymId)
+
+    const result = await sut.execute({
+      userId,
+      gymId,
+      userLatitude: latitude,
+      userLongitude: longitude,
+    })
+    expect(result.isLeft()).toBeTruthy()
+    expect(result.value.data).toBe('Resource not found')
+  })
+
+  it('should not be able to check in when gym not exists', async () => {
     const result = await sut.execute({
       userId,
       gymId,
@@ -76,7 +89,7 @@ describe('CheckIn use case', () => {
     expect(result.isLeft()).toBeTruthy()
   })
 
-  it.only('should be able to check in twice but in different day', async () => {
+  it('should be able to check in twice but in different day', async () => {
     const date1 = new Date(2022, 0, 20, 8, 0, 0)
     vi.setSystemTime(date1)
 
@@ -121,5 +134,6 @@ describe('CheckIn use case', () => {
       userLongitude: longitude,
     })
     expect(result.isLeft()).toBeTruthy()
+    expect(result.value.data).toBe('Max distance reached.')
   })
 })
