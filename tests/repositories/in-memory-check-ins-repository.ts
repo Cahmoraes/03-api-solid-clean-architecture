@@ -1,10 +1,11 @@
 import ExtendedSet from '@cahmoraes93/extended-set'
-import { CheckIn } from '@/application/entities/check-in'
 import { CheckInsRepository } from '@/application/repositories/check-ins-repository'
 import { DateHelper } from '@/infra/date/date-helper'
+import { CheckIn } from '@/application/entities/check-in.entity'
 
 export class InMemoryCheckInsRepository implements CheckInsRepository {
   public data: ExtendedSet<CheckIn> = new ExtendedSet()
+  private ITEM_PER_PAGE = 20
 
   constructor(private dateHelper: DateHelper) {}
 
@@ -22,5 +23,12 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
         this.dateHelper.isOnSameDate(aDate, checkIn.createAt) &&
         checkIn.userId.toString() === userId,
     )
+  }
+
+  async checkInsByUserId(userId: string, page: number): Promise<CheckIn[]> {
+    return this.data
+      .filter((checkIn) => checkIn.userId.toString() === userId)
+      .toArray()
+      .slice((page - 1) * this.ITEM_PER_PAGE, page * this.ITEM_PER_PAGE)
   }
 }
