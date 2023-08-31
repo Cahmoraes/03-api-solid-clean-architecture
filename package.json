@@ -30,6 +30,7 @@
   "dependencies": {
     "@cahmoraes93/either": "1.0.4",
     "@cahmoraes93/extended-set": "1.1.3",
+    "@fastify/jwt": "7.2.0",
     "@prisma/client": "5.2.0",
     "bcrypt": "5.1.1",
     "dayjs": "1.11.9",

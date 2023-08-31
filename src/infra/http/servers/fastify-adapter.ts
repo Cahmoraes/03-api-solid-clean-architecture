@@ -1,18 +1,38 @@
-import Fastify from 'fastify'
-import { HTTPMethodTypes, HttpHandler, HttpServer } from './http-server'
+import Fastify, { FastifyReply, FastifyRequest } from 'fastify'
+import {
+  HTTPMethodTypes,
+  HttpHandler,
+  HttpServer,
+  JwtHandlers,
+} from './http-server'
 import { env, isProduction } from '@/env'
 import { ZodError } from 'zod'
+import fastifyJwt from '@fastify/jwt'
+
+interface JwtSignIn {
+  (payload: object, options?: object): Promise<string>
+}
 
 export class FastifyAdapter implements HttpServer {
   private httpServer = Fastify()
 
+  constructor() {
+    this.registerJWT()
+    this.errorHandler()
+  }
+
   async listen(): Promise<void> {
     try {
-      this.errorHandler()
       await this.performListen()
     } catch (error) {
       console.error(error)
     }
+  }
+
+  private registerJWT(): void {
+    this.httpServer.register(fastifyJwt, {
+      secret: env.JWT_SECRET,
+    })
   }
 
   private errorHandler() {
@@ -46,12 +66,30 @@ export class FastifyAdapter implements HttpServer {
     handler: HttpHandler,
   ): void {
     this.httpServer[method](route, async (request, reply) => {
-      const response = await handler(request.body, request.params)
+      const response = await handler(
+        request.body,
+        request.params,
+        this.jwtHandler(request, reply),
+      )
       if (response.isLeft()) {
-        console.log('aqui')
         return reply.status(response.value.status).send(response.value.toDto())
       }
       reply.status(response.value.status).send(response.value.data)
     })
+  }
+
+  private jwtHandler(
+    fastifyRequest: FastifyRequest,
+    fastifyReply: FastifyReply,
+  ): JwtHandlers {
+    const fastifyJwtSign = fastifyReply.jwtSign.bind(fastifyReply)
+    return {
+      async sign(payload, options) {
+        return fastifyJwtSign(payload, options)
+      },
+      async verify(payload) {
+        return fastifyRequest.jwtVerify(payload)
+      },
+    }
   }
 }

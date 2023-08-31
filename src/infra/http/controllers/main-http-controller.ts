@@ -33,7 +33,7 @@ export class MainHttpController {
 
   private handleMe(): void {
     this.httpServer.on(
-      HTTPMethodTypes.GET,
+      HTTPMethodTypes.POST,
       Routes.ME,
       new ProfileController().handleRequest,
     )

@@ -10,9 +10,18 @@ export const enum HTTPMethodTypes {
   DELETE = 'delete',
 }
 
+type JwtSignIn = (payload: object, options: object) => Promise<string>
+type JwtVerify = (options?: object) => Promise<any>
+
+export interface JwtHandlers {
+  sign: JwtSignIn
+  verify: JwtVerify
+}
+
 export type HttpHandler = (
   body: unknown,
   params: unknown,
+  jwtHandler: JwtHandlers,
 ) => Promise<EitherType<FailResponse<unknown>, SuccessResponse<unknown>>>
 
 export interface HttpServer {
