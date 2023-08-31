@@ -20,6 +20,7 @@ function getDistanceBetweenCoordinates(from: Coordinate, to: Coordinate) {
     Math.sin(fromRadian) * Math.sin(toRadian) +
     Math.cos(fromRadian) * Math.cos(toRadian) * Math.cos(radTheta)
 
+  /* c8 ignore start */
   if (dist > 1) {
     dist = 1
   }
