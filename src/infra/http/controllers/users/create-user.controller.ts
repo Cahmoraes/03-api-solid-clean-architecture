@@ -2,9 +2,9 @@ import { z } from 'zod'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { FailResponse } from '../../entities/fail-response'
-import { inject } from '@/application/registry'
 import { User } from '@/application/entities/user.entity'
 import { CreateUserUseCase } from '@/application/use-cases/create-user.usecase'
+import { inject } from '@/infra/dependency-inversion/registry'
 
 const CreateUserBodySchema = z.object({
   name: z.string(),

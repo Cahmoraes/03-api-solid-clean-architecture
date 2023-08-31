@@ -1,10 +1,10 @@
 import { FailResponse } from '@/infra/http/entities/fail-response'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { Either, EitherType } from '@cahmoraes93/either'
-import { inject } from '../registry'
 import { UsersRepository } from '../repositories/users-repository'
 import { User } from '../entities/user.entity'
 import { PasswordHash } from '@/core/entities/password-hash'
+import { inject } from '@/infra/dependency-inversion/registry'
 
 export interface AuthenticateUseCaseInput {
   email: string

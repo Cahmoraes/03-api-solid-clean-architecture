@@ -1,9 +1,9 @@
-import { provide } from '../registry'
 import { CreateUserUseCase } from './create-user.usecase'
 import { InMemoryUsersRepository } from 'tests/repositories/in-memory-users-repository'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import bcrypt from 'bcrypt'
 import { User } from '../entities/user.entity'
+import { provide } from '@/infra/dependency-inversion/registry'
 
 describe('CreateUser use case', () => {
   let usersRepository: InMemoryUsersRepository

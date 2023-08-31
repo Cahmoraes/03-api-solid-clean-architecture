@@ -1,8 +1,8 @@
-import { provide } from '../registry'
 import { InMemoryGymsRepository } from '@/tests/repositories/in-memory-gyms-repository'
 import { Gym } from '../entities/gym.entity'
 import { FetchNearbyGymsUseCase } from './fetch-nearby-gym.usecase'
 import { Coord } from '../entities/value-objects/coord'
+import { provide } from '@/infra/dependency-inversion/registry'
 
 describe('Fetch Nearby Gyms use case', () => {
   let gymsRepository: InMemoryGymsRepository

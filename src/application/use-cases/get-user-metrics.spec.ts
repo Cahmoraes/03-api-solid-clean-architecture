@@ -1,8 +1,8 @@
 import { CheckIn } from '../entities/check-in.entity'
-import { provide } from '../registry'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { InMemoryCheckInsRepository } from 'tests/repositories/in-memory-check-ins-repository'
 import { GetUserMetrics } from './get-user-metrics.usecase'
+import { provide } from '@/infra/dependency-inversion/registry'
 
 describe('Get User Metrics use case', () => {
   let checkInsRepository: InMemoryCheckInsRepository

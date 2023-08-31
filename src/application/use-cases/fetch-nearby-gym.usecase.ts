@@ -3,8 +3,8 @@ import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { Gym } from '../entities/gym.entity'
 import { Coord } from '../entities/value-objects/coord'
-import { inject } from '../registry'
 import { GymsRepository } from '../repositories/gyms-repository'
+import { inject } from '@/infra/dependency-inversion/registry'
 
 interface FetchNearbyGymsInput {
   userCoord: Coord

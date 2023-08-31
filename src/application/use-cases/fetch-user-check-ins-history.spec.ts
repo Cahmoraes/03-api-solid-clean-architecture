@@ -1,9 +1,9 @@
 import { CheckIn } from '../entities/check-in.entity'
-import { provide } from '../registry'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { InMemoryCheckInsRepository } from 'tests/repositories/in-memory-check-ins-repository'
 import { InMemoryGymsRepository } from '../../../tests/repositories/in-memory-gyms-repository'
 import { FetchUserCheckInsHistoryUseCase } from './fetch-user-check-ins-history.usecase'
+import { provide } from '@/infra/dependency-inversion/registry'
 
 describe('Fetch User Check-in history use case', () => {
   let checkInsRepository: InMemoryCheckInsRepository

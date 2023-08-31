@@ -1,38 +1,18 @@
 import { CheckIn } from '../entities/check-in.entity'
-import { provide } from '../registry'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { InMemoryCheckInsRepository } from 'tests/repositories/in-memory-check-ins-repository'
-import { InMemoryGymsRepository } from '../../../tests/repositories/in-memory-gyms-repository'
 import { ValidateCheckInUseCase } from './validate-check-in.usecase'
+import { provide } from '@/infra/dependency-inversion/registry'
 
 describe('Validate Check-in use case', () => {
   let checkInsRepository: InMemoryCheckInsRepository
-  let gymsRepository: InMemoryGymsRepository
   let sut: ValidateCheckInUseCase
-  const userId = 'user-01'
-  const gymId = 'gym-01'
-  const latitude = -27.2092052
-  const longitude = -49.6401091
 
   beforeEach(async () => {
     vi.useFakeTimers()
     checkInsRepository = new InMemoryCheckInsRepository()
-    gymsRepository = new InMemoryGymsRepository()
     provide('checkInsRepository', checkInsRepository)
-    // provide('gymsRepository', gymsRepository)
     sut = new ValidateCheckInUseCase()
-
-    // const gym = Gym.create(
-    //   {
-    //     title: 'Academia JavaScript Gym',
-    //     description: 'Fake Gym',
-    //     phone: '00-0000-0000',
-    //     latitude,
-    //     longitude,
-    //   },
-    //   gymId,
-    // )
-    // await gymsRepository.save(gym)
   })
 
   afterEach(() => {

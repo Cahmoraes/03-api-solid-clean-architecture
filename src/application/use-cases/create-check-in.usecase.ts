@@ -1,12 +1,12 @@
 import { Either, EitherType } from '@cahmoraes93/either'
 import { FailResponse } from '@/infra/http/entities/fail-response'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
-import { inject } from '../registry'
 import { CheckIn } from '../entities/check-in.entity'
 import { CheckInsRepository } from '../repositories/check-ins-repository'
 import { GymsRepository } from '../repositories/gyms-repository'
 import { DistanceCalculator } from '../entities/services/distance-calculator.service'
 import { Coord } from '../entities/value-objects/coord'
+import { inject } from '@/infra/dependency-inversion/registry'
 
 export interface CheckInUseCaseInput {
   userId: string

@@ -1,5 +1,5 @@
 import { CheckIn } from '../entities/check-in.entity'
-import { provide } from '../registry'
+import { provide } from '@/infra/dependency-inversion/registry'
 import { CheckInUseCase } from './create-check-in.usecase'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { InMemoryCheckInsRepository } from 'tests/repositories/in-memory-check-ins-repository'

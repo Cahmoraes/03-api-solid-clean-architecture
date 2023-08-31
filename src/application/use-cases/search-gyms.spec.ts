@@ -1,7 +1,7 @@
-import { provide } from '../registry'
 import { InMemoryGymsRepository } from '../../../tests/repositories/in-memory-gyms-repository'
 import { SearchGymUseCase } from './search-gyms.usecase'
 import { Gym } from '../entities/gym.entity'
+import { provide } from '@/infra/dependency-inversion/registry'
 
 describe('Search Gyms use case', () => {
   let gymsRepository: InMemoryGymsRepository
