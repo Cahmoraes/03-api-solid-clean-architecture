@@ -1,6 +1,6 @@
 import { Entity } from '@/core/entities/entity'
 import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
-import { Location } from './value-objects/location'
+import { Coord } from './value-objects/coord'
 
 interface GymProps {
   title: string
@@ -11,7 +11,7 @@ interface GymProps {
 }
 
 type GymInternalProps = Omit<GymProps, 'latitude' | 'longitude'> & {
-  location: Location
+  coord: Coord
 }
 
 export class Gym extends Entity<GymInternalProps> {
@@ -24,7 +24,7 @@ export class Gym extends Entity<GymInternalProps> {
     return new Gym(
       {
         ...rest,
-        location: new Location(latitude, longitude),
+        coord: new Coord({ latitude, longitude }),
       },
       new UniqueIdentity(anId),
     )
@@ -42,7 +42,7 @@ export class Gym extends Entity<GymInternalProps> {
     return this.props.phone
   }
 
-  get location(): Location {
-    return this.props.location
+  get coord(): Coord {
+    return this.props.coord
   }
 }

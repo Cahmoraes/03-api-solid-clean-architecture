@@ -6,7 +6,7 @@ import { CheckIn } from '../entities/check-in.entity'
 import { CheckInsRepository } from '../repositories/check-ins-repository'
 import { GymsRepository } from '../repositories/gyms-repository'
 import { DistanceCalculator } from '../entities/distance-calculator.service'
-import { Location } from '../entities/value-objects/location'
+import { Coord } from '../entities/value-objects/coord'
 
 export interface CheckInUseCaseInput {
   userId: string
@@ -35,8 +35,8 @@ export class CheckInUseCase {
     if (!gym) return Either.left(FailResponse.notFound('Resource not found'))
     if (
       this.distanceBetweenUserAndGymIsMoreThanOneHundredMeters(
-        new Location(userLatitude, userLongitude),
-        gym.location,
+        new Coord({ latitude: userLatitude, longitude: userLongitude }),
+        gym.coord,
       )
     ) {
       return Either.left(FailResponse.bad('Max distance reached.'))
@@ -53,8 +53,8 @@ export class CheckInUseCase {
   }
 
   private distanceBetweenUserAndGymIsMoreThanOneHundredMeters(
-    userLocation: Location,
-    gymLocation: Location,
+    userLocation: Coord,
+    gymLocation: Coord,
   ): boolean {
     const distanceCalculator = new DistanceCalculator()
     return (

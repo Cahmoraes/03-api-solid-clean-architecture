@@ -1,5 +1,4 @@
-import { provide, clearDependenciesTesting } from '../registry'
-import { SuccessResponse } from '@/infra/http/entities/success-response'
+import { provide } from '../registry'
 import { InMemoryGymsRepository } from '../../../tests/repositories/in-memory-gyms-repository'
 import { SearchGymUseCase } from './search-gyms.usecase'
 import { Gym } from '../entities/gym.entity'

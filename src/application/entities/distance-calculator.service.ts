@@ -1,4 +1,4 @@
-import { Location } from './value-objects/location'
+import { Coord } from './value-objects/coord'
 
 export interface Coordinate {
   latitude: number
@@ -34,7 +34,7 @@ function getDistanceBetweenCoordinates(from: Coordinate, to: Coordinate) {
 }
 
 export class DistanceCalculator {
-  calculate(location1: Location, location2: Location): number {
+  calculate(location1: Coord, location2: Coord): number {
     return getDistanceBetweenCoordinates(
       {
         latitude: location1.latitude,
