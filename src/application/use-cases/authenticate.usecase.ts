@@ -23,18 +23,18 @@ export class AuthenticateUseCase {
     email,
     password,
   }: AuthenticateUseCaseInput): Promise<AuthenticateUseCaseOutput> {
-    const userExists = await this.usersRepository.userOfEmail(email)
-    if (!userExists) {
+    const user = await this.usersRepository.userOfEmail(email)
+    if (!user) {
       return Either.left(FailResponse.unauthorized('Invalid credentials'))
     }
     const doesPasswordMatches = await this.comparePasswordAndHash(
       password,
-      userExists.passwordHash,
+      user.passwordHash,
     )
     if (!doesPasswordMatches) {
       return Either.left(FailResponse.unauthorized('Invalid credentials'))
     }
-    return Either.right(SuccessResponse.ok(userExists))
+    return Either.right(SuccessResponse.ok(user))
   }
 
   private async comparePasswordAndHash(
