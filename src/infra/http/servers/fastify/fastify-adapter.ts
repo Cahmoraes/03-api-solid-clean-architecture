@@ -1,15 +1,8 @@
-import Fastify, { FastifyReply, FastifyRequest } from 'fastify'
-import {
-  HTTPMethodTypes,
-  HttpHandler,
-  HttpHandlerParams,
-  HttpServer,
-  JwtHandlers,
-} from './http-server'
+import Fastify from 'fastify'
+import { HTTPMethodTypes, HttpHandler, HttpServer } from './http-server'
 import { env, isProduction } from '@/env'
 import { ZodError } from 'zod'
 import fastifyJwt from '@fastify/jwt'
-import { FastifyJwtHandlers } from './fastify-jwt-handlers'
 import { FastifyHttpHandler } from './fastify-http-handler'
 
 export class FastifyAdapter implements HttpServer {

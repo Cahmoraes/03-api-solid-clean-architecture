@@ -1,8 +1,8 @@
 import { Routes } from './routes.enum'
 import { CreateUserController } from './users/create-user.controller'
-import { HTTPMethodTypes, HttpServer } from '../servers/http-server'
 import { AuthenticateController } from './users/authenticate.controller'
 import { ProfileController } from './users/profile.controller'
+import { HTTPMethodTypes, HttpServer } from '../servers/fastify/http-server'
 
 export class MainHttpController {
   constructor(private readonly httpServer: HttpServer) {
