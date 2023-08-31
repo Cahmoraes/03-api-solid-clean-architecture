@@ -2,7 +2,7 @@ import ExtendedSet from '@cahmoraes93/extended-set'
 import { GymsRepository } from '@/application/repositories/gyms-repository'
 import { Gym } from '@/application/entities/gym.entity'
 import { Coord } from '@/application/entities/value-objects/coord'
-import { DistanceCalculator } from '@/application/entities/distance-calculator.service'
+import { DistanceCalculator } from '@/application/entities/services/distance-calculator.service'
 
 export class InMemoryGymsRepository implements GymsRepository {
   public data: ExtendedSet<Gym> = new ExtendedSet()

@@ -1,6 +1,8 @@
 import { Entity } from '@/core/entities/entity'
 import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
 import { Optional } from '@/core/types/optional'
+import { Either, EitherType } from '@cahmoraes93/either'
+import { DateHelper } from './services/date-helper'
 
 export interface CheckInProps {
   userId: string
@@ -15,6 +17,8 @@ type CheckInInternalProps = Omit<CheckInProps, 'userId' | 'gymId'> & {
 }
 
 export class CheckIn extends Entity<CheckInInternalProps> {
+  private MINUTES = 20
+
   static create(props: Optional<CheckInProps, 'createdAt'>) {
     const { gymId, userId, ...rest } = props
     return new CheckIn({
@@ -39,5 +43,20 @@ export class CheckIn extends Entity<CheckInInternalProps> {
 
   get validatedAt(): Date | undefined {
     return this.props.validatedAt
+  }
+
+  public validate(): EitherType<Error, Date> {
+    console.log(this.distanceInMinutesFromCheckingCreation)
+    if (this.distanceInMinutesFromCheckingCreation > this.MINUTES) {
+      return Either.left(new Error('Late check-in validation error.'))
+    }
+    const today = new Date()
+    this.props.validatedAt = today
+    return Either.right(today)
+  }
+
+  private get distanceInMinutesFromCheckingCreation() {
+    const dateHelper = new DateHelper()
+    return dateHelper.disTanceInMinutesFromDate(this.createAt)
   }
 }

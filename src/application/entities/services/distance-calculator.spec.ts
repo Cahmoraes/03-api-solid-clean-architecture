@@ -1,5 +1,5 @@
+import { Coord } from '../value-objects/coord'
 import { DistanceCalculator } from './distance-calculator.service'
-import { Coord } from './value-objects/coord'
 
 describe('DistanceCalculator', () => {
   it('calculates distance correctly between two locations', () => {

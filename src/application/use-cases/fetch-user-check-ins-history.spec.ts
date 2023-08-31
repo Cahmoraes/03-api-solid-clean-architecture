@@ -1,4 +1,3 @@
-import { DayjsAdapter } from '@/infra/date/dayjs-adapter'
 import { CheckIn } from '../entities/check-in.entity'
 import { provide } from '../registry'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
@@ -13,7 +12,7 @@ describe('Fetch User Check-in history use case', () => {
   const userId = 'user-01'
 
   beforeEach(async () => {
-    checkInsRepository = new InMemoryCheckInsRepository(new DayjsAdapter())
+    checkInsRepository = new InMemoryCheckInsRepository()
     gymsRepository = new InMemoryGymsRepository()
     provide('checkInsRepository', checkInsRepository)
     provide('gymsRepository', gymsRepository)

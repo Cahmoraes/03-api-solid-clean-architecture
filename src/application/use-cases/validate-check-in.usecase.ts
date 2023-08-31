@@ -1,14 +1,34 @@
 import { FailResponse } from '@/infra/http/entities/fail-response'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
-import { EitherType } from '@cahmoraes93/either'
+import { Either, EitherType } from '@cahmoraes93/either'
+import { CheckIn } from '../entities/check-in.entity'
+import { inject } from '../registry'
+import { CheckInsRepository } from '../repositories/check-ins-repository'
 
-interface ValidateCheckInUseCaseInput {}
+interface ValidateCheckInUseCaseInput {
+  checkInId: string
+}
 
 type ValidateCheckInUseCaseOutput = EitherType<
   FailResponse<unknown>,
-  SuccessResponse<void>
+  SuccessResponse<CheckIn>
 >
 
 export class ValidateCheckInUseCase {
-  async execute() {}
+  private checkInsRepository = inject<CheckInsRepository>('checkInsRepository')
+
+  async execute({
+    checkInId,
+  }: ValidateCheckInUseCaseInput): Promise<ValidateCheckInUseCaseOutput> {
+    const checkIn = await this.checkInsRepository.checkInOfId(checkInId)
+    if (!checkIn) {
+      return Either.left(FailResponse.notFound('Resource not found'))
+    }
+    const isValidated = checkIn.validate()
+    if (isValidated.isLeft()) {
+      return Either.left(FailResponse.bad(isValidated.value))
+    }
+    await this.checkInsRepository.save(checkIn)
+    return Either.right(SuccessResponse.ok(checkIn))
+  }
 }

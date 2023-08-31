@@ -1,7 +1,10 @@
 import dayjs from 'dayjs'
-import { DateHelper } from './date-helper'
 
-export class DayjsAdapter implements DateHelper {
+export class DateHelper {
+  public disTanceInMinutesFromDate(aDate: Date): number {
+    return dayjs(new Date()).diff(aDate, 'minutes')
+  }
+
   public isOnSameDate(initialDate: Date, targetDate: Date): boolean {
     const startOfTheDay = dayjs(initialDate).startOf('date')
     const endOfTheDay = dayjs(initialDate).endOf('date')

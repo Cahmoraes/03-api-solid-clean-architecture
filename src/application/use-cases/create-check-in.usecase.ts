@@ -5,7 +5,7 @@ import { inject } from '../registry'
 import { CheckIn } from '../entities/check-in.entity'
 import { CheckInsRepository } from '../repositories/check-ins-repository'
 import { GymsRepository } from '../repositories/gyms-repository'
-import { DistanceCalculator } from '../entities/distance-calculator.service'
+import { DistanceCalculator } from '../entities/services/distance-calculator.service'
 import { Coord } from '../entities/value-objects/coord'
 
 export interface CheckInUseCaseInput {

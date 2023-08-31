@@ -1,17 +1,17 @@
-import { DayjsAdapter } from './dayjs-adapter'
+import { DateHelper } from './date-helper'
 
-describe('DayjsAdapter test suite', () => {
+describe('DateHelper test suite', () => {
   it('should return true when 2 days are the same', () => {
-    const dayjsAdapter = new DayjsAdapter()
+    const dateHelper = new DateHelper()
     const date1 = new Date(2022, 0, 20, 8, 0, 0)
     const date2 = new Date(2022, 0, 20, 8, 0, 0)
-    expect(dayjsAdapter.isOnSameDate(date1, date2)).toBe(true)
+    expect(dateHelper.isOnSameDate(date1, date2)).toBe(true)
   })
 
   it('should return false when 2 days are different', () => {
-    const dayjsAdapter = new DayjsAdapter()
+    const dateHelper = new DateHelper()
     const date1 = new Date(2022, 0, 20, 8, 0, 0)
     const date2 = new Date(2022, 0, 21, 8, 0, 0)
-    expect(dayjsAdapter.isOnSameDate(date1, date2)).toBe(false)
+    expect(dateHelper.isOnSameDate(date1, date2)).toBe(false)
   })
 })

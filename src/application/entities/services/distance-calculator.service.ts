@@ -1,4 +1,4 @@
-import { Coord } from './value-objects/coord'
+import { Coord } from '../value-objects/coord'
 
 export interface Coordinate {
   latitude: number

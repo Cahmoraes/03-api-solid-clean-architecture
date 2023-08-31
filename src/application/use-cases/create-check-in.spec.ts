@@ -1,4 +1,3 @@
-import { DayjsAdapter } from '@/infra/date/dayjs-adapter'
 import { CheckIn } from '../entities/check-in.entity'
 import { provide } from '../registry'
 import { CheckInUseCase } from './create-check-in.usecase'
@@ -18,7 +17,7 @@ describe('CheckIn use case', () => {
 
   beforeEach(async () => {
     vi.useFakeTimers()
-    checkInsRepository = new InMemoryCheckInsRepository(new DayjsAdapter())
+    checkInsRepository = new InMemoryCheckInsRepository()
     gymsRepository = new InMemoryGymsRepository()
     provide('checkInsRepository', checkInsRepository)
     provide('gymsRepository', gymsRepository)
