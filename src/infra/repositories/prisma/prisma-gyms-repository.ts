@@ -67,6 +67,10 @@ export class PrismaGymsRepository implements GymsRepository {
   }
 
   async findManyNearby(aCoord: Coord): Promise<Gym[]> {
-    throw new Error('Method not implemented.')
+    const prismaGyms = await this.prisma.$queryRaw<PrismaGym[]>`
+      SELECT * from gyms
+      WHERE ( 6371 * acos( cos( radians(${aCoord.latitude}) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(${aCoord.longitude}) ) + sin( radians(${aCoord.latitude}) ) * sin( radians( latitude ) ) ) ) <= 10
+    `
+    return prismaGyms.map(this.createGymFromPrisma)
   }
 }
