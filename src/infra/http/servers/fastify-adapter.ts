@@ -10,10 +10,7 @@ import {
 import { env, isProduction } from '@/env'
 import { ZodError } from 'zod'
 import fastifyJwt from '@fastify/jwt'
-
-interface JwtSignIn {
-  (payload: object, options?: object): Promise<string>
-}
+import { FastifyTokenService } from '@/infra/services/fastify-token.service'
 
 export class FastifyAdapter implements HttpServer {
   private httpServer = Fastify()
@@ -83,23 +80,15 @@ export class FastifyAdapter implements HttpServer {
     return {
       body: fastifyRequest.body,
       params: fastifyRequest.params,
-      jwtHandler: this.jwtHandler(fastifyRequest, fastifyReply),
+      jwtHandler: this.createTokenHandler(fastifyRequest, fastifyReply),
     }
   }
 
-  private jwtHandler(
+  private createTokenHandler(
     fastifyRequest: FastifyRequest,
     fastifyReply: FastifyReply,
   ): JwtHandlers {
-    const fastifyJwtSign = fastifyReply.jwtSign.bind(fastifyReply)
-    return {
-      async sign(payload, options) {
-        return fastifyJwtSign(payload, options)
-      },
-      async verify(payload): Promise<VerifyUser> {
-        await fastifyRequest.jwtVerify(payload)
-        return fastifyRequest.user as VerifyUser
-      },
-    }
+    const tokenService = new FastifyTokenService(fastifyRequest, fastifyReply)
+    return tokenService
   }
 }
