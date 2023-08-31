@@ -10,6 +10,7 @@ import { env, isProduction } from '@/env'
 import { ZodError } from 'zod'
 import fastifyJwt from '@fastify/jwt'
 import { FastifyJwtHandlers } from './fastify-jwt-handlers'
+import { FastifyHttpHandler } from './fastify-http-handler'
 
 export class FastifyAdapter implements HttpServer {
   private httpServer = Fastify()
@@ -64,24 +65,11 @@ export class FastifyAdapter implements HttpServer {
     handler: HttpHandler,
   ): void {
     this.httpServer[method](route, async (request, reply) => {
-      const response = await handler(
-        this.createHttpHandlerParams(request, reply),
-      )
+      const response = await handler(new FastifyHttpHandler(request, reply))
       if (response.isLeft()) {
         return reply.status(response.value.status).send(response.value.toDto())
       }
       reply.status(response.value.status).send(response.value.data)
     })
-  }
-
-  private createHttpHandlerParams(
-    fastifyRequest: FastifyRequest,
-    fastifyReply: FastifyReply,
-  ): HttpHandlerParams {
-    return {
-      body: fastifyRequest.body,
-      params: fastifyRequest.params,
-      jwtHandler: new FastifyJwtHandlers(fastifyRequest, fastifyReply),
-    }
   }
 }
