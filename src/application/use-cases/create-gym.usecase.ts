@@ -23,6 +23,7 @@ export class CreateGymUseCase {
 
   async execute(props: CreateGymUseCaseInput): Promise<CreateGymUseCaseOutput> {
     const gym = Gym.create(props)
+    await this.gymsRepository.save(gym)
     return Either.right(SuccessResponse.ok(gym))
   }
 }
