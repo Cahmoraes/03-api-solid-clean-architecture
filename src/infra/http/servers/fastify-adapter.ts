@@ -5,12 +5,11 @@ import {
   HttpHandlerParams,
   HttpServer,
   JwtHandlers,
-  VerifyUser,
 } from './http-server'
 import { env, isProduction } from '@/env'
 import { ZodError } from 'zod'
 import fastifyJwt from '@fastify/jwt'
-import { FastifyTokenService } from '@/infra/services/fastify-token.service'
+import { FastifyJwtHandlers } from './fastify-jwt-handlers'
 
 export class FastifyAdapter implements HttpServer {
   private httpServer = Fastify()
@@ -80,15 +79,7 @@ export class FastifyAdapter implements HttpServer {
     return {
       body: fastifyRequest.body,
       params: fastifyRequest.params,
-      jwtHandler: this.createTokenHandler(fastifyRequest, fastifyReply),
+      jwtHandler: new FastifyJwtHandlers(fastifyRequest, fastifyReply),
     }
-  }
-
-  private createTokenHandler(
-    fastifyRequest: FastifyRequest,
-    fastifyReply: FastifyReply,
-  ): JwtHandlers {
-    const tokenService = new FastifyTokenService(fastifyRequest, fastifyReply)
-    return tokenService
   }
 }

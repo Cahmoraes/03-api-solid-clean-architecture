@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { TokenService, VerifyUser } from './token.service'
+import { JwtHandlers, VerifyUser } from './http-server'
 
-export class FastifyTokenService implements TokenService {
+export class FastifyJwtHandlers implements JwtHandlers {
   constructor(
     private request: FastifyRequest,
     private reply: FastifyReply,
