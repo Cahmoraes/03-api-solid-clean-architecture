@@ -8,8 +8,8 @@ import {
   HttpHandlerParams,
   JwtHandlers,
 } from '../../servers/fastify/http-server'
-import { InvalidCredentialsError } from '@/application/errors/invalid-credentials-error'
 import { UserDto } from '@/application/dtos/user.dto'
+import { InvalidCredentialsError } from '@/application/errors/invalid-credentials.error'
 
 const authenticateBodySchema = z.object({
   email: z.string().email(),

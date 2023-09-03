@@ -6,7 +6,7 @@ import { PasswordHash } from '@/core/entities/password-hash'
 import { inject } from '@/infra/dependency-inversion/registry'
 import { UserDto } from '../dtos/user.dto'
 import { User } from '../entities/user.entity'
-import { InvalidCredentialsError } from '../errors/invalid-credentials-error'
+import { InvalidCredentialsError } from '../errors/invalid-credentials.error'
 
 export interface AuthenticateUseCaseInput {
   email: string

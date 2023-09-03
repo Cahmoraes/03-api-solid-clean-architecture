@@ -4,7 +4,7 @@ import { Either, EitherType } from '@cahmoraes93/either'
 import { CheckIn } from '../entities/check-in.entity'
 import { CheckInsRepository } from '../repositories/check-ins-repository'
 import { inject } from '@/infra/dependency-inversion/registry'
-import { ResourceNotFoundError } from '../errors/resource-not-found-error'
+import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 
 interface ValidateCheckInUseCaseInput {
   checkInId: string

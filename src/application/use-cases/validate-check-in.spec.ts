@@ -3,7 +3,7 @@ import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { InMemoryCheckInsRepository } from 'tests/repositories/in-memory-check-ins-repository'
 import { ValidateCheckInUseCase } from './validate-check-in.usecase'
 import { provide } from '@/infra/dependency-inversion/registry'
-import { ResourceNotFoundError } from '../errors/resource-not-found-error'
+import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 
 describe('Validate Check-in use case', () => {
   let checkInsRepository: InMemoryCheckInsRepository

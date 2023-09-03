@@ -1,4 +1,4 @@
-import { InvalidAssertError } from '@/errors/invalid-assert-error'
+import { InvalidAssertError } from '@/errors/invalid-assert.error'
 import { assert } from './assert'
 
 describe('Assert', () => {

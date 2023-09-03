@@ -7,9 +7,9 @@ import { GymsRepository } from '../repositories/gyms-repository'
 import { DistanceCalculator } from '../entities/services/distance-calculator.service'
 import { Coord } from '../entities/value-objects/coord'
 import { inject } from '@/infra/dependency-inversion/registry'
-import { ResourceNotFoundError } from '../errors/resource-not-found-error'
-import { MaxDistanceReachedError } from '../errors/max-distance-reached-error'
-import { MaxNumbersOfCheckInsReachedError } from '../errors/max-number-of-check-ins-reached-error'
+import { ResourceNotFoundError } from '../errors/resource-not-found.error'
+import { MaxDistanceReachedError } from '../errors/max-distance-reached.error'
+import { MaxNumbersOfCheckInsReachedError } from '../errors/max-number-of-check-ins-reached.error'
 
 export interface CheckInUseCaseInput {
   userId: string

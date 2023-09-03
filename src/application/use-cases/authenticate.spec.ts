@@ -4,7 +4,7 @@ import { User } from '../entities/user.entity'
 import { AuthenticateUseCase } from './authenticate.usecase'
 import { PasswordHash } from '@/core/entities/password-hash'
 import { provide } from '@/infra/dependency-inversion/registry'
-import { InvalidCredentialsError } from '../errors/invalid-credentials-error'
+import { InvalidCredentialsError } from '../errors/invalid-credentials.error'
 import { UserDto } from '../dtos/user.dto'
 
 describe('CreateUser use case', () => {

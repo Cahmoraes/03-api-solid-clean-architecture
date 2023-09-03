@@ -1,7 +1,7 @@
 import { test, expect } from 'vitest'
 import { FailResponse } from './fail-response'
 import { HTTP_STATUS_CODES } from './http-status-code.enum'
-import { InvalidAssertError } from '@/errors/invalid-assert-error'
+import { InvalidAssertError } from '@/errors/invalid-assert.error'
 
 const ErrorMessage = 'Error message'
 

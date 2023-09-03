@@ -4,7 +4,7 @@ import { SuccessResponse } from '@/infra/http/entities/success-response'
 import bcrypt from 'bcrypt'
 import { User } from '../entities/user.entity'
 import { provide } from '@/infra/dependency-inversion/registry'
-import { UserAlreadyExistsError } from '../errors/user-already-exists-error'
+import { UserAlreadyExistsError } from '../errors/user-already-exists.error'
 
 describe('CreateUser use case', () => {
   let usersRepository: InMemoryUsersRepository

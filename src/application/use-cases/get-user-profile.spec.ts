@@ -4,7 +4,7 @@ import { User } from '../entities/user.entity'
 import { PasswordHash } from '@/core/entities/password-hash'
 import { GetUserProfileUseCase } from './get-user-profile.usecase'
 import { provide } from '@/infra/dependency-inversion/registry'
-import { ResourceNotFoundError } from '../errors/resource-not-found-error'
+import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 
 describe('GetUserProfile use case', () => {
   let usersRepository: InMemoryUsersRepository

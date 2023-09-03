@@ -4,8 +4,8 @@ import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { FailResponse } from '../../entities/fail-response'
 import { inject } from '@/infra/dependency-inversion/registry'
 import { HttpHandlerParams } from '../../servers/fastify/http-server'
-import { InvalidCredentialsError } from '@/application/errors/invalid-credentials-error'
 import { GetUserMetricsUseCase } from '@/application/use-cases/get-user-metrics.usecase'
+import { InvalidCredentialsError } from '@/application/errors/invalid-credentials.error'
 
 const GetUserMetricsBodySchema = z.object({
   userId: z.string(),

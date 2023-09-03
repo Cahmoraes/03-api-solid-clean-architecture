@@ -5,7 +5,7 @@ import { UsersRepository } from '../repositories/users-repository'
 import { User } from '../entities/user.entity'
 import { PasswordHash } from '@/core/entities/password-hash'
 import { inject } from '@/infra/dependency-inversion/registry'
-import { UserAlreadyExistsError } from '../errors/user-already-exists-error'
+import { UserAlreadyExistsError } from '../errors/user-already-exists.error'
 
 export interface CreateUserUseCaseInput {
   name: string
