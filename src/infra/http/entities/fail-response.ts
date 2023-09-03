@@ -3,7 +3,7 @@ import { HTTP_STATUS_CODES } from './http-status-code.enum'
 import { Response } from './response'
 
 export class FailResponse<TData> extends Response<TData> {
-  static bad<TData>(aData?: TData) {
+  static bad<TData>(aData: TData) {
     return new FailResponse<TData>(HTTP_STATUS_CODES.BAD_REQUEST, aData)
   }
 

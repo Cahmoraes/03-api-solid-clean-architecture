@@ -4,6 +4,7 @@ type Constructor = { new (): unknown }
 export enum DependencyTypes {
   'createUserUseCase',
   'authenticateUseCase',
+  'getUserMetricsUseCase',
   'usersRepository',
   'checkInsRepository',
   'gymsRepository',

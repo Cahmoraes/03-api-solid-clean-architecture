@@ -36,8 +36,8 @@ export class CreateUserController {
     try {
       const { name, email, password } = this.parseBodyOrThrow(body)
       return this.createUserUseCase.execute({ name, email, password })
-    } catch (error) {
-      return Either.left(FailResponse.internalServerError(new Error('')))
+    } catch (error: any) {
+      return Either.left(FailResponse.internalServerError(error))
     }
   }
 

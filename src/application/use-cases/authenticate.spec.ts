@@ -5,6 +5,7 @@ import { AuthenticateUseCase } from './authenticate.usecase'
 import { PasswordHash } from '@/core/entities/password-hash'
 import { provide } from '@/infra/dependency-inversion/registry'
 import { InvalidCredentialsError } from '../errors/invalid-credentials-error'
+import { UserDto } from '../dtos/user.dto'
 
 describe('CreateUser use case', () => {
   let usersRepository: InMemoryUsersRepository
@@ -34,7 +35,7 @@ describe('CreateUser use case', () => {
     })
 
     expect(result.isRight()).toBe(true)
-    const value = result.value as SuccessResponse<User>
+    const value = result.value as SuccessResponse<UserDto>
     expect(value.data?.email).toBe(email)
     expect(value.data?.name).toBe(name)
   })

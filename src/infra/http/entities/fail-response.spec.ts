@@ -6,7 +6,7 @@ const ErrorMessage = 'Error message'
 
 describe('FailResponse', () => {
   test('FailResponse.bad should create a FailResponse instance with BAD_REQUEST status', () => {
-    const response = FailResponse.bad()
+    const response = FailResponse.bad(ErrorMessage)
     expect(response.status).toBe(HTTP_STATUS_CODES.BAD_REQUEST)
   })
 

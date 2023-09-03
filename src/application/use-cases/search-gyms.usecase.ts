@@ -11,7 +11,7 @@ interface SearchGymUseCaseInput {
 }
 
 type SearchGymUseCaseOutput = EitherType<
-  FailResponse<unknown>,
+  FailResponse<Error>,
   SuccessResponse<Gym[]>
 >
 

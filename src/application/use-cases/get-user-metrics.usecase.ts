@@ -13,11 +13,11 @@ interface Output {
 }
 
 type GetUserMetricsOutput = EitherType<
-  FailResponse<unknown>,
+  FailResponse<Error>,
   SuccessResponse<Output>
 >
 
-export class GetUserMetrics {
+export class GetUserMetricsUseCase {
   private checkInsRepository = inject<CheckInsRepository>('checkInsRepository')
 
   async execute({
