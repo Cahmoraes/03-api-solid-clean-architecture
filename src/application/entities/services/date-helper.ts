@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 
 export class DateHelper {
-  public disTanceInMinutesFromDate(aDate: Date): number {
+  public distanceInMinutesFromDate(aDate: Date): number {
     return dayjs(new Date()).diff(aDate, 'minutes')
   }
 

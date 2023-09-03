@@ -63,6 +63,6 @@ export class CheckIn extends Entity<CheckInInternalProps> {
 
   private get distanceInMinutesFromCheckingCreation() {
     const dateHelper = new DateHelper()
-    return dateHelper.disTanceInMinutesFromDate(this.createAt)
+    return dateHelper.distanceInMinutesFromDate(this.createAt)
   }
 }
