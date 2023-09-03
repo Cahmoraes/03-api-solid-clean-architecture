@@ -8,9 +8,9 @@ import { GetUserMetricsUseCase } from './application/use-cases/get-user-metrics.
 import { InMemoryCheckInsRepository } from '@/tests/repositories/in-memory-check-ins-repository'
 
 provide('usersRepository', new PrismaUsersRepository())
+provide('checkInsRepository', new InMemoryCheckInsRepository())
 provide('createUserUseCase', new CreateUserUseCase())
 provide('authenticateUseCase', new AuthenticateUseCase())
-provide('checkInsRepository', new InMemoryCheckInsRepository())
 provide('getUserMetricsUseCase', new GetUserMetricsUseCase())
 const httpServer = new FastifyAdapter()
 new MainHttpController(httpServer)
