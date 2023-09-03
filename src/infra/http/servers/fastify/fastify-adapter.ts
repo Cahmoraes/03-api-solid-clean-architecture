@@ -62,7 +62,7 @@ export class FastifyAdapter implements HttpServer {
       if (response.isLeft()) {
         return reply
           .status(response.value.status)
-          .send(response.value.data!.message)
+          .send(response.value.formatError())
       }
       reply.status(response.value.status).send(response.value.data)
     })

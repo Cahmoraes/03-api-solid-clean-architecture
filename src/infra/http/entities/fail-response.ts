@@ -1,3 +1,4 @@
+import { assert } from '@/core/helpers/assert'
 import { HTTP_STATUS_CODES } from './http-status-code.enum'
 import { Response } from './response'
 
@@ -29,6 +30,14 @@ export class FailResponse<TData> extends Response<TData> {
     return {
       status: this.status,
       data: this.data,
+    }
+  }
+
+  public formatError() {
+    assert(this.data instanceof Error, 'Data must be an Error')
+    return {
+      status: this.status,
+      data: this.data.message,
     }
   }
 }
