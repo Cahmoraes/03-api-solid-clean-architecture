@@ -33,7 +33,7 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
   ): Promise<CheckIn | null> {
     return this.data.find(
       (checkIn) =>
-        this.dateHelper.isOnSameDate(aDate, checkIn.createAt) &&
+        this.dateHelper.isOnSameDate(aDate, checkIn.createdAt) &&
         checkIn.userId.toString() === userId,
     )
   }

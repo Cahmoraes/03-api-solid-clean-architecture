@@ -66,7 +66,7 @@ describe('CheckIn use case', () => {
     const value = result.value as SuccessResponse<CheckIn>
     expect(value.data?.gymId.toString()).toEqual(gymId)
     expect(value.data?.userId.toString()).toEqual(userId)
-    expect(value.data?.createAt).instanceOf(Date)
+    expect(value.data?.createdAt).instanceOf(Date)
   })
 
   it('should not be able to check in twice in the same day', async () => {

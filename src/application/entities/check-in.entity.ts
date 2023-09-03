@@ -44,7 +44,7 @@ export class CheckIn extends Entity<CheckInInternalProps> {
     return this.props.gymId
   }
 
-  get createAt(): Date {
+  get createdAt(): Date {
     return this.props.createdAt
   }
 
@@ -70,6 +70,6 @@ export class CheckIn extends Entity<CheckInInternalProps> {
 
   private get distanceInMinutesFromCheckingCreation() {
     const dateHelper = new DateHelper()
-    return dateHelper.distanceInMinutesFromDate(this.createAt)
+    return dateHelper.distanceInMinutesFromDate(this.createdAt)
   }
 }

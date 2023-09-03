@@ -34,7 +34,7 @@ export class PrismaCheckInsRepository implements CheckInsRepository {
     await this.prisma.checkIn.create({
       data: {
         id: aCheckIn.id.toString(),
-        created_at: aCheckIn.createAt,
+        created_at: aCheckIn.createdAt,
         gym_id: aCheckIn.gymId.toString(),
         user_id: aCheckIn.userId.toString(),
         validated_at: aCheckIn.validatedAt,

@@ -23,7 +23,7 @@ describe('CheckIn Entity', () => {
     expect(checkIn).toBeInstanceOf(CheckIn)
     expect(checkIn.userId.toString()).toEqual(userId.toString())
     expect(checkIn.gymId.toString()).toEqual(gymId.toString())
-    expect(checkIn.createAt).toBeInstanceOf(Date)
+    expect(checkIn.createdAt).toBeInstanceOf(Date)
     expect(checkIn.validatedAt).toBeUndefined()
   })
 
@@ -37,7 +37,7 @@ describe('CheckIn Entity', () => {
     expect(checkIn).toBeInstanceOf(CheckIn)
     expect(checkIn.userId.toString()).toEqual(userId.toString())
     expect(checkIn.gymId.toString()).toEqual(gymId.toString())
-    expect(checkIn.createAt).toBeInstanceOf(Date)
+    expect(checkIn.createdAt).toBeInstanceOf(Date)
     expect(checkIn.validatedAt).toBeInstanceOf(Date)
     expect(checkIn.validatedAt?.getTime()).toEqual(validatedAt.getTime())
   })
