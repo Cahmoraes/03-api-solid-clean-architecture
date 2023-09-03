@@ -56,8 +56,9 @@ export class FastifyAdapter implements HttpServer {
     method: HTTPMethodTypes,
     route: string,
     handler: HttpHandler,
+    middleware = {},
   ): void {
-    this.httpServer[method](route, async (request, reply) => {
+    this.httpServer[method](route, middleware, async (request, reply) => {
       const response = await handler(new FastifyHttpHandler(request, reply))
       if (response.isLeft()) {
         return reply

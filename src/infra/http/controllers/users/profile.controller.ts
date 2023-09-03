@@ -35,8 +35,8 @@ export class ProfileController {
     jwtHandler,
   }: HttpHandlerParams): Promise<ProfileControllerOutput> {
     try {
-      const user = await jwtHandler.verify()
-      console.log(user.sub)
+      // const user = await jwtHandler.verify()
+      // console.log(user.sub)
       const { email, password } = this.parseBodyOrThrow(body)
       return this.authenticateUseCase.execute({ email, password })
     } catch (error: any) {

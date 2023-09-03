@@ -35,5 +35,10 @@ export type HttpHandler = (
 
 export interface HttpServer {
   listen(): Promise<void>
-  on(method: HTTPMethodTypes, route: string, handler: HttpHandler): void
+  on(
+    method: HTTPMethodTypes,
+    route: string,
+    handler: HttpHandler,
+    middleware?: object,
+  ): void
 }

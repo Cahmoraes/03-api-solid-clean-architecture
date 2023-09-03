@@ -3,6 +3,7 @@ import { CreateUserController } from './users/create-user.controller'
 import { AuthenticateController } from './users/authenticate.controller'
 import { ProfileController } from './users/profile.controller'
 import { HTTPMethodTypes, HttpServer } from '../servers/http-server'
+import { jwtVerify } from '../servers/fastify/middleware/jwt-verify.middleware'
 
 export class MainHttpController {
   constructor(private readonly httpServer: HttpServer) {
@@ -36,6 +37,9 @@ export class MainHttpController {
       HTTPMethodTypes.POST,
       Routes.ME,
       new ProfileController().handleRequest,
+      {
+        onRequest: jwtVerify,
+      },
     )
   }
 }
