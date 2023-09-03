@@ -7,7 +7,7 @@ import { PrismaUsersRepository } from './infra/repositories/prisma/prisma-users-
 import { GetUserMetricsUseCase } from './application/use-cases/get-user-metrics.usecase'
 import { InMemoryCheckInsRepository } from '@/tests/repositories/in-memory-check-ins-repository'
 import { DomainEventPublisher } from './application/events/domain-event-publisher'
-import { UserCreatedSubscriber } from './application/events/user-created/user-created.subscriber'
+import { UserCreatedSubscriber } from './application/events/user-created/user-created-subscriber'
 
 DomainEventPublisher.getInstance().subscribe(new UserCreatedSubscriber())
 provide('usersRepository', new PrismaUsersRepository())
