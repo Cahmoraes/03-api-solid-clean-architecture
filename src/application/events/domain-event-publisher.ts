@@ -5,7 +5,7 @@ export class DomainEventPublisher {
   private static instance: DomainEventPublisher
   private readonly subscribers = new Map<string, DomainEventSubscriber[]>()
 
-  private constructor() {}
+  protected constructor() {}
 
   /* c8 ignore start */
   static getInstance(): DomainEventPublisher {
