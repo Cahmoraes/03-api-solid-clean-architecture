@@ -18,7 +18,7 @@ type CheckInInternalProps = Omit<CheckInProps, 'userId' | 'gymId'> & {
 }
 
 export class CheckIn extends Entity<CheckInInternalProps> {
-  private MINUTES = 20
+  private TOLERANCE_MINUTES_TO_CHECK_IN = 20
 
   static create(
     props: Optional<CheckInProps, 'createdAt'>,
@@ -53,12 +53,19 @@ export class CheckIn extends Entity<CheckInInternalProps> {
   }
 
   public validate(): EitherType<Error, Date> {
-    if (this.distanceInMinutesFromCheckingCreation > this.MINUTES) {
+    if (this.isValidToCheckIn()) {
       return Either.left(new LateCheckInValidateError())
     }
     const today = new Date()
     this.props.validatedAt = today
     return Either.right(today)
+  }
+
+  private isValidToCheckIn(): boolean {
+    return (
+      this.distanceInMinutesFromCheckingCreation >
+      this.TOLERANCE_MINUTES_TO_CHECK_IN
+    )
   }
 
   private get distanceInMinutesFromCheckingCreation() {
