@@ -8,7 +8,8 @@
     "dev": "tsx watch ./src/main.ts",
     "build": "tsup src --out-dir build",
     "test": "npx vitest",
-    "test:cov": "npx vitest --coverage"
+    "test:cov": "npx vitest --coverage",
+    "test:e2e": "vitest run --config ./vitest.config.e2e.ts"
   },
   "keywords": [],
   "author": "",
