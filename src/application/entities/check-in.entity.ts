@@ -3,6 +3,7 @@ import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
 import { Optional } from '@/core/types/optional'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { DateHelper } from './services/date-helper'
+import { LateCheckInValidateError } from './errors/late-check-in-validate.error'
 
 export interface CheckInProps {
   userId: string
@@ -52,9 +53,8 @@ export class CheckIn extends Entity<CheckInInternalProps> {
   }
 
   public validate(): EitherType<Error, Date> {
-    console.log(this.distanceInMinutesFromCheckingCreation)
     if (this.distanceInMinutesFromCheckingCreation > this.MINUTES) {
-      return Either.left(new Error('Late check-in validation error.'))
+      return Either.left(new LateCheckInValidateError())
     }
     const today = new Date()
     this.props.validatedAt = today
