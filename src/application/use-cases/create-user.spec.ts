@@ -4,6 +4,7 @@ import { SuccessResponse } from '@/infra/http/entities/success-response'
 import bcrypt from 'bcrypt'
 import { User } from '../entities/user.entity'
 import { provide } from '@/infra/dependency-inversion/registry'
+import { UserAlreadyExistsError } from '../errors/user-already-exists-error'
 
 describe('CreateUser use case', () => {
   let usersRepository: InMemoryUsersRepository
@@ -50,7 +51,7 @@ describe('CreateUser use case', () => {
     })
 
     expect(result.isLeft()).toBeTruthy()
-    expect(result.value.data).toBe('User already exists')
+    expect(result.value.data).toBeInstanceOf(UserAlreadyExistsError)
     expect(result.value.status).toBe(400)
   })
 })

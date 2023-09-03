@@ -3,6 +3,7 @@ import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { InMemoryCheckInsRepository } from 'tests/repositories/in-memory-check-ins-repository'
 import { ValidateCheckInUseCase } from './validate-check-in.usecase'
 import { provide } from '@/infra/dependency-inversion/registry'
+import { ResourceNotFoundError } from '../errors/resource-not-found-error'
 
 describe('Validate Check-in use case', () => {
   let checkInsRepository: InMemoryCheckInsRepository
@@ -46,7 +47,7 @@ describe('Validate Check-in use case', () => {
       checkInId: 'inexistent-check-in-id',
     })
     expect(result.isLeft()).toBeTruthy()
-    expect(result.value.data).toBe('Resource not found')
+    expect(result.value.data).toBeInstanceOf(ResourceNotFoundError)
   })
 
   it('should not be able to validate the check-in after 20 minutes of its creation', async () => {

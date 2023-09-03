@@ -4,6 +4,7 @@ import { User } from '../entities/user.entity'
 import { PasswordHash } from '@/core/entities/password-hash'
 import { GetUserProfileUseCase } from './get-user-profile.usecase'
 import { provide } from '@/infra/dependency-inversion/registry'
+import { ResourceNotFoundError } from '../errors/resource-not-found-error'
 
 describe('GetUserProfile use case', () => {
   let usersRepository: InMemoryUsersRepository
@@ -45,7 +46,7 @@ describe('GetUserProfile use case', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value.data).toBe('Resource not found')
+    expect(result.value.data).toBeInstanceOf(ResourceNotFoundError)
     expect(result.value.status).toBe(404)
   })
 })

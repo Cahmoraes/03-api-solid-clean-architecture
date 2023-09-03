@@ -4,6 +4,7 @@ import { User } from '../entities/user.entity'
 import { AuthenticateUseCase } from './authenticate.usecase'
 import { PasswordHash } from '@/core/entities/password-hash'
 import { provide } from '@/infra/dependency-inversion/registry'
+import { InvalidCredentialsError } from '../errors/invalid-credentials-error'
 
 describe('CreateUser use case', () => {
   let usersRepository: InMemoryUsersRepository
@@ -50,7 +51,7 @@ describe('CreateUser use case', () => {
     expect(result.isRight()).toBeFalsy()
     expect(result.isLeft()).toBeTruthy()
     expect(result.value.status).toBe(401)
-    expect(result.value.data).toBe('Invalid credentials')
+    expect(result.value.data).toBeInstanceOf(InvalidCredentialsError)
   })
 
   it('should not be able to authenticate an user with wrong password', async () => {
@@ -74,6 +75,6 @@ describe('CreateUser use case', () => {
     expect(result.isRight()).toBeFalsy()
     expect(result.isLeft()).toBeTruthy()
     expect(result.value.status).toBe(401)
-    expect(result.value.data).toBe('Invalid credentials')
+    expect(result.value.data).toBeInstanceOf(InvalidCredentialsError)
   })
 })

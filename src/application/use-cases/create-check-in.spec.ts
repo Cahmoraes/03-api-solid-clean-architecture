@@ -3,8 +3,10 @@ import { provide } from '@/infra/dependency-inversion/registry'
 import { CheckInUseCase } from './create-check-in.usecase'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { InMemoryCheckInsRepository } from 'tests/repositories/in-memory-check-ins-repository'
-import { InMemoryGymsRepository } from '../../../tests/repositories/in-memory-gyms-repository'
+import { InMemoryGymsRepository } from '@/tests/repositories/in-memory-gyms-repository'
 import { Gym } from '../entities/gym.entity'
+import { MaxDistanceReachedError } from '../errors/max-distance-reached-error'
+import { ResourceNotFoundError } from '../errors/resource-not-found-error'
 
 describe('CheckIn use case', () => {
   let checkInsRepository: InMemoryCheckInsRepository
@@ -50,7 +52,7 @@ describe('CheckIn use case', () => {
       userLongitude: longitude,
     })
     expect(result.isLeft()).toBeTruthy()
-    expect(result.value.data).toBe('Resource not found')
+    expect(result.value.data).toBeInstanceOf(ResourceNotFoundError)
   })
 
   it('should not be able to check in when gym not exists', async () => {
@@ -133,6 +135,6 @@ describe('CheckIn use case', () => {
       userLongitude: longitude,
     })
     expect(result.isLeft()).toBeTruthy()
-    expect(result.value.data).toBe('Max distance reached.')
+    expect(result.value.data).toBeInstanceOf(MaxDistanceReachedError)
   })
 })

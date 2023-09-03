@@ -5,6 +5,7 @@ import { UsersRepository } from '../repositories/users-repository'
 import { User } from '../entities/user.entity'
 import { PasswordHash } from '@/core/entities/password-hash'
 import { inject } from '@/infra/dependency-inversion/registry'
+import { UserAlreadyExistsError } from '../errors/user-already-exists-error'
 
 export interface CreateUserUseCaseInput {
   name: string
@@ -13,7 +14,7 @@ export interface CreateUserUseCaseInput {
 }
 
 export type CreateUserUseCaseOutput = EitherType<
-  FailResponse<Error>,
+  FailResponse<UserAlreadyExistsError>,
   SuccessResponse<User>
 >
 
@@ -25,7 +26,7 @@ export class CreateUserUseCase {
   ): Promise<CreateUserUseCaseOutput> {
     const existsUser = await this.existsUser(aCreateUserInput.email)
     if (existsUser)
-      return Either.left(FailResponse.bad(new Error('User already exists')))
+      return Either.left(FailResponse.bad(new UserAlreadyExistsError()))
     const user = await this.performCreateUser(aCreateUserInput)
     return Either.right(SuccessResponse.created(user))
   }
