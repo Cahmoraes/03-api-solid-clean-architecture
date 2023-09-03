@@ -2,13 +2,14 @@ import { z } from 'zod'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { FailResponse } from '../../entities/fail-response'
-import { User } from '@/application/entities/user.entity'
 import { AuthenticateUseCase } from '@/application/use-cases/authenticate.usecase'
 import { inject } from '@/infra/dependency-inversion/registry'
 import {
   HttpHandlerParams,
   JwtHandlers,
 } from '../../servers/fastify/http-server'
+import { InvalidCredentialsError } from '@/application/errors/invalid-credentials-error'
+import { UserDto } from '@/application/dtos/user.dto'
 
 const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -21,7 +22,7 @@ type OutputDTO = {
 }
 
 type UserControllerOutput = EitherType<
-  FailResponse<unknown>,
+  FailResponse<InvalidCredentialsError>,
   SuccessResponse<OutputDTO>
 >
 
@@ -45,10 +46,11 @@ export class AuthenticateController {
     try {
       const { email, password } = this.parseBodyOrThrow(body)
       const result = await this.authenticateUseCase.execute({ email, password })
-      if (result.isLeft()) return Either.left(FailResponse.bad(result.value))
+      if (result.isLeft())
+        return Either.left(FailResponse.bad(result.value.data))
       const token = await this.createJwtToken(jwtHandler, result.value.data!)
       return Either.right(SuccessResponse.ok({ token }))
-    } catch (error) {
+    } catch (error: any) {
       return Either.left(FailResponse.internalServerError(error))
     }
   }
@@ -57,7 +59,7 @@ export class AuthenticateController {
     return authenticateBodySchema.parse(body)
   }
 
-  private createJwtToken(jwtHandler: JwtHandlers, user: User) {
+  private createJwtToken(jwtHandler: JwtHandlers, user: UserDto) {
     return jwtHandler.sign(
       {},
       {

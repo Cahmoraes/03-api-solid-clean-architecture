@@ -13,7 +13,7 @@ export interface CreateUserUseCaseInput {
 }
 
 export type CreateUserUseCaseOutput = EitherType<
-  FailResponse<unknown>,
+  FailResponse<Error>,
   SuccessResponse<User>
 >
 
@@ -24,7 +24,8 @@ export class CreateUserUseCase {
     aCreateUserInput: CreateUserUseCaseInput,
   ): Promise<CreateUserUseCaseOutput> {
     const existsUser = await this.existsUser(aCreateUserInput.email)
-    if (existsUser) return Either.left(FailResponse.bad('User already exists'))
+    if (existsUser)
+      return Either.left(FailResponse.bad(new Error('User already exists')))
     const user = await this.performCreateUser(aCreateUserInput)
     return Either.right(SuccessResponse.created(user))
   }

@@ -31,7 +31,7 @@ export interface HttpHandlerParams {
 
 export type HttpHandler = (
   httpHandlerParams: HttpHandlerParams,
-) => Promise<EitherType<FailResponse<unknown>, SuccessResponse<unknown>>>
+) => Promise<EitherType<FailResponse<Error>, SuccessResponse<unknown>>>
 
 export interface HttpServer {
   listen(): Promise<void>

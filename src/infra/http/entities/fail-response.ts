@@ -25,7 +25,7 @@ export class FailResponse<TData> extends Response<TData> {
     )
   }
 
-  toDto() {
+  public toDto() {
     return {
       status: this.status,
       data: this.data,

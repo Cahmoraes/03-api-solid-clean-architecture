@@ -7,6 +7,9 @@ import { GymsRepository } from '../repositories/gyms-repository'
 import { DistanceCalculator } from '../entities/services/distance-calculator.service'
 import { Coord } from '../entities/value-objects/coord'
 import { inject } from '@/infra/dependency-inversion/registry'
+import { ResourceNotFoundError } from '../errors/resource-not-found-error'
+import { MaxDistanceReachedError } from '../errors/max-distance-reached-error'
+import { MaxNumbersOfCheckInsReachedError } from '../errors/max-number-of-check-ins-reached-error'
 
 export interface CheckInUseCaseInput {
   userId: string
@@ -16,7 +19,11 @@ export interface CheckInUseCaseInput {
 }
 
 export type CheckInUseCaseOutput = EitherType<
-  FailResponse<unknown>,
+  FailResponse<
+    | ResourceNotFoundError
+    | MaxDistanceReachedError
+    | MaxNumbersOfCheckInsReachedError
+  >,
   SuccessResponse<CheckIn>
 >
 
@@ -32,17 +39,20 @@ export class CheckInUseCase {
     userLongitude,
   }: CheckInUseCaseInput): Promise<CheckInUseCaseOutput> {
     const gym = await this.gymsRepository.gymOfId(gymId)
-    if (!gym) return Either.left(FailResponse.notFound('Resource not found'))
+    if (!gym)
+      return Either.left(FailResponse.notFound(new ResourceNotFoundError()))
     if (
       this.distanceBetweenUserAndGymIsMoreThanOneHundredMeters(
         new Coord({ latitude: userLatitude, longitude: userLongitude }),
         gym.coord,
       )
     ) {
-      return Either.left(FailResponse.bad('Max distance reached.'))
+      return Either.left(FailResponse.bad(new MaxDistanceReachedError()))
     }
     if (await this.hasCheckInOnSameDay(userId)) {
-      return Either.left(FailResponse.bad('Max number of check-ins reached.'))
+      return Either.left(
+        FailResponse.bad(new MaxNumbersOfCheckInsReachedError()),
+      )
     }
     const checkIn = CheckIn.create({
       gymId,

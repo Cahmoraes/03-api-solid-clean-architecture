@@ -4,13 +4,14 @@ import { Either, EitherType } from '@cahmoraes93/either'
 import { CheckIn } from '../entities/check-in.entity'
 import { CheckInsRepository } from '../repositories/check-ins-repository'
 import { inject } from '@/infra/dependency-inversion/registry'
+import { ResourceNotFoundError } from '../errors/resource-not-found-error'
 
 interface ValidateCheckInUseCaseInput {
   checkInId: string
 }
 
 type ValidateCheckInUseCaseOutput = EitherType<
-  FailResponse<unknown>,
+  FailResponse<ResourceNotFoundError>,
   SuccessResponse<CheckIn>
 >
 
@@ -22,7 +23,7 @@ export class ValidateCheckInUseCase {
   }: ValidateCheckInUseCaseInput): Promise<ValidateCheckInUseCaseOutput> {
     const checkIn = await this.checkInsRepository.checkInOfId(checkInId)
     if (!checkIn) {
-      return Either.left(FailResponse.notFound('Resource not found'))
+      return Either.left(FailResponse.notFound(new ResourceNotFoundError()))
     }
     const isValidated = checkIn.validate()
     if (isValidated.isLeft()) {

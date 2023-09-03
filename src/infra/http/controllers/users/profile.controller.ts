@@ -2,10 +2,10 @@ import { z } from 'zod'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { FailResponse } from '../../entities/fail-response'
-import { User } from '@/application/entities/user.entity'
 import { AuthenticateUseCase } from '@/application/use-cases/authenticate.usecase'
 import { inject } from '@/infra/dependency-inversion/registry'
 import { HttpHandlerParams } from '../../servers/fastify/http-server'
+import { UserDto } from '@/application/dtos/user.dto'
 
 const profileBodySchema = z.object({
   email: z.string().email(),
@@ -13,8 +13,8 @@ const profileBodySchema = z.object({
 })
 type ProfileBodyDto = z.infer<typeof profileBodySchema>
 type ProfileControllerOutput = EitherType<
-  FailResponse<unknown>,
-  SuccessResponse<User>
+  FailResponse<Error>,
+  SuccessResponse<UserDto>
 >
 
 export class ProfileController {
@@ -39,7 +39,7 @@ export class ProfileController {
       console.log(user.sub)
       const { email, password } = this.parseBodyOrThrow(body)
       return this.authenticateUseCase.execute({ email, password })
-    } catch (error) {
+    } catch (error: any) {
       return Either.left(FailResponse.internalServerError(error))
     }
   }

@@ -2,9 +2,11 @@ import { FailResponse } from '@/infra/http/entities/fail-response'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { UsersRepository } from '../repositories/users-repository'
-import { User } from '../entities/user.entity'
 import { PasswordHash } from '@/core/entities/password-hash'
 import { inject } from '@/infra/dependency-inversion/registry'
+import { UserDto } from '../dtos/user.dto'
+import { User } from '../entities/user.entity'
+import { InvalidCredentialsError } from '../errors/invalid-credentials-error'
 
 export interface AuthenticateUseCaseInput {
   email: string
@@ -12,8 +14,8 @@ export interface AuthenticateUseCaseInput {
 }
 
 export type AuthenticateUseCaseOutput = EitherType<
-  FailResponse<unknown>,
-  SuccessResponse<User>
+  FailResponse<InvalidCredentialsError>,
+  SuccessResponse<UserDto>
 >
 
 export class AuthenticateUseCase {
@@ -25,16 +27,20 @@ export class AuthenticateUseCase {
   }: AuthenticateUseCaseInput): Promise<AuthenticateUseCaseOutput> {
     const user = await this.usersRepository.userOfEmail(email)
     if (!user) {
-      return Either.left(FailResponse.unauthorized('Invalid credentials'))
+      return Either.left(
+        FailResponse.unauthorized(new InvalidCredentialsError()),
+      )
     }
     const doesPasswordMatches = await this.comparePasswordAndHash(
       password,
       user.passwordHash,
     )
     if (!doesPasswordMatches) {
-      return Either.left(FailResponse.unauthorized('Invalid credentials'))
+      return Either.left(
+        FailResponse.unauthorized(new InvalidCredentialsError()),
+      )
     }
-    return Either.right(SuccessResponse.ok(user))
+    return Either.right(SuccessResponse.ok(this.createUserDto(user)))
   }
 
   private async comparePasswordAndHash(
@@ -43,5 +49,14 @@ export class AuthenticateUseCase {
   ): Promise<boolean> {
     const passwordHash = new PasswordHash()
     return passwordHash.isMatch(aPassword, aHash)
+  }
+
+  private createUserDto(anUser: User): UserDto {
+    return {
+      id: anUser.id.toString(),
+      name: anUser.name,
+      email: anUser.email,
+      createdAt: anUser.createdAt.toISOString(),
+    }
   }
 }

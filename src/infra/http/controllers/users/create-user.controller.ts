@@ -14,7 +14,7 @@ const CreateUserBodySchema = z.object({
 })
 type CreateUserBodyDto = z.infer<typeof CreateUserBodySchema>
 type UserControllerOutput = EitherType<
-  FailResponse<unknown>,
+  FailResponse<Error>,
   SuccessResponse<User>
 >
 
@@ -37,7 +37,7 @@ export class CreateUserController {
       const { name, email, password } = this.parseBodyOrThrow(body)
       return this.createUserUseCase.execute({ name, email, password })
     } catch (error) {
-      return Either.left(FailResponse.internalServerError(error))
+      return Either.left(FailResponse.internalServerError(new Error('')))
     }
   }
 
