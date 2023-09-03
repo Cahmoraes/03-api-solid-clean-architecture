@@ -6,6 +6,8 @@ import { User } from '../entities/user.entity'
 import { PasswordHash } from '@/core/entities/password-hash'
 import { inject } from '@/infra/dependency-inversion/registry'
 import { UserAlreadyExistsError } from '../errors/user-already-exists.error'
+import { DomainEventPublisher } from '../events/domain-event-publisher'
+import { UserCreatedEvent } from '../events/user-created/user-created.event'
 
 export interface CreateUserUseCaseInput {
   name: string
@@ -28,6 +30,7 @@ export class CreateUserUseCase {
     if (existsUser)
       return Either.left(FailResponse.bad(new UserAlreadyExistsError()))
     const user = await this.performCreateUser(aCreateUserInput)
+    this.publishUserCreated(user)
     return Either.right(SuccessResponse.created(user))
   }
 
@@ -51,5 +54,14 @@ export class CreateUserUseCase {
   private hashPassword(aPassword: string): Promise<string> {
     const passwordHash = new PasswordHash()
     return passwordHash.createHash(aPassword)
+  }
+
+  private publishUserCreated(aUser: User) {
+    DomainEventPublisher.getInstance().publish(
+      new UserCreatedEvent({
+        id: aUser.id,
+        email: aUser.email,
+      }),
+    )
   }
 }
