@@ -1,6 +1,7 @@
 import { test, expect } from 'vitest'
 import { FailResponse } from './fail-response'
 import { HTTP_STATUS_CODES } from './http-status-code.enum'
+import { InvalidAssertError } from '@/errors/invalid-assert-error'
 
 const ErrorMessage = 'Error message'
 
@@ -41,5 +42,20 @@ describe('FailResponse', () => {
       status: HTTP_STATUS_CODES.BAD_REQUEST,
       data: ErrorMessage,
     })
+  })
+
+  test('formatError should return an object with status and data properties formatted when data is instance of Error', () => {
+    const response = FailResponse.bad(new Error(ErrorMessage))
+
+    const dto = response.formatError()
+    expect(dto).toEqual({
+      status: HTTP_STATUS_CODES.BAD_REQUEST,
+      data: ErrorMessage,
+    })
+  })
+
+  test('formatError should thrown error when data is not instance of Error', () => {
+    const response = FailResponse.bad(ErrorMessage)
+    expect(() => response.formatError()).toThrow(InvalidAssertError)
   })
 })
