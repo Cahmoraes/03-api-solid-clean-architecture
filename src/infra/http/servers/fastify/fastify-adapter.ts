@@ -1,5 +1,5 @@
 import Fastify from 'fastify'
-import { HTTPMethodTypes, HttpHandler, HttpServer } from './http-server'
+import { HTTPMethodTypes, HttpHandler, HttpServer } from '../http-server'
 import { env, isProduction } from '@/env'
 import { ZodError } from 'zod'
 import fastifyJwt from '@fastify/jwt'

@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { JwtHandlers, VerifyUser } from './http-server'
+import { JwtHandlers, VerifyUser } from '../http-server'
 
 export class FastifyJwtHandlers implements JwtHandlers {
   constructor(

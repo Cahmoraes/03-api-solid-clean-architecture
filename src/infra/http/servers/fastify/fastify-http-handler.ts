@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { HttpHandlerParams, JwtHandlers } from './http-server'
+import { HttpHandlerParams, JwtHandlers } from '../http-server'
 import { FastifyJwtHandlers } from './fastify-jwt-handlers'
 
 export class FastifyHttpHandler implements HttpHandlerParams {

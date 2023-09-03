@@ -5,7 +5,7 @@ import { FailResponse } from '../../entities/fail-response'
 import { User } from '@/application/entities/user.entity'
 import { CreateUserUseCase } from '@/application/use-cases/create-user.usecase'
 import { inject } from '@/infra/dependency-inversion/registry'
-import { HttpHandlerParams } from '../../servers/fastify/http-server'
+import { HttpHandlerParams } from '../../servers/http-server'
 
 const CreateUserBodySchema = z.object({
   name: z.string(),

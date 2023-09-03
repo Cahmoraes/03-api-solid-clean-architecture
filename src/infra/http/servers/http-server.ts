@@ -1,6 +1,6 @@
 import { EitherType } from '@cahmoraes93/either'
-import { FailResponse } from '../../entities/fail-response'
-import { SuccessResponse } from '../../entities/success-response'
+import { FailResponse } from '../entities/fail-response'
+import { SuccessResponse } from '../entities/success-response'
 
 export const enum HTTPMethodTypes {
   GET = 'get',

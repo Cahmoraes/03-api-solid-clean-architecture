@@ -4,7 +4,7 @@ import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { FailResponse } from '../../entities/fail-response'
 import { AuthenticateUseCase } from '@/application/use-cases/authenticate.usecase'
 import { inject } from '@/infra/dependency-inversion/registry'
-import { HttpHandlerParams } from '../../servers/fastify/http-server'
+import { HttpHandlerParams } from '../../servers/http-server'
 import { UserDto } from '@/application/dtos/user.dto'
 
 const profileBodySchema = z.object({

@@ -4,10 +4,7 @@ import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { FailResponse } from '../../entities/fail-response'
 import { AuthenticateUseCase } from '@/application/use-cases/authenticate.usecase'
 import { inject } from '@/infra/dependency-inversion/registry'
-import {
-  HttpHandlerParams,
-  JwtHandlers,
-} from '../../servers/fastify/http-server'
+import { HttpHandlerParams, JwtHandlers } from '../../servers/http-server'
 import { UserDto } from '@/application/dtos/user.dto'
 import { InvalidCredentialsError } from '@/application/errors/invalid-credentials.error'
 
