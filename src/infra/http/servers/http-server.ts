@@ -23,10 +23,12 @@ export interface JwtHandlers {
   verify: JwtVerify
 }
 
-export interface HttpHandlerParams {
+export interface HttpHandlerParams<TRequest = any, TResponse = any> {
   body: unknown
   params: unknown
   jwtHandler: JwtHandlers
+  request: TRequest
+  reply: TResponse
 }
 
 export type HttpHandler = (

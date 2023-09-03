@@ -4,8 +4,8 @@ import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { FailResponse } from '../../entities/fail-response'
 import { AuthenticateUseCase } from '@/application/use-cases/authenticate.usecase'
 import { inject } from '@/infra/dependency-inversion/registry'
-import { HttpHandlerParams } from '../../servers/http-server'
 import { UserDto } from '@/application/dtos/user.dto'
+import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
 
 const profileBodySchema = z.object({
   email: z.string().email(),
@@ -33,8 +33,10 @@ export class ProfileController {
   public async handleRequest({
     body,
     jwtHandler,
-  }: HttpHandlerParams): Promise<ProfileControllerOutput> {
+    request,
+  }: FastifyHttpHandlerParams): Promise<ProfileControllerOutput> {
     try {
+      console.log(request)
       // const user = await jwtHandler.verify()
       // console.log(user.sub)
       const { email, password } = this.parseBodyOrThrow(body)

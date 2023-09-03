@@ -2,21 +2,23 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import { HttpHandlerParams, JwtHandlers } from '../http-server'
 import { FastifyJwtHandlers } from './fastify-jwt-handlers'
 
-export class FastifyHttpHandler implements HttpHandlerParams {
+export class FastifyHttpHandlerParams
+  implements HttpHandlerParams<FastifyRequest, FastifyReply>
+{
   constructor(
-    private fastifyRequest: FastifyRequest,
-    private fastifyReply: FastifyReply,
+    readonly request: FastifyRequest,
+    readonly reply: FastifyReply,
   ) {}
 
   get body(): unknown {
-    return this.fastifyRequest.body
+    return this.request.body
   }
 
   get params(): unknown {
-    return this.fastifyRequest.params
+    return this.request.params
   }
 
   get jwtHandler(): JwtHandlers {
-    return new FastifyJwtHandlers(this.fastifyRequest, this.fastifyReply)
+    return new FastifyJwtHandlers(this.request, this.reply)
   }
 }

@@ -1,9 +1,16 @@
-import Fastify from 'fastify'
-import { HTTPMethodTypes, HttpHandler, HttpServer } from '../http-server'
+import Fastify, { FastifyReply, FastifyRequest } from 'fastify'
+import { HTTPMethodTypes, HttpHandlerParams, HttpServer } from '../http-server'
 import { env, isProduction } from '@/env'
 import { ZodError } from 'zod'
 import fastifyJwt from '@fastify/jwt'
-import { FastifyHttpHandler } from './fastify-http-handler'
+import { FastifyHttpHandlerParams } from './fastify-http-handler-params'
+import { EitherType } from '@cahmoraes93/either'
+import { FailResponse } from '../../entities/fail-response'
+import { SuccessResponse } from '../../entities/success-response'
+
+export type FastifyHttpHandlerType = (
+  httpHandlerParams: HttpHandlerParams<FastifyRequest, FastifyReply>,
+) => Promise<EitherType<FailResponse<Error>, SuccessResponse<unknown>>>
 
 export class FastifyAdapter implements HttpServer {
   private httpServer = Fastify()
@@ -55,11 +62,13 @@ export class FastifyAdapter implements HttpServer {
   public on(
     method: HTTPMethodTypes,
     route: string,
-    handler: HttpHandler,
+    handler: FastifyHttpHandlerType,
     middleware = {},
   ): void {
     this.httpServer[method](route, middleware, async (request, reply) => {
-      const response = await handler(new FastifyHttpHandler(request, reply))
+      const response = await handler(
+        new FastifyHttpHandlerParams(request, reply),
+      )
       if (response.isLeft()) {
         return reply
           .status(response.value.status)
