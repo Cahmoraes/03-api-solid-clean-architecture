@@ -37,9 +37,9 @@ describe('Fetch User Check-in history use case', () => {
       page: 1,
     })
     expect(result.isRight()).toBeTruthy()
-    const value = result.value as SuccessResponse<CheckIn[]>
-    expect(value.data).toHaveLength(2)
-    expect(value.data).toEqual([checkIn1, checkIn2])
+    const value = result.value as CheckIn[]
+    expect(value).toHaveLength(2)
+    expect(value).toEqual([checkIn1, checkIn2])
   })
 
   it('should be able to fetch paginated check-in history', async () => {
@@ -58,7 +58,7 @@ describe('Fetch User Check-in history use case', () => {
     })
 
     expect(result.isRight()).toBeTruthy()
-    const value = result.value as SuccessResponse<CheckIn[]>
-    expect(value.data).toHaveLength(2)
+    const value = result.value as CheckIn[]
+    expect(value).toHaveLength(2)
   })
 })
