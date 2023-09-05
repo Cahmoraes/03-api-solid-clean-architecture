@@ -1,5 +1,3 @@
-import { FailResponse } from '@/infra/http/entities/fail-response'
-import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { Gym } from '../entities/gym.entity'
 import { GymsRepository } from '../repositories/gyms-repository'
@@ -10,10 +8,7 @@ interface SearchGymUseCaseInput {
   page: number
 }
 
-type SearchGymUseCaseOutput = EitherType<
-  FailResponse<Error>,
-  SuccessResponse<Gym[]>
->
+type SearchGymUseCaseOutput = EitherType<Error, Gym[]>
 
 export class SearchGymUseCase {
   private gymsRepository = inject<GymsRepository>('gymsRepository')
@@ -22,7 +17,24 @@ export class SearchGymUseCase {
     query,
     page,
   }: SearchGymUseCaseInput): Promise<SearchGymUseCaseOutput> {
-    const gyms = await this.gymsRepository.searchMany(query, page)
-    return Either.right(SuccessResponse.ok(gyms))
+    const result = await this.performSearchGymUse({ query, page })
+    return result.isLeft()
+      ? Either.left(result.value)
+      : Either.right(result.value)
+  }
+
+  private async performSearchGymUse({
+    query,
+    page,
+  }: SearchGymUseCaseInput): Promise<EitherType<Error, Gym[]>> {
+    try {
+      const gyms = await this.gymsRepository.searchMany(query, page)
+      return Either.right(gyms)
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return Either.left(error)
+      }
+      throw error
+    }
   }
 }

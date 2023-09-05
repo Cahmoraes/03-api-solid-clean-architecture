@@ -36,8 +36,8 @@ describe('Search Gyms use case', () => {
     })
 
     expect(result.isRight()).toBeTruthy()
-    expect(result.value.data).instanceOf(Array)
-    const gyms = result.value.data as Gym[]
+    expect(result.value).instanceOf(Array)
+    const gyms = result.value as Gym[]
     expect(gyms).toHaveLength(1)
     expect(gyms[0].title).toEqual('JavaScript Gym')
   })
@@ -59,7 +59,7 @@ describe('Search Gyms use case', () => {
     })
 
     expect(result.isRight()).toBeTruthy()
-    const gyms = result.value.data as Gym[]
+    const gyms = result.value as Gym[]
     expect(gyms).toHaveLength(2)
     expect(gyms[0].title).toEqual('JavaScript Gym 21')
     expect(gyms[1].title).toEqual('JavaScript Gym 22')
