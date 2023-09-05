@@ -45,11 +45,11 @@ export class GetUserMetricsController {
         userId,
       })
       if (result.isLeft()) {
-        return Either.left(FailResponse.bad(result.value.data))
+        return Either.left(FailResponse.bad(result.value))
       }
       return Either.right(
         SuccessResponse.ok<OutputDTO>({
-          metrics: result.value.data.checkInsCount,
+          metrics: result.value.checkInsCount,
         }),
       )
     } catch (error: any) {

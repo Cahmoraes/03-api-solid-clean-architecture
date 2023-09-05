@@ -30,7 +30,12 @@ export class GetUserProfileController {
   }: FastifyHttpHandlerParams): Promise<GetUserProfileControllerOutput> {
     try {
       const user = request.user
-      return this.getUserProfileUseCase.execute({ userId: user.sub })
+      const result = await this.getUserProfileUseCase.execute({
+        userId: user.sub,
+      })
+      return result.isLeft()
+        ? Either.left(FailResponse.bad(result.value))
+        : Either.right(SuccessResponse.ok(result.value))
     } catch (error: unknown) {
       if (error instanceof Error) {
         return Either.left(FailResponse.internalServerError(error))
