@@ -47,11 +47,11 @@ describe('Get User Profile (e2e)', () => {
 
     const token = sessionResponse.body.token
 
-    const response = await request(fastify.server)
+    const profileResponse = await request(fastify.server)
       .get(Routes.ME)
       .set('Authorization', `Bearer ${token}`)
 
-    expect(response.body).toMatchObject({
+    expect(profileResponse.body).toMatchObject({
       id: expect.any(String),
       name: 'John Doe',
       email: 'johm@doe.com',
