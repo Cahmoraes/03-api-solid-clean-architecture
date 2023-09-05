@@ -1,16 +1,17 @@
 import { InMemoryGymsRepository } from '../../../tests/repositories/in-memory-gyms-repository'
-import { SearchGymUseCase } from './search-gyms.usecase'
+import { SearchGymsUseCase } from './search-gyms.usecase'
 import { Gym } from '../entities/gym.entity'
 import { provide } from '@/infra/dependency-inversion/registry'
+import { GymDto } from '../dtos/gym-dto.factory'
 
 describe('Search Gyms use case', () => {
   let gymsRepository: InMemoryGymsRepository
-  let sut: SearchGymUseCase
+  let sut: SearchGymsUseCase
 
   beforeEach(async () => {
     gymsRepository = new InMemoryGymsRepository()
     provide('gymsRepository', gymsRepository)
-    sut = new SearchGymUseCase()
+    sut = new SearchGymsUseCase()
   })
 
   it('should be able to search for gyms', async () => {
@@ -37,7 +38,7 @@ describe('Search Gyms use case', () => {
 
     expect(result.isRight()).toBeTruthy()
     expect(result.value).instanceOf(Array)
-    const gyms = result.value as Gym[]
+    const gyms = result.value as GymDto[]
     expect(gyms).toHaveLength(1)
     expect(gyms[0].title).toEqual('JavaScript Gym')
   })
@@ -59,7 +60,7 @@ describe('Search Gyms use case', () => {
     })
 
     expect(result.isRight()).toBeTruthy()
-    const gyms = result.value as Gym[]
+    const gyms = result.value as GymDto[]
     expect(gyms).toHaveLength(2)
     expect(gyms[0].title).toEqual('JavaScript Gym 21')
     expect(gyms[1].title).toEqual('JavaScript Gym 22')

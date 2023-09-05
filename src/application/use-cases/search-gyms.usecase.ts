@@ -2,21 +2,22 @@ import { Either, EitherType } from '@cahmoraes93/either'
 import { Gym } from '../entities/gym.entity'
 import { GymsRepository } from '../repositories/gyms-repository'
 import { inject } from '@/infra/dependency-inversion/registry'
+import { GymDto, GymDtoFactory } from '../dtos/gym-dto.factory'
 
-interface SearchGymUseCaseInput {
+interface SearchGymsUseCaseInput {
   query: string
   page: number
 }
 
-type SearchGymUseCaseOutput = EitherType<Error, Gym[]>
+type SearchGymsUseCaseOutput = EitherType<Error, GymDto[]>
 
-export class SearchGymUseCase {
+export class SearchGymsUseCase {
   private gymsRepository = inject<GymsRepository>('gymsRepository')
 
   async execute({
     query,
     page,
-  }: SearchGymUseCaseInput): Promise<SearchGymUseCaseOutput> {
+  }: SearchGymsUseCaseInput): Promise<SearchGymsUseCaseOutput> {
     const result = await this.performSearchGymUse({ query, page })
     return result.isLeft()
       ? Either.left(result.value)
@@ -26,10 +27,10 @@ export class SearchGymUseCase {
   private async performSearchGymUse({
     query,
     page,
-  }: SearchGymUseCaseInput): Promise<EitherType<Error, Gym[]>> {
+  }: SearchGymsUseCaseInput): Promise<EitherType<Error, GymDto[]>> {
     try {
       const gyms = await this.gymsRepository.searchMany(query, page)
-      return Either.right(gyms)
+      return Either.right(gyms.map(GymDtoFactory.create))
     } catch (error: unknown) {
       if (error instanceof Error) {
         return Either.left(error)
