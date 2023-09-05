@@ -35,9 +35,9 @@ describe('CreateUser use case', () => {
     })
 
     expect(result.isRight()).toBe(true)
-    const value = result.value as SuccessResponse<UserDto>
-    expect(value.data?.email).toBe(email)
-    expect(value.data?.name).toBe(name)
+    const value = result.value as UserDto
+    expect(value.email).toBe(email)
+    expect(value.name).toBe(name)
   })
 
   it('should not be able to authenticate a non-existing user', async () => {
@@ -51,8 +51,7 @@ describe('CreateUser use case', () => {
 
     expect(result.isRight()).toBeFalsy()
     expect(result.isLeft()).toBeTruthy()
-    expect(result.value.status).toBe(401)
-    expect(result.value.data).toBeInstanceOf(InvalidCredentialsError)
+    expect(result.value).toBeInstanceOf(InvalidCredentialsError)
   })
 
   it('should not be able to authenticate an user with wrong password', async () => {
@@ -75,7 +74,6 @@ describe('CreateUser use case', () => {
 
     expect(result.isRight()).toBeFalsy()
     expect(result.isLeft()).toBeTruthy()
-    expect(result.value.status).toBe(401)
-    expect(result.value.data).toBeInstanceOf(InvalidCredentialsError)
+    expect(result.value).toBeInstanceOf(InvalidCredentialsError)
   })
 })

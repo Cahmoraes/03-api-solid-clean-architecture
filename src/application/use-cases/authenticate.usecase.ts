@@ -1,5 +1,3 @@
-import { FailResponse } from '@/infra/http/entities/fail-response'
-import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { UsersRepository } from '../repositories/users-repository'
 import { PasswordHash } from '@/core/entities/password-hash'
@@ -13,8 +11,8 @@ export interface AuthenticateUseCaseInput {
 }
 
 export type AuthenticateUseCaseOutput = EitherType<
-  FailResponse<InvalidCredentialsError>,
-  SuccessResponse<UserDto>
+  InvalidCredentialsError,
+  UserDto
 >
 
 export class AuthenticateUseCase {
@@ -26,20 +24,16 @@ export class AuthenticateUseCase {
   }: AuthenticateUseCaseInput): Promise<AuthenticateUseCaseOutput> {
     const user = await this.usersRepository.userOfEmail(email)
     if (!user) {
-      return Either.left(
-        FailResponse.unauthorized(new InvalidCredentialsError()),
-      )
+      return Either.left(new InvalidCredentialsError())
     }
     const doesPasswordMatches = await this.comparePasswordAndHash(
       password,
       user.passwordHash,
     )
     if (!doesPasswordMatches) {
-      return Either.left(
-        FailResponse.unauthorized(new InvalidCredentialsError()),
-      )
+      return Either.left(new InvalidCredentialsError())
     }
-    return Either.right(SuccessResponse.ok(UserDtoFactory.create(user)))
+    return Either.right(UserDtoFactory.create(user))
   }
 
   private async comparePasswordAndHash(

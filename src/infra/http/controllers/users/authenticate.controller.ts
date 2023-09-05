@@ -44,9 +44,9 @@ export class AuthenticateController {
       const { email, password } = this.parseBodyOrThrow(body)
       const result = await this.authenticateUseCase.execute({ email, password })
       if (result.isLeft()) {
-        return Either.left(FailResponse.bad(result.value.data))
+        return Either.left(FailResponse.bad(result.value))
       }
-      const token = await this.createJwtToken(jwtHandler, result.value.data!)
+      const token = await this.createJwtToken(jwtHandler, result.value)
       return Either.right(SuccessResponse.ok({ token }))
     } catch (error: unknown) {
       if (error instanceof Error) {
