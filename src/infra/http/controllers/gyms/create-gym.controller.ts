@@ -1,16 +1,11 @@
 import { z } from 'zod'
-import { Either, EitherType } from '@cahmoraes93/either'
+import { EitherType } from '@cahmoraes93/either'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { FailResponse } from '../../entities/fail-response'
-import { CreateUserUseCase } from '@/application/use-cases/create-user.usecase'
 import { inject } from '@/infra/dependency-inversion/registry'
-import { HttpHandlerParams } from '../../servers/http-server'
-import { UserDto } from '@/application/dtos/user-dto.factory'
-import { Gym } from '@/application/entities/gym.entity'
 import { CreateGymUseCase } from '@/application/use-cases/create-gym.usecase'
 import { GymDto } from '@/application/dtos/gym-dto.factory'
 import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
-import { InternalServerError } from '@/application/errors/internal-server.error'
 
 const CreateGymBodySchema = z.object({
   title: z.string(),

@@ -29,7 +29,7 @@ export class CreateGymUseCase {
     if (result.isLeft()) {
       return Either.left(FailResponse.bad(new InternalServerError()))
     }
-    return Either.right(SuccessResponse.ok(GymDtoFactory.create(gym)))
+    return Either.right(SuccessResponse.created(GymDtoFactory.create(gym)))
   }
 
   private async performCreateGym(

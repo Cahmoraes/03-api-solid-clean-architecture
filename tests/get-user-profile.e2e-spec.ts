@@ -8,18 +8,22 @@ import { GetUserMetricsUseCase } from '@/application/use-cases/get-user-metrics.
 import { AuthenticateUseCase } from '@/application/use-cases/authenticate.usecase'
 import { CreateUserUseCase } from '@/application/use-cases/create-user.usecase'
 import { PrismaUsersRepository } from '@/infra/repositories/prisma/prisma-users-repository'
-import { InMemoryCheckInsRepository } from './repositories/in-memory-check-ins-repository'
 import { provide } from '@/infra/dependency-inversion/registry'
+import { PrismaGymsRepository } from '@/infra/repositories/prisma/prisma-gyms-repository'
+import { PrismaCheckInsRepository } from '@/infra/repositories/prisma/prisma-check-ins-repository'
+import { CreateGymUseCase } from '@/application/use-cases/create-gym.usecase'
 
 describe('Get User Profile (e2e)', () => {
   let fastify: FastifyAdapter
   beforeAll(async () => {
     provide('usersRepository', new PrismaUsersRepository())
-    provide('checkInsRepository', new InMemoryCheckInsRepository())
+    provide('gymsRepository', new PrismaGymsRepository())
+    provide('checkInsRepository', new PrismaCheckInsRepository())
     provide('createUserUseCase', new CreateUserUseCase())
     provide('authenticateUseCase', new AuthenticateUseCase())
     provide('getUserMetricsUseCase', new GetUserMetricsUseCase())
     provide('getUserProfileUseCase', new GetUserProfileUseCase())
+    provide('createGymUseCase', new CreateGymUseCase())
 
     const port = await getPort()
     fastify = new FastifyAdapter({ port })

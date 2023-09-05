@@ -1,7 +1,6 @@
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { CreateGymUseCase } from './create-gym.usecase'
 import { InMemoryGymsRepository } from 'tests/repositories/in-memory-gyms-repository'
-import { Gym } from '../entities/gym.entity'
 import { provide } from '@/infra/dependency-inversion/registry'
 import { GymDto } from '../dtos/gym-dto.factory'
 
