@@ -8,6 +8,7 @@ import { GetUserMetricsUseCase } from './application/use-cases/get-user-metrics.
 import { InMemoryCheckInsRepository } from '@/tests/repositories/in-memory-check-ins-repository'
 import { DomainEventPublisher } from './application/events/domain-event-publisher'
 import { UserCreatedSubscriber } from './application/events/user-created/user-created-subscriber'
+import { GetUserProfileUseCase } from './application/use-cases/get-user-profile.usecase'
 
 DomainEventPublisher.getInstance().subscribe(new UserCreatedSubscriber())
 provide('usersRepository', new PrismaUsersRepository())
@@ -15,6 +16,7 @@ provide('checkInsRepository', new InMemoryCheckInsRepository())
 provide('createUserUseCase', new CreateUserUseCase())
 provide('authenticateUseCase', new AuthenticateUseCase())
 provide('getUserMetricsUseCase', new GetUserMetricsUseCase())
+provide('getUserProfileUseCase', new GetUserProfileUseCase())
 const httpServer = new FastifyAdapter()
 new MainHttpController(httpServer)
 httpServer.listen()

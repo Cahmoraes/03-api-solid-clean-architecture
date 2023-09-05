@@ -1,3 +1,4 @@
+import getPort from 'get-port'
 import request from 'supertest'
 import { provide } from '@/infra/dependency-inversion/registry'
 import { FastifyAdapter } from '@/infra/http/servers/fastify/fastify-adapter'
@@ -8,6 +9,7 @@ import { AuthenticateUseCase } from '@/application/use-cases/authenticate.usecas
 import { GetUserMetricsUseCase } from '@/application/use-cases/get-user-metrics.usecase'
 import { MainHttpController } from '@/infra/http/controllers/main-http-controller'
 import { Routes } from '@/infra/http/controllers/routes.enum'
+import { GetUserProfileUseCase } from '@/application/use-cases/get-user-profile.usecase'
 
 describe('Create User (e2e)', () => {
   let fastify: FastifyAdapter
@@ -17,10 +19,15 @@ describe('Create User (e2e)', () => {
     provide('createUserUseCase', new CreateUserUseCase())
     provide('authenticateUseCase', new AuthenticateUseCase())
     provide('getUserMetricsUseCase', new GetUserMetricsUseCase())
+    provide('getUserProfileUseCase', new GetUserProfileUseCase())
 
-    fastify = new FastifyAdapter()
+    fastify = new FastifyAdapter(await getPort())
     new MainHttpController(fastify)
     await fastify.listen()
+  })
+
+  afterAll(async () => {
+    await fastify.close()
   })
 
   it('should be able to create an user', async () => {

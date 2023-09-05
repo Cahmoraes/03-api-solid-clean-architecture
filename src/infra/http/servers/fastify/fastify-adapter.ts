@@ -15,14 +15,20 @@ export type FastifyHttpHandlerType = (
 
 export class FastifyAdapter implements HttpServer {
   private httpServer = Fastify()
+  private PORT: number
 
-  constructor() {
+  constructor(port = env.PORT) {
+    this.PORT = port
     this.registerJWT()
     this.errorHandler()
   }
 
   public get server(): Server {
     return this.httpServer.server
+  }
+
+  public async close(): Promise<void> {
+    this.httpServer.close()
   }
 
   public async ready(): Promise<void> {
@@ -64,8 +70,8 @@ export class FastifyAdapter implements HttpServer {
   }
 
   private async performListen(): Promise<void> {
-    await this.httpServer.listen({ port: env.PORT, host: env.HOST })
-    console.log(`🚀 Server is running on http://${env.HOST}:${env.PORT}`)
+    await this.httpServer.listen({ port: this.PORT, host: env.HOST })
+    console.log(`🚀 Server is running on http://${env.HOST}:${this.PORT}`)
   }
 
   public on(

@@ -5,6 +5,7 @@ import { PasswordHash } from '@/core/entities/password-hash'
 import { GetUserProfileUseCase } from './get-user-profile.usecase'
 import { provide } from '@/infra/dependency-inversion/registry'
 import { ResourceNotFoundError } from '../errors/resource-not-found.error'
+import { UserDto } from '../dtos/user-dto.factory'
 
 describe('GetUserProfile use case', () => {
   let usersRepository: InMemoryUsersRepository
@@ -35,7 +36,7 @@ describe('GetUserProfile use case', () => {
     })
 
     expect(result.isRight()).toBe(true)
-    const value = result.value as SuccessResponse<User>
+    const value = result.value as SuccessResponse<UserDto>
     expect(value.data?.email).toBe(email)
     expect(value.data?.name).toBe(name)
   })

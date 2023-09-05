@@ -2,9 +2,9 @@ import { FailResponse } from '@/infra/http/entities/fail-response'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { UsersRepository } from '../repositories/users-repository'
-import { User } from '../entities/user.entity'
 import { inject } from '@/infra/dependency-inversion/registry'
 import { ResourceNotFoundError } from '../errors/resource-not-found.error'
+import { UserDto, UserDtoFactory } from '../dtos/user-dto.factory'
 
 export interface GetUserProfileUseCaseInput {
   userId: string
@@ -12,7 +12,7 @@ export interface GetUserProfileUseCaseInput {
 
 export type GetUserProfileUseCaseOutput = EitherType<
   FailResponse<ResourceNotFoundError>,
-  SuccessResponse<User>
+  SuccessResponse<UserDto>
 >
 
 export class GetUserProfileUseCase {
@@ -21,10 +21,10 @@ export class GetUserProfileUseCase {
   public async execute({
     userId,
   }: GetUserProfileUseCaseInput): Promise<GetUserProfileUseCaseOutput> {
-    const userExists = await this.usersRepository.userOfId(userId)
-    if (!userExists) {
+    const user = await this.usersRepository.userOfId(userId)
+    if (!user) {
       return Either.left(FailResponse.notFound(new ResourceNotFoundError()))
     }
-    return Either.right(SuccessResponse.ok(userExists))
+    return Either.right(SuccessResponse.ok(UserDtoFactory.create(user)))
   }
 }

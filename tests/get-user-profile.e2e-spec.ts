@@ -1,17 +1,17 @@
 import getPort from 'get-port'
 import request from 'supertest'
-import { provide } from '@/infra/dependency-inversion/registry'
 import { FastifyAdapter } from '@/infra/http/servers/fastify/fastify-adapter'
-import { PrismaUsersRepository } from '@/infra/repositories/prisma/prisma-users-repository'
-import { InMemoryCheckInsRepository } from './repositories/in-memory-check-ins-repository'
-import { CreateUserUseCase } from '@/application/use-cases/create-user.usecase'
-import { AuthenticateUseCase } from '@/application/use-cases/authenticate.usecase'
-import { GetUserMetricsUseCase } from '@/application/use-cases/get-user-metrics.usecase'
 import { MainHttpController } from '@/infra/http/controllers/main-http-controller'
 import { Routes } from '@/infra/http/controllers/routes.enum'
 import { GetUserProfileUseCase } from '@/application/use-cases/get-user-profile.usecase'
+import { GetUserMetricsUseCase } from '@/application/use-cases/get-user-metrics.usecase'
+import { AuthenticateUseCase } from '@/application/use-cases/authenticate.usecase'
+import { CreateUserUseCase } from '@/application/use-cases/create-user.usecase'
+import { PrismaUsersRepository } from '@/infra/repositories/prisma/prisma-users-repository'
+import { InMemoryCheckInsRepository } from './repositories/in-memory-check-ins-repository'
+import { provide } from '@/infra/dependency-inversion/registry'
 
-describe('Authenticate (e2e)', () => {
+describe('Get User Profile (e2e)', () => {
   let fastify: FastifyAdapter
   beforeAll(async () => {
     provide('usersRepository', new PrismaUsersRepository())
@@ -22,7 +22,6 @@ describe('Authenticate (e2e)', () => {
     provide('getUserProfileUseCase', new GetUserProfileUseCase())
 
     fastify = new FastifyAdapter(await getPort())
-    fastify = new FastifyAdapter()
     new MainHttpController(fastify)
     await fastify.listen()
   })
@@ -38,22 +37,24 @@ describe('Authenticate (e2e)', () => {
       password: '123456',
     })
 
-    const response = await request(fastify.server).post(Routes.SESSIONS).send({
+    const sessionResponse = await request(fastify.server)
+      .post(Routes.SESSIONS)
+      .send({
+        email: 'johm@doe.com',
+        password: '123456',
+      })
+
+    const token = sessionResponse.body.token
+
+    const response = await request(fastify.server)
+      .get(Routes.ME)
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(response.body).toMatchObject({
+      id: expect.any(String),
+      name: 'John Doe',
       email: 'johm@doe.com',
-      password: '123456',
+      createdAt: expect.any(String),
     })
-
-    expect(response.statusCode).toBe(200)
-    expect(response.body).toHaveProperty('token')
-    expect(response.body.token).toEqual(expect.any(String))
-  })
-
-  it('should not be able to authenticate a non-existing user', async () => {
-    const response = await request(fastify.server).post(Routes.SESSIONS).send({
-      email: 'non-existing@user.com',
-      password: '123456',
-    })
-    expect(response.statusCode).toBe(400)
-    expect(response.body.data).toBe('Invalid credentials.')
   })
 })

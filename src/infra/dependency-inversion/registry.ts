@@ -5,6 +5,7 @@ export enum DependencyTypes {
   'createUserUseCase',
   'authenticateUseCase',
   'getUserMetricsUseCase',
+  'getUserProfileUseCase',
   'usersRepository',
   'checkInsRepository',
   'gymsRepository',
