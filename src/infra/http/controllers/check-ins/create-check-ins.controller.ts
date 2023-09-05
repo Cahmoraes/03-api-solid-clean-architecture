@@ -44,7 +44,6 @@ export class CreateCheckInController {
     params,
     request,
   }: FastifyHttpHandlerParams): Promise<CreateCheckInControllerOutput> {
-    console.log('**********')
     const { userLatitude, userLongitude } = this.parseBodyOrThrow(body)
     const { gymId } = this.parseParamsOrThrow(params)
     const userId = request.user.sub
