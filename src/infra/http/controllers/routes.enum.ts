@@ -3,4 +3,5 @@ export enum Routes {
   SESSIONS = '/sessions',
   ME = '/me',
   METRICS = '/metrics',
+  GYMS = '/gyms',
 }
