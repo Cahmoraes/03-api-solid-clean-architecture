@@ -19,12 +19,10 @@ export interface CheckInUseCaseInput {
 }
 
 export type CheckInUseCaseOutput = EitherType<
-  FailResponse<
-    | ResourceNotFoundError
-    | MaxDistanceReachedError
-    | MaxNumbersOfCheckInsReachedError
-  >,
-  SuccessResponse<CheckIn>
+  | ResourceNotFoundError
+  | MaxDistanceReachedError
+  | MaxNumbersOfCheckInsReachedError,
+  CheckIn
 >
 
 export class CheckInUseCase {
@@ -39,27 +37,24 @@ export class CheckInUseCase {
     userLongitude,
   }: CheckInUseCaseInput): Promise<CheckInUseCaseOutput> {
     const gym = await this.gymsRepository.gymOfId(gymId)
-    if (!gym)
-      return Either.left(FailResponse.notFound(new ResourceNotFoundError()))
+    if (!gym) return Either.left(new ResourceNotFoundError())
     if (
       this.distanceBetweenUserAndGymIsMoreThanOneHundredMeters(
         new Coord({ latitude: userLatitude, longitude: userLongitude }),
         gym.coord,
       )
     ) {
-      return Either.left(FailResponse.bad(new MaxDistanceReachedError()))
+      return Either.left(new MaxDistanceReachedError())
     }
     if (await this.hasCheckInOnSameDay(userId)) {
-      return Either.left(
-        FailResponse.bad(new MaxNumbersOfCheckInsReachedError()),
-      )
+      return Either.left(new MaxNumbersOfCheckInsReachedError())
     }
     const checkIn = CheckIn.create({
       gymId,
       userId,
     })
     await this.checkInsRepository.save(checkIn)
-    return Either.right(SuccessResponse.ok(checkIn))
+    return Either.right(checkIn)
   }
 
   private distanceBetweenUserAndGymIsMoreThanOneHundredMeters(

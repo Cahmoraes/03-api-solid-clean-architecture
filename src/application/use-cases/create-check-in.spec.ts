@@ -1,7 +1,6 @@
 import { CheckIn } from '../entities/check-in.entity'
 import { provide } from '@/infra/dependency-inversion/registry'
 import { CheckInUseCase } from './create-check-in.usecase'
-import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { InMemoryCheckInsRepository } from 'tests/repositories/in-memory-check-ins-repository'
 import { InMemoryGymsRepository } from '@/tests/repositories/in-memory-gyms-repository'
 import { Gym } from '../entities/gym.entity'
@@ -52,7 +51,7 @@ describe('CheckIn use case', () => {
       userLongitude: longitude,
     })
     expect(result.isLeft()).toBeTruthy()
-    expect(result.value.data).toBeInstanceOf(ResourceNotFoundError)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 
   it('should not be able to check in when gym not exists', async () => {
@@ -63,10 +62,10 @@ describe('CheckIn use case', () => {
       userLongitude: longitude,
     })
     expect(result.isRight()).toBeTruthy()
-    const value = result.value as SuccessResponse<CheckIn>
-    expect(value.data?.gymId.toString()).toEqual(gymId)
-    expect(value.data?.userId.toString()).toEqual(userId)
-    expect(value.data?.createdAt).instanceOf(Date)
+    const value = result.value as CheckIn
+    expect(value.gymId.toString()).toEqual(gymId)
+    expect(value.userId.toString()).toEqual(userId)
+    expect(value.createdAt).instanceOf(Date)
   })
 
   it('should not be able to check in twice in the same day', async () => {
@@ -135,6 +134,6 @@ describe('CheckIn use case', () => {
       userLongitude: longitude,
     })
     expect(result.isLeft()).toBeTruthy()
-    expect(result.value.data).toBeInstanceOf(MaxDistanceReachedError)
+    expect(result.value).toBeInstanceOf(MaxDistanceReachedError)
   })
 })
