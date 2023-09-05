@@ -66,8 +66,8 @@ export class PrismaCheckInsRepository implements CheckInsRepository {
       where: {
         user_id: userId,
       },
-      skip: this.ITEM_PER_PAGE,
-      take: (page - 1) * this.ITEM_PER_PAGE,
+      skip: (page - 1) * this.ITEM_PER_PAGE,
+      take: 20,
     })
     return prismaCheckIns.map(this.createCheckInFromPrisma)
   }

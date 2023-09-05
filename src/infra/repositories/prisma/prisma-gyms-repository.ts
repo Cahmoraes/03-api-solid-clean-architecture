@@ -60,8 +60,8 @@ export class PrismaGymsRepository implements GymsRepository {
           contains: query,
         },
       },
-      take: this.ITEM_PER_PAGE,
       skip: (page - 1) * this.ITEM_PER_PAGE,
+      take: 20,
     })
     return prismaGyms.map(this.createGymFromPrisma)
   }

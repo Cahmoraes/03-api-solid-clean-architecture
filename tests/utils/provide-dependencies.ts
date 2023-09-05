@@ -1,3 +1,4 @@
+import { provide } from '@/infra/dependency-inversion/registry'
 import { AuthenticateUseCase } from '@/application/use-cases/authenticate.usecase'
 import { CreateCheckInUseCase } from '@/application/use-cases/create-check-in.usecase'
 import { CreateGymUseCase } from '@/application/use-cases/create-gym.usecase'
@@ -8,7 +9,6 @@ import { GetUserMetricsUseCase } from '@/application/use-cases/get-user-metrics.
 import { GetUserProfileUseCase } from '@/application/use-cases/get-user-profile.usecase'
 import { SearchGymsUseCase } from '@/application/use-cases/search-gyms.usecase'
 import { ValidateCheckInUseCase } from '@/application/use-cases/validate-check-in.usecase'
-import { provide } from '@/infra/dependency-inversion/registry'
 import { PrismaCheckInsRepository } from '@/infra/repositories/prisma/prisma-check-ins-repository'
 import { PrismaGymsRepository } from '@/infra/repositories/prisma/prisma-gyms-repository'
 import { PrismaUsersRepository } from '@/infra/repositories/prisma/prisma-users-repository'

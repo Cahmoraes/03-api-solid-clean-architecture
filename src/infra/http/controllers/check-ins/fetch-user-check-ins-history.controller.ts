@@ -42,7 +42,7 @@ export class FetchUserCheckInsHistoryController {
     })
     return result.isLeft()
       ? Either.left(FailResponse.internalServerError(result.value))
-      : Either.right(SuccessResponse.created(result.value))
+      : Either.right(SuccessResponse.ok(result.value))
   }
 
   private parseParamsOrThrow(
