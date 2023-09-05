@@ -8,7 +8,7 @@ import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-han
 import { FetchNearbyGymsUseCase } from '@/application/use-cases/fetch-nearby-gym.usecase'
 import { Coord } from '@/application/entities/value-objects/coord'
 
-const FetchNearbyGymsBodySchema = z.object({
+const FetchNearbyGymsQuerySchema = z.object({
   latitude: z.coerce.number().refine((value) => {
     return Math.abs(value) <= 90
   }),
@@ -16,7 +16,7 @@ const FetchNearbyGymsBodySchema = z.object({
     return Math.abs(value) <= 180
   }),
 })
-type FetchNearbyGymsBodyDto = z.infer<typeof FetchNearbyGymsBodySchema>
+type FetchNearbyGymsQueryDto = z.infer<typeof FetchNearbyGymsQuerySchema>
 type FetchNearbyGymsControllerOutput = EitherType<
   FailResponse<Error>,
   SuccessResponse<GymDto[]>
@@ -36,16 +36,16 @@ export class FetchNearbyGymsController {
   }
 
   public async handleRequest({
-    params,
+    query,
   }: FastifyHttpHandlerParams): Promise<FetchNearbyGymsControllerOutput> {
-    const userCoord = new Coord(this.parseParamsOrThrow(params))
+    const userCoord = new Coord(this.parseQueryOrThrow(query))
     const result = await this.fetchNearbyGymsUseCase.execute({ userCoord })
     return result.isLeft()
       ? Either.left(FailResponse.internalServerError(result.value))
-      : Either.right(SuccessResponse.created(result.value))
+      : Either.right(SuccessResponse.ok(result.value))
   }
 
-  private parseParamsOrThrow(params: unknown): FetchNearbyGymsBodyDto {
-    return FetchNearbyGymsBodySchema.parse(params)
+  private parseQueryOrThrow(query: unknown): FetchNearbyGymsQueryDto {
+    return FetchNearbyGymsQuerySchema.parse(query)
   }
 }
