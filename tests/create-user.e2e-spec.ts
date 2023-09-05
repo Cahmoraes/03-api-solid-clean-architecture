@@ -21,7 +21,8 @@ describe('Create User (e2e)', () => {
     provide('getUserMetricsUseCase', new GetUserMetricsUseCase())
     provide('getUserProfileUseCase', new GetUserProfileUseCase())
 
-    fastify = new FastifyAdapter(await getPort())
+    const port = await getPort()
+    fastify = new FastifyAdapter({ port })
     new MainHttpController(fastify)
     await fastify.listen()
   })

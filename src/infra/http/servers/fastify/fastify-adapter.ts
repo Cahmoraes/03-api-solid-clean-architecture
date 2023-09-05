@@ -13,12 +13,19 @@ export type FastifyHttpHandlerType = (
   httpHandlerParams: HttpHandlerParams<FastifyRequest, FastifyReply>,
 ) => Promise<EitherType<FailResponse<Error>, SuccessResponse<unknown>>>
 
-export class FastifyAdapter implements HttpServer {
-  private httpServer = Fastify()
-  private PORT: number
+interface FastifyAdapterProps {
+  port?: number
+  host?: string
+}
 
-  constructor(port = env.PORT) {
-    this.PORT = port
+export class FastifyAdapter implements HttpServer {
+  private readonly httpServer = Fastify()
+  private readonly PORT: number
+  private readonly HOST: string
+
+  constructor(props?: FastifyAdapterProps) {
+    this.PORT = props?.port ?? env.PORT
+    this.HOST = props?.host ?? env.HOST
     this.registerJWT()
     this.errorHandler()
   }
@@ -70,8 +77,8 @@ export class FastifyAdapter implements HttpServer {
   }
 
   private async performListen(): Promise<void> {
-    await this.httpServer.listen({ port: this.PORT, host: env.HOST })
-    console.log(`🚀 Server is running on http://${env.HOST}:${this.PORT}`)
+    await this.httpServer.listen({ port: this.PORT, host: this.HOST })
+    console.log(`🚀 Server is running on http://${this.HOST}:${this.PORT}`)
   }
 
   public on(
