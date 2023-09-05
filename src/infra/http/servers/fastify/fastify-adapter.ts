@@ -7,6 +7,7 @@ import { FastifyHttpHandlerParams } from './fastify-http-handler-params'
 import { EitherType } from '@cahmoraes93/either'
 import { FailResponse } from '../../entities/fail-response'
 import { SuccessResponse } from '../../entities/success-response'
+import { Server } from 'http'
 
 export type FastifyHttpHandlerType = (
   httpHandlerParams: HttpHandlerParams<FastifyRequest, FastifyReply>,
@@ -18,12 +19,10 @@ export class FastifyAdapter implements HttpServer {
   constructor() {
     this.registerJWT()
     this.errorHandler()
-    console.log('*************///*******////*****///')
-    console.log(process.env.DATABASE_URL)
   }
 
-  public get app() {
-    return this.httpServer
+  public get server(): Server {
+    return this.httpServer.server
   }
 
   public async ready(): Promise<void> {

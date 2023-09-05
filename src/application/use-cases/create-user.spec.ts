@@ -1,10 +1,10 @@
 import { CreateUserUseCase } from './create-user.usecase'
 import { InMemoryUsersRepository } from 'tests/repositories/in-memory-users-repository'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
-import bcrypt from 'bcrypt'
-import { User } from '../entities/user.entity'
 import { provide } from '@/infra/dependency-inversion/registry'
 import { UserAlreadyExistsError } from '../errors/user-already-exists.error'
+import { UserDto } from '../dtos/user.dto'
+import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
 
 describe('CreateUser use case', () => {
   let usersRepository: InMemoryUsersRepository
@@ -23,16 +23,16 @@ describe('CreateUser use case', () => {
       password: '123456',
     })
     expect(result.isRight()).toBeTruthy()
-    const value = result.value as SuccessResponse<User>
+    const value = result.value as SuccessResponse<UserDto>
     expect(value.data?.name).toEqual('John Doe')
     expect(value.data?.email).toEqual('jhon@doe.com')
     expect(value.data?.id.toString()).toBeDefined()
-    expect(usersRepository.data.toArray()[0]).toEqual(result.value.data)
-    const isPasswordCorrectlyHashed = await bcrypt.compare(
-      '123456',
-      value.data!.passwordHash,
-    )
-    expect(isPasswordCorrectlyHashed).toBeTruthy()
+    expect(usersRepository.data.toArray()[0]).toMatchObject({
+      _id: new UniqueIdentity(value.data?.id.toString()),
+      email: value.data?.email,
+      name: value.data?.name,
+      createdAt: new Date(value.data?.createdAt),
+    })
   })
 
   it('should not able to create an user with same email', async () => {

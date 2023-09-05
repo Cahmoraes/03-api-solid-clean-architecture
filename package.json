@@ -9,7 +9,8 @@
     "build": "tsup src --out-dir build",
     "test": "npx vitest",
     "test:cov": "npx vitest --coverage",
-    "test:e2e": "vitest run --config ./vitest.config.e2e.ts"
+    "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
+    "test:e2e:watch": "vitest --config ./vitest.config.e2e.ts"
   },
   "keywords": [],
   "author": "",

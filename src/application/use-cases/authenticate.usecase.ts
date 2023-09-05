@@ -4,7 +4,7 @@ import { Either, EitherType } from '@cahmoraes93/either'
 import { UsersRepository } from '../repositories/users-repository'
 import { PasswordHash } from '@/core/entities/password-hash'
 import { inject } from '@/infra/dependency-inversion/registry'
-import { UserDto } from '../dtos/user.dto'
+import { UserDto, UserDtoFactory } from '../dtos/user.dto'
 import { User } from '../entities/user.entity'
 import { InvalidCredentialsError } from '../errors/invalid-credentials.error'
 
@@ -40,7 +40,7 @@ export class AuthenticateUseCase {
         FailResponse.unauthorized(new InvalidCredentialsError()),
       )
     }
-    return Either.right(SuccessResponse.ok(this.createUserDto(user)))
+    return Either.right(SuccessResponse.ok(UserDtoFactory.create(user)))
   }
 
   private async comparePasswordAndHash(
@@ -49,14 +49,5 @@ export class AuthenticateUseCase {
   ): Promise<boolean> {
     const passwordHash = new PasswordHash()
     return passwordHash.isMatch(aPassword, aHash)
-  }
-
-  private createUserDto(anUser: User): UserDto {
-    return {
-      id: anUser.id.toString(),
-      name: anUser.name,
-      email: anUser.email,
-      createdAt: anUser.createdAt.toISOString(),
-    }
   }
 }

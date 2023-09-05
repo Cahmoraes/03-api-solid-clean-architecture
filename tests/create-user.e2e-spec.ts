@@ -1,14 +1,15 @@
+import request from 'supertest'
 import { provide } from '@/infra/dependency-inversion/registry'
 import { FastifyAdapter } from '@/infra/http/servers/fastify/fastify-adapter'
 import { PrismaUsersRepository } from '@/infra/repositories/prisma/prisma-users-repository'
-import request from 'supertest'
 import { InMemoryCheckInsRepository } from './repositories/in-memory-check-ins-repository'
 import { CreateUserUseCase } from '@/application/use-cases/create-user.usecase'
 import { AuthenticateUseCase } from '@/application/use-cases/authenticate.usecase'
 import { GetUserMetricsUseCase } from '@/application/use-cases/get-user-metrics.usecase'
 import { MainHttpController } from '@/infra/http/controllers/main-http-controller'
+import { Routes } from '@/infra/http/controllers/routes.enum'
 
-describe('Register (e2e)', () => {
+describe('Create User (e2e)', () => {
   let fastify: FastifyAdapter
   beforeAll(async () => {
     provide('usersRepository', new PrismaUsersRepository())
@@ -23,11 +24,17 @@ describe('Register (e2e)', () => {
   })
 
   it('should be able to register', async () => {
-    const response = await request(fastify.app.server).post('/users').send({
+    const response = await request(fastify.server).post(Routes.USERS).send({
       name: 'John Doe',
-      email: 'johm@dossse.com',
+      email: 'johm@doe.com',
       password: '123456',
     })
-    console.log(response.body)
+    expect(response.statusCode).toBe(201)
+    expect(response.body).toEqual({
+      id: expect.any(String),
+      name: 'John Doe',
+      email: 'johm@doe.com',
+      createdAt: expect.any(String),
+    })
   })
 })

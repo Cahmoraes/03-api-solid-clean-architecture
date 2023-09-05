@@ -8,6 +8,7 @@ import { inject } from '@/infra/dependency-inversion/registry'
 import { UserAlreadyExistsError } from '../errors/user-already-exists.error'
 import { DomainEventPublisher } from '../events/domain-event-publisher'
 import { UserCreatedEvent } from '../events/user-created/user-created.event'
+import { UserDto, UserDtoFactory } from '../dtos/user.dto'
 
 export interface CreateUserUseCaseInput {
   name: string
@@ -17,7 +18,7 @@ export interface CreateUserUseCaseInput {
 
 export type CreateUserUseCaseOutput = EitherType<
   FailResponse<UserAlreadyExistsError>,
-  SuccessResponse<User>
+  SuccessResponse<UserDto>
 >
 
 export class CreateUserUseCase {
@@ -27,11 +28,12 @@ export class CreateUserUseCase {
     aCreateUserInput: CreateUserUseCaseInput,
   ): Promise<CreateUserUseCaseOutput> {
     const existsUser = await this.existsUser(aCreateUserInput.email)
-    if (existsUser)
+    if (existsUser) {
       return Either.left(FailResponse.bad(new UserAlreadyExistsError()))
+    }
     const user = await this.performCreateUser(aCreateUserInput)
     this.publishUserCreated(user)
-    return Either.right(SuccessResponse.created(user))
+    return Either.right(SuccessResponse.created(UserDtoFactory.create(user)))
   }
 
   private async existsUser(email: string): Promise<boolean> {
