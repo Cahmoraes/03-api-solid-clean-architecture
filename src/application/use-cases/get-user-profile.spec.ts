@@ -36,9 +36,9 @@ describe('GetUserProfile use case', () => {
     })
 
     expect(result.isRight()).toBe(true)
-    const value = result.value as SuccessResponse<UserDto>
-    expect(value.data?.email).toBe(email)
-    expect(value.data?.name).toBe(name)
+    const value = result.value as UserDto
+    expect(value.email).toBe(email)
+    expect(value.name).toBe(name)
   })
 
   it('should not be able to get user by wrong id', async () => {
@@ -47,7 +47,6 @@ describe('GetUserProfile use case', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value.data).toBeInstanceOf(ResourceNotFoundError)
-    expect(result.value.status).toBe(404)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 })
