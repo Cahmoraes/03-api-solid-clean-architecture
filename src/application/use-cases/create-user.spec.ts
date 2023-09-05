@@ -1,6 +1,5 @@
 import { CreateUserUseCase } from './create-user.usecase'
 import { InMemoryUsersRepository } from 'tests/repositories/in-memory-users-repository'
-import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { provide } from '@/infra/dependency-inversion/registry'
 import { UserAlreadyExistsError } from '../errors/user-already-exists.error'
 import { UserDto } from '../dtos/user-dto.factory'
@@ -23,15 +22,15 @@ describe('CreateUser use case', () => {
       password: '123456',
     })
     expect(result.isRight()).toBeTruthy()
-    const value = result.value as SuccessResponse<UserDto>
-    expect(value.data?.name).toEqual('John Doe')
-    expect(value.data?.email).toEqual('jhon@doe.com')
-    expect(value.data?.id.toString()).toBeDefined()
+    const value = result.value as UserDto
+    expect(value.name).toEqual('John Doe')
+    expect(value.email).toEqual('jhon@doe.com')
+    expect(value.id.toString()).toBeDefined()
     expect(usersRepository.data.toArray()[0]).toMatchObject({
-      _id: new UniqueIdentity(value.data?.id.toString()),
-      email: value.data?.email,
-      name: value.data?.name,
-      createdAt: new Date(value.data?.createdAt),
+      _id: new UniqueIdentity(value.id.toString()),
+      email: value.email,
+      name: value.name,
+      createdAt: new Date(value.createdAt),
     })
   })
 
@@ -51,7 +50,6 @@ describe('CreateUser use case', () => {
     })
 
     expect(result.isLeft()).toBeTruthy()
-    expect(result.value.data).toBeInstanceOf(UserAlreadyExistsError)
-    expect(result.value.status).toBe(400)
+    expect(result.value).toBeInstanceOf(UserAlreadyExistsError)
   })
 })

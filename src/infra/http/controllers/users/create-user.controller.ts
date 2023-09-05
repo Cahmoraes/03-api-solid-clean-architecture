@@ -34,8 +34,11 @@ export class CreateUserController {
     body,
   }: HttpHandlerParams): Promise<UserControllerOutput> {
     try {
-      const { name, email, password } = this.parseBodyOrThrow(body)
-      return this.createUserUseCase.execute({ name, email, password })
+      const userDto = this.parseBodyOrThrow(body)
+      const result = await this.createUserUseCase.execute(userDto)
+      return result.isLeft()
+        ? Either.left(FailResponse.bad(result.value))
+        : Either.right(SuccessResponse.created(result.value))
     } catch (error: unknown) {
       if (error instanceof Error) {
         return Either.left(FailResponse.internalServerError(error))

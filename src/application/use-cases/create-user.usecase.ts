@@ -1,5 +1,3 @@
-import { FailResponse } from '@/infra/http/entities/fail-response'
-import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { UsersRepository } from '../repositories/users-repository'
 import { User } from '../entities/user.entity'
@@ -17,8 +15,8 @@ export interface CreateUserUseCaseInput {
 }
 
 export type CreateUserUseCaseOutput = EitherType<
-  FailResponse<UserAlreadyExistsError>,
-  SuccessResponse<UserDto>
+  UserAlreadyExistsError,
+  UserDto
 >
 
 export class CreateUserUseCase {
@@ -29,11 +27,11 @@ export class CreateUserUseCase {
   ): Promise<CreateUserUseCaseOutput> {
     const existsUser = await this.existsUser(aCreateUserInput.email)
     if (existsUser) {
-      return Either.left(FailResponse.bad(new UserAlreadyExistsError()))
+      return Either.left(new UserAlreadyExistsError())
     }
     const user = await this.performCreateUser(aCreateUserInput)
     this.publishUserCreated(user)
-    return Either.right(SuccessResponse.created(UserDtoFactory.create(user)))
+    return Either.right(UserDtoFactory.create(user))
   }
 
   private async existsUser(email: string): Promise<boolean> {
