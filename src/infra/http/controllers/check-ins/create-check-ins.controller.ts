@@ -7,9 +7,13 @@ import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-han
 import { CreateCheckInUseCase } from '@/application/use-cases/create-check-in.usecase'
 import { CheckInDto } from '@/application/dtos/check-in-dto.factory'
 
+const CreateCheckInParamsSchema = z.object({
+  gymId: z.string().uuid(),
+})
+type CreateCheckInParamsDto = z.infer<typeof CreateCheckInParamsSchema>
+
 const CreateCheckInBodySchema = z.object({
   userId: z.string().uuid(),
-  gymId: z.string().uuid(),
   userLatitude: z.coerce.number().refine((value) => {
     return Math.abs(value) <= 90
   }),
@@ -38,14 +42,25 @@ export class CreateCheckInController {
 
   public async handleRequest({
     body,
+    params,
+    request,
   }: FastifyHttpHandlerParams): Promise<CreateCheckInControllerOutput> {
-    const createCheckInInputDto = this.parseBodyOrThrow(body)
-    const result = await this.createCheckInUseCase.execute(
-      createCheckInInputDto,
-    )
+    const { userLatitude, userLongitude } = this.parseBodyOrThrow(body)
+    const { gymId } = this.parseParamsOrThrow(params)
+    const userId = request.user.sub
+    const result = await this.createCheckInUseCase.execute({
+      gymId,
+      userId,
+      userLatitude,
+      userLongitude,
+    })
     return result.isLeft()
       ? Either.left(FailResponse.internalServerError(result.value))
       : Either.right(SuccessResponse.created(result.value))
+  }
+
+  private parseParamsOrThrow(params: unknown): CreateCheckInParamsDto {
+    return CreateCheckInParamsSchema.parse(params)
   }
 
   private parseBodyOrThrow(body: unknown): CreateCheckInBodyDto {

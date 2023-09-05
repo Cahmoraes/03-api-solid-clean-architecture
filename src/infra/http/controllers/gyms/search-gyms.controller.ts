@@ -7,11 +7,11 @@ import { GymDto } from '@/application/dtos/gym-dto.factory'
 import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
 import { SearchGymsUseCase } from '@/application/use-cases/search-gyms.usecase'
 
-const SearchGymsBodySchema = z.object({
+const SearchGymsParamsSchema = z.object({
   query: z.string(),
   page: z.coerce.number().default(1),
 })
-type SearchGymsBodyDto = z.infer<typeof SearchGymsBodySchema>
+type SearchGymsParamsDto = z.infer<typeof SearchGymsParamsSchema>
 type SearchGymsControllerOutput = EitherType<
   FailResponse<Error>,
   SuccessResponse<GymDto[]>
@@ -39,7 +39,7 @@ export class SearchGymsController {
       : Either.right(SuccessResponse.created(result.value))
   }
 
-  private parseParamsOrThrow(params: unknown): SearchGymsBodyDto {
-    return SearchGymsBodySchema.parse(params)
+  private parseParamsOrThrow(params: unknown): SearchGymsParamsDto {
+    return SearchGymsParamsSchema.parse(params)
   }
 }
