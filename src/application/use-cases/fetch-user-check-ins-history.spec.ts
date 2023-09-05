@@ -1,9 +1,9 @@
 import { CheckIn } from '../entities/check-in.entity'
-import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { InMemoryCheckInsRepository } from 'tests/repositories/in-memory-check-ins-repository'
 import { InMemoryGymsRepository } from '../../../tests/repositories/in-memory-gyms-repository'
 import { FetchUserCheckInsHistoryUseCase } from './fetch-user-check-ins-history.usecase'
 import { provide } from '@/infra/dependency-inversion/registry'
+import { CheckInDto, CheckInDtoFactory } from '../dtos/check-in-dto.factory'
 
 describe('Fetch User Check-in history use case', () => {
   let checkInsRepository: InMemoryCheckInsRepository
@@ -37,9 +37,12 @@ describe('Fetch User Check-in history use case', () => {
       page: 1,
     })
     expect(result.isRight()).toBeTruthy()
-    const value = result.value as CheckIn[]
+    const value = result.value as CheckInDto[]
     expect(value).toHaveLength(2)
-    expect(value).toEqual([checkIn1, checkIn2])
+    expect(value).toEqual([
+      CheckInDtoFactory.create(checkIn1),
+      CheckInDtoFactory.create(checkIn2),
+    ])
   })
 
   it('should be able to fetch paginated check-in history', async () => {
@@ -58,7 +61,7 @@ describe('Fetch User Check-in history use case', () => {
     })
 
     expect(result.isRight()).toBeTruthy()
-    const value = result.value as CheckIn[]
+    const value = result.value as CheckInDto[]
     expect(value).toHaveLength(2)
   })
 })

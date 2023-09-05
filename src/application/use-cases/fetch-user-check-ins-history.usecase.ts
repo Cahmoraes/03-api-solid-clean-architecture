@@ -1,14 +1,14 @@
 import { Either, EitherType } from '@cahmoraes93/either'
-import { CheckIn } from '../entities/check-in.entity'
 import { CheckInsRepository } from '../repositories/check-ins-repository'
 import { inject } from '@/infra/dependency-inversion/registry'
+import { CheckInDto, CheckInDtoFactory } from '../dtos/check-in-dto.factory'
 
 interface FetchUserCheckInsHistoryInput {
   userId: string
   page: number
 }
 
-type FetchUserCheckInsHistoryOutput = EitherType<Error, CheckIn[]>
+type FetchUserCheckInsHistoryOutput = EitherType<Error, CheckInDto[]>
 
 export class FetchUserCheckInsHistoryUseCase {
   private checkInsRepository = inject<CheckInsRepository>('checkInsRepository')
@@ -26,13 +26,13 @@ export class FetchUserCheckInsHistoryUseCase {
   private async performFetchUserCheckInsHistory({
     userId,
     page,
-  }: FetchUserCheckInsHistoryInput): Promise<EitherType<Error, CheckIn[]>> {
+  }: FetchUserCheckInsHistoryInput): Promise<EitherType<Error, CheckInDto[]>> {
     try {
       const checkIns = await this.checkInsRepository.checkInsByUserId(
         userId,
         page,
       )
-      return Either.right(checkIns)
+      return Either.right(checkIns.map(CheckInDtoFactory.create))
     } catch (error: unknown) {
       if (error instanceof Error) {
         return Either.left(error)
