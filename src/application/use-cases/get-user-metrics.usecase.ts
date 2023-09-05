@@ -6,11 +6,11 @@ interface GetUserMetricsInput {
   userId: string
 }
 
-interface Output {
+export interface GetUserMetricsDto {
   checkInsCount: number
 }
 
-type GetUserMetricsOutput = EitherType<Error, Output>
+type GetUserMetricsOutput = EitherType<Error, GetUserMetricsDto>
 
 export class GetUserMetricsUseCase {
   private checkInsRepository = inject<CheckInsRepository>('checkInsRepository')
@@ -26,7 +26,7 @@ export class GetUserMetricsUseCase {
 
   private async performGetUserMetrics({
     userId,
-  }: GetUserMetricsInput): Promise<EitherType<Error, Output>> {
+  }: GetUserMetricsInput): Promise<EitherType<Error, GetUserMetricsDto>> {
     try {
       const checkInsCount = await this.checkInsRepository.countByUserId(userId)
       return Either.right({ checkInsCount })
