@@ -37,7 +37,7 @@ describe('Fetch Nearby Gyms use case', () => {
     })
     const result = await sut.execute({ userCoord })
     expect(result.isRight()).toBeTruthy()
-    const gyms = result.value.data as Gym[]
+    const gyms = result.value as Gym[]
     expect(gyms).toHaveLength(1)
     expect(gyms[0].title).toEqual('Near Gym')
   })
