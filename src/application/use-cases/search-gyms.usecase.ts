@@ -1,5 +1,4 @@
 import { Either, EitherType } from '@cahmoraes93/either'
-import { Gym } from '../entities/gym.entity'
 import { GymsRepository } from '../repositories/gyms-repository'
 import { inject } from '@/infra/dependency-inversion/registry'
 import { GymDto, GymDtoFactory } from '../dtos/gym-dto.factory'
