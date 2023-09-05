@@ -5,7 +5,6 @@ import { UsersRepository } from '../repositories/users-repository'
 import { PasswordHash } from '@/core/entities/password-hash'
 import { inject } from '@/infra/dependency-inversion/registry'
 import { UserDto, UserDtoFactory } from '../dtos/user-dto.factory'
-import { User } from '../entities/user.entity'
 import { InvalidCredentialsError } from '../errors/invalid-credentials.error'
 
 export interface AuthenticateUseCaseInput {
