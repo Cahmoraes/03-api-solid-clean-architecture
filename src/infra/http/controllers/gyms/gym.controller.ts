@@ -1,6 +1,7 @@
 import { HTTPMethodTypes, HttpServer } from '../../servers/http-server'
 import { Routes } from '../routes.enum'
 import { CreateGymController } from './create-gym.controller'
+import { FetchNearbyGymsController } from './fetch-neaby-gyms.controller'
 import { SearchGymsController } from './search-gyms.controller'
 
 export class GymController {
@@ -11,6 +12,7 @@ export class GymController {
   private init(): void {
     this.handleCreateGym()
     this.handleSearchGyms()
+    this.handleNearbyGyms()
   }
 
   private handleCreateGym(): void {
@@ -24,8 +26,16 @@ export class GymController {
   private handleSearchGyms(): void {
     this.httpServer.on(
       HTTPMethodTypes.GET,
-      Routes.GYMS,
+      Routes.GYMS_SEARCH,
       new SearchGymsController().handleRequest,
+    )
+  }
+
+  private handleNearbyGyms(): void {
+    this.httpServer.on(
+      HTTPMethodTypes.GET,
+      Routes.GYMS_NEARBY,
+      new FetchNearbyGymsController().handleRequest,
     )
   }
 }

@@ -8,6 +8,7 @@ export enum DependencyTypes {
   'authenticateUseCase',
   'getUserMetricsUseCase',
   'getUserProfileUseCase',
+  'fetchNearbyGymsUseCase',
   'usersRepository',
   'checkInsRepository',
   'gymsRepository',

@@ -12,6 +12,7 @@ import { GetUserProfileUseCase } from './application/use-cases/get-user-profile.
 import { CreateGymUseCase } from './application/use-cases/create-gym.usecase'
 import { PrismaGymsRepository } from './infra/repositories/prisma/prisma-gyms-repository'
 import { SearchGymsUseCase } from './application/use-cases/search-gyms.usecase'
+import { FetchNearbyGymsUseCase } from './application/use-cases/fetch-nearby-gym.usecase'
 
 DomainEventPublisher.getInstance().subscribe(new UserCreatedSubscriber())
 provide('usersRepository', new PrismaUsersRepository())
@@ -23,6 +24,7 @@ provide('getUserMetricsUseCase', new GetUserMetricsUseCase())
 provide('getUserProfileUseCase', new GetUserProfileUseCase())
 provide('createGymUseCase', new CreateGymUseCase())
 provide('searchGymsUseCase', new SearchGymsUseCase())
+provide('fetchNearbyGymsUseCase', new FetchNearbyGymsUseCase())
 const httpServer = new FastifyAdapter()
 new MainHttpController(httpServer)
 httpServer.listen()

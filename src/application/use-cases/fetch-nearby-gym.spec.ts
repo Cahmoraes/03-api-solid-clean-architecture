@@ -3,6 +3,7 @@ import { Gym } from '../entities/gym.entity'
 import { FetchNearbyGymsUseCase } from './fetch-nearby-gym.usecase'
 import { Coord } from '../entities/value-objects/coord'
 import { provide } from '@/infra/dependency-inversion/registry'
+import { GymDto } from '../dtos/gym-dto.factory'
 
 describe('Fetch Nearby Gyms use case', () => {
   let gymsRepository: InMemoryGymsRepository
@@ -37,7 +38,7 @@ describe('Fetch Nearby Gyms use case', () => {
     })
     const result = await sut.execute({ userCoord })
     expect(result.isRight()).toBeTruthy()
-    const gyms = result.value as Gym[]
+    const gyms = result.value as GymDto[]
     expect(gyms).toHaveLength(1)
     expect(gyms[0].title).toEqual('Near Gym')
   })

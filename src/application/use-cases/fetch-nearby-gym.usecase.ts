@@ -1,14 +1,14 @@
 import { Either, EitherType } from '@cahmoraes93/either'
-import { Gym } from '../entities/gym.entity'
 import { Coord } from '../entities/value-objects/coord'
 import { GymsRepository } from '../repositories/gyms-repository'
 import { inject } from '@/infra/dependency-inversion/registry'
+import { GymDto, GymDtoFactory } from '../dtos/gym-dto.factory'
 
 interface FetchNearbyGymsInput {
   userCoord: Coord
 }
 
-type FetchNearbyGymsOutput = EitherType<Error, Gym[]>
+type FetchNearbyGymsOutput = EitherType<Error, GymDto[]>
 
 export class FetchNearbyGymsUseCase {
   private gymsRepository = inject<GymsRepository>('gymsRepository')
@@ -24,10 +24,10 @@ export class FetchNearbyGymsUseCase {
 
   private async performFetchNearbyGyms(
     userCoord: Coord,
-  ): Promise<EitherType<Error, Gym[]>> {
+  ): Promise<EitherType<Error, GymDto[]>> {
     try {
       const gyms = await this.gymsRepository.findManyNearby(userCoord)
-      return Either.right(gyms)
+      return Either.right(gyms.map(GymDtoFactory.create))
     } catch (error) {
       if (error instanceof Error) {
         return Either.left(error)
