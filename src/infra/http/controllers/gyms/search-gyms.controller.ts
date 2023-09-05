@@ -17,7 +17,7 @@ type SearchGymsControllerOutput = EitherType<
   SuccessResponse<GymDto[]>
 >
 
-export class SearchGymController {
+export class SearchGymsController {
   private readonly searchGymsUseCase =
     inject<SearchGymsUseCase>('searchGymsUseCase')
 
