@@ -5,7 +5,7 @@ import { FailResponse } from '../../entities/fail-response'
 import { AuthenticateUseCase } from '@/application/use-cases/authenticate.usecase'
 import { inject } from '@/infra/dependency-inversion/registry'
 import { HttpHandlerParams, JwtHandlers } from '../../servers/http-server'
-import { UserDto } from '@/application/dtos/user.dto'
+import { UserDto } from '@/application/dtos/user-dto.factory'
 import { InvalidCredentialsError } from '@/application/errors/invalid-credentials.error'
 
 const authenticateBodySchema = z.object({

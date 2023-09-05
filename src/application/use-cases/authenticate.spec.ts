@@ -5,7 +5,7 @@ import { AuthenticateUseCase } from './authenticate.usecase'
 import { PasswordHash } from '@/core/entities/password-hash'
 import { provide } from '@/infra/dependency-inversion/registry'
 import { InvalidCredentialsError } from '../errors/invalid-credentials.error'
-import { UserDto } from '../dtos/user.dto'
+import { UserDto } from '../dtos/user-dto.factory'
 
 describe('CreateUser use case', () => {
   let usersRepository: InMemoryUsersRepository

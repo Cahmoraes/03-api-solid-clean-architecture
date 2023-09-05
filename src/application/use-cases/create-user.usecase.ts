@@ -8,7 +8,7 @@ import { inject } from '@/infra/dependency-inversion/registry'
 import { UserAlreadyExistsError } from '../errors/user-already-exists.error'
 import { DomainEventPublisher } from '../events/domain-event-publisher'
 import { UserCreatedEvent } from '../events/user-created/user-created.event'
-import { UserDto, UserDtoFactory } from '../dtos/user.dto'
+import { UserDto, UserDtoFactory } from '../dtos/user-dto.factory'
 
 export interface CreateUserUseCaseInput {
   name: string

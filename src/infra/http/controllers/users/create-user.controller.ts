@@ -2,10 +2,10 @@ import { z } from 'zod'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { FailResponse } from '../../entities/fail-response'
-import { User } from '@/application/entities/user.entity'
 import { CreateUserUseCase } from '@/application/use-cases/create-user.usecase'
 import { inject } from '@/infra/dependency-inversion/registry'
 import { HttpHandlerParams } from '../../servers/http-server'
+import { UserDto } from '@/application/dtos/user-dto.factory'
 
 const CreateUserBodySchema = z.object({
   name: z.string(),
@@ -15,7 +15,7 @@ const CreateUserBodySchema = z.object({
 type CreateUserBodyDto = z.infer<typeof CreateUserBodySchema>
 type UserControllerOutput = EitherType<
   FailResponse<Error>,
-  SuccessResponse<User>
+  SuccessResponse<UserDto>
 >
 
 export class CreateUserController {
@@ -36,8 +36,11 @@ export class CreateUserController {
     try {
       const { name, email, password } = this.parseBodyOrThrow(body)
       return this.createUserUseCase.execute({ name, email, password })
-    } catch (error: any) {
-      return Either.left(FailResponse.internalServerError(error))
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return Either.left(FailResponse.internalServerError(error))
+      }
+      throw error
     }
   }
 

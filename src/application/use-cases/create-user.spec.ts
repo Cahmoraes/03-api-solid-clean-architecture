@@ -3,7 +3,7 @@ import { InMemoryUsersRepository } from 'tests/repositories/in-memory-users-repo
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { provide } from '@/infra/dependency-inversion/registry'
 import { UserAlreadyExistsError } from '../errors/user-already-exists.error'
-import { UserDto } from '../dtos/user.dto'
+import { UserDto } from '../dtos/user-dto.factory'
 import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
 
 describe('CreateUser use case', () => {
