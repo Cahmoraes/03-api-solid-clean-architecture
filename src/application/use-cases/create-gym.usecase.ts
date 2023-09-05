@@ -15,10 +15,7 @@ interface CreateGymUseCaseInput {
   phone?: string | null
 }
 
-type CreateGymUseCaseOutput = EitherType<
-  FailResponse<InternalServerError>,
-  SuccessResponse<GymDto>
->
+type CreateGymUseCaseOutput = EitherType<InternalServerError, GymDto>
 
 export class CreateGymUseCase {
   private gymsRepository = inject<GymsRepository>('gymsRepository')
@@ -26,10 +23,9 @@ export class CreateGymUseCase {
   async execute(props: CreateGymUseCaseInput): Promise<CreateGymUseCaseOutput> {
     const gym = Gym.create(props)
     const result = await this.performCreateGym(gym)
-    if (result.isLeft()) {
-      return Either.left(FailResponse.bad(new InternalServerError()))
-    }
-    return Either.right(SuccessResponse.created(GymDtoFactory.create(gym)))
+    return result.isLeft()
+      ? Either.left(new InternalServerError())
+      : Either.right(GymDtoFactory.create(gym))
   }
 
   private async performCreateGym(

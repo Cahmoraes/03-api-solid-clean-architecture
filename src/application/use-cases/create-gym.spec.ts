@@ -24,11 +24,11 @@ describe('CreateGym use case', () => {
     })
 
     expect(result.isRight()).toBeTruthy()
-    const value = result.value as SuccessResponse<GymDto>
-    expect(value.data?.title).toEqual('Academia TypeScript Gym')
-    expect(value.data.latitude).toEqual(-27.0747279)
-    expect(value.data.longitude).toEqual(-49.4889672)
-    expect(value.data?.description).toEqual('Fake TypeScript Gym')
-    expect(value.data?.phone).toEqual('00-0000-0000')
+    const value = result.value as GymDto
+    expect(value.title).toEqual('Academia TypeScript Gym')
+    expect(value.latitude).toEqual(-27.0747279)
+    expect(value.longitude).toEqual(-49.4889672)
+    expect(value.description).toEqual('Fake TypeScript Gym')
+    expect(value.phone).toEqual('00-0000-0000')
   })
 })

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { EitherType } from '@cahmoraes93/either'
+import { Either, EitherType } from '@cahmoraes93/either'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { FailResponse } from '../../entities/fail-response'
 import { inject } from '@/infra/dependency-inversion/registry'
@@ -40,7 +40,10 @@ export class CreateGymController {
     body,
   }: FastifyHttpHandlerParams): Promise<CreateGymControllerOutput> {
     const gymDto = this.parseBodyOrThrow(body)
-    return this.createGymUseCase.execute(gymDto)
+    const result = await this.createGymUseCase.execute(gymDto)
+    return result.isLeft()
+      ? Either.left(FailResponse.internalServerError(result.value))
+      : Either.right(SuccessResponse.created(result.value))
   }
 
   private parseBodyOrThrow(body: unknown): CreateGymBodyDto {
