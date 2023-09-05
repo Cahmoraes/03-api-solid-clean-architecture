@@ -9,7 +9,7 @@ import { GetUserMetricsUseCase } from '@/application/use-cases/get-user-metrics.
 import { MainHttpController } from '@/infra/http/controllers/main-http-controller'
 import { Routes } from '@/infra/http/controllers/routes.enum'
 
-describe('Create User (e2e)', () => {
+describe('Authenticate (e2e)', () => {
   let fastify: FastifyAdapter
   beforeAll(async () => {
     provide('usersRepository', new PrismaUsersRepository())
@@ -23,18 +23,29 @@ describe('Create User (e2e)', () => {
     await fastify.listen()
   })
 
-  it('should be able to create an user', async () => {
-    const response = await request(fastify.server).post(Routes.USERS).send({
+  it('should be able to authenticate an user', async () => {
+    await request(fastify.server).post(Routes.USERS).send({
       name: 'John Doe',
       email: 'johm@doe.com',
       password: '123456',
     })
-    expect(response.statusCode).toBe(201)
-    expect(response.body).toEqual({
-      id: expect.any(String),
-      name: 'John Doe',
+
+    const response = await request(fastify.server).post(Routes.SESSIONS).send({
       email: 'johm@doe.com',
-      createdAt: expect.any(String),
+      password: '123456',
     })
+
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toHaveProperty('token')
+    expect(response.body.token).toEqual(expect.any(String))
+  })
+
+  it('should not be able to authenticate a non-existing user', async () => {
+    const response = await request(fastify.server).post(Routes.SESSIONS).send({
+      email: 'non-existing@user.com',
+      password: '123456',
+    })
+    expect(response.statusCode).toBe(400)
+    expect(response.body.data).toBe('Invalid credentials.')
   })
 })
