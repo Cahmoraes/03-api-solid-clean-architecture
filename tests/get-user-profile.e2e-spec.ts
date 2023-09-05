@@ -12,6 +12,8 @@ import { provide } from '@/infra/dependency-inversion/registry'
 import { PrismaGymsRepository } from '@/infra/repositories/prisma/prisma-gyms-repository'
 import { PrismaCheckInsRepository } from '@/infra/repositories/prisma/prisma-check-ins-repository'
 import { CreateGymUseCase } from '@/application/use-cases/create-gym.usecase'
+import { SearchGymsUseCase } from '@/application/use-cases/search-gyms.usecase'
+import { FetchNearbyGymsUseCase } from '@/application/use-cases/fetch-nearby-gym.usecase'
 
 describe('Get User Profile (e2e)', () => {
   let fastify: FastifyAdapter
@@ -24,6 +26,8 @@ describe('Get User Profile (e2e)', () => {
     provide('getUserMetricsUseCase', new GetUserMetricsUseCase())
     provide('getUserProfileUseCase', new GetUserProfileUseCase())
     provide('createGymUseCase', new CreateGymUseCase())
+    provide('searchGymsUseCase', new SearchGymsUseCase())
+    provide('fetchNearbyGymsUseCase', new FetchNearbyGymsUseCase())
 
     const port = await getPort()
     fastify = new FastifyAdapter({ port })

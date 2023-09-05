@@ -1,16 +1,16 @@
-import { CheckIn } from '../entities/check-in.entity'
 import { provide } from '@/infra/dependency-inversion/registry'
-import { CheckInUseCase } from './create-check-in.usecase'
+import { CreateCheckInUseCase } from './create-check-in.usecase'
 import { InMemoryCheckInsRepository } from 'tests/repositories/in-memory-check-ins-repository'
 import { InMemoryGymsRepository } from '@/tests/repositories/in-memory-gyms-repository'
 import { Gym } from '../entities/gym.entity'
 import { MaxDistanceReachedError } from '../errors/max-distance-reached.error'
 import { ResourceNotFoundError } from '../errors/resource-not-found.error'
+import { CheckInDto } from '../dtos/check-in-dto.factory'
 
 describe('CheckIn use case', () => {
   let checkInsRepository: InMemoryCheckInsRepository
   let gymsRepository: InMemoryGymsRepository
-  let sut: CheckInUseCase
+  let sut: CreateCheckInUseCase
   const userId = 'user-01'
   const gymId = 'gym-01'
   const latitude = -27.2092052
@@ -22,7 +22,7 @@ describe('CheckIn use case', () => {
     gymsRepository = new InMemoryGymsRepository()
     provide('checkInsRepository', checkInsRepository)
     provide('gymsRepository', gymsRepository)
-    sut = new CheckInUseCase()
+    sut = new CreateCheckInUseCase()
 
     const gym = Gym.create(
       {
@@ -62,7 +62,7 @@ describe('CheckIn use case', () => {
       userLongitude: longitude,
     })
     expect(result.isRight()).toBeTruthy()
-    const value = result.value as CheckIn
+    const value = result.value as CheckInDto
     expect(value.gymId.toString()).toEqual(gymId)
     expect(value.userId.toString()).toEqual(userId)
     expect(value.createdAt).instanceOf(Date)

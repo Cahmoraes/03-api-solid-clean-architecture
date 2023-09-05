@@ -1,6 +1,4 @@
 import { Either, EitherType } from '@cahmoraes93/either'
-import { FailResponse } from '@/infra/http/entities/fail-response'
-import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { CheckIn } from '../entities/check-in.entity'
 import { CheckInsRepository } from '../repositories/check-ins-repository'
 import { GymsRepository } from '../repositories/gyms-repository'
@@ -10,22 +8,23 @@ import { inject } from '@/infra/dependency-inversion/registry'
 import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 import { MaxDistanceReachedError } from '../errors/max-distance-reached.error'
 import { MaxNumbersOfCheckInsReachedError } from '../errors/max-number-of-check-ins-reached.error'
+import { CheckInDto, CheckInDtoFactory } from '../dtos/check-in-dto.factory'
 
-export interface CheckInUseCaseInput {
+export interface CreateCheckInUseCaseInput {
   userId: string
   gymId: string
   userLatitude: number
   userLongitude: number
 }
 
-export type CheckInUseCaseOutput = EitherType<
+export type CreateCheckInUseCaseOutput = EitherType<
   | ResourceNotFoundError
   | MaxDistanceReachedError
   | MaxNumbersOfCheckInsReachedError,
-  CheckIn
+  CheckInDto
 >
 
-export class CheckInUseCase {
+export class CreateCheckInUseCase {
   private checkInsRepository = inject<CheckInsRepository>('checkInsRepository')
   private gymsRepository = inject<GymsRepository>('gymsRepository')
   private MAX_DISTANCE_IN_KILOMETERS = 0.1
@@ -35,7 +34,7 @@ export class CheckInUseCase {
     gymId,
     userLatitude,
     userLongitude,
-  }: CheckInUseCaseInput): Promise<CheckInUseCaseOutput> {
+  }: CreateCheckInUseCaseInput): Promise<CreateCheckInUseCaseOutput> {
     const gym = await this.gymsRepository.gymOfId(gymId)
     if (!gym) return Either.left(new ResourceNotFoundError())
     if (
@@ -54,7 +53,7 @@ export class CheckInUseCase {
       userId,
     })
     await this.checkInsRepository.save(checkIn)
-    return Either.right(checkIn)
+    return Either.right(CheckInDtoFactory.create(checkIn))
   }
 
   private distanceBetweenUserAndGymIsMoreThanOneHundredMeters(

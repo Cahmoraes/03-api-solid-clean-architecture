@@ -13,6 +13,7 @@ import { CreateGymUseCase } from './application/use-cases/create-gym.usecase'
 import { PrismaGymsRepository } from './infra/repositories/prisma/prisma-gyms-repository'
 import { SearchGymsUseCase } from './application/use-cases/search-gyms.usecase'
 import { FetchNearbyGymsUseCase } from './application/use-cases/fetch-nearby-gym.usecase'
+import { CreateCheckInUseCase } from './application/use-cases/create-check-in.usecase'
 
 DomainEventPublisher.getInstance().subscribe(new UserCreatedSubscriber())
 provide('usersRepository', new PrismaUsersRepository())
@@ -25,6 +26,7 @@ provide('getUserProfileUseCase', new GetUserProfileUseCase())
 provide('createGymUseCase', new CreateGymUseCase())
 provide('searchGymsUseCase', new SearchGymsUseCase())
 provide('fetchNearbyGymsUseCase', new FetchNearbyGymsUseCase())
+provide('createCheckInUseCase', new CreateCheckInUseCase())
 const httpServer = new FastifyAdapter()
 new MainHttpController(httpServer)
 httpServer.listen()

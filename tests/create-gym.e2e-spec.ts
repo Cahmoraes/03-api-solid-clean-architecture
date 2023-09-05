@@ -12,6 +12,8 @@ import { AuthenticateUseCase } from '@/application/use-cases/authenticate.usecas
 import { CreateUserUseCase } from '@/application/use-cases/create-user.usecase'
 import { GetUserMetricsUseCase } from '@/application/use-cases/get-user-metrics.usecase'
 import { GetUserProfileUseCase } from '@/application/use-cases/get-user-profile.usecase'
+import { SearchGymsUseCase } from '@/application/use-cases/search-gyms.usecase'
+import { FetchNearbyGymsUseCase } from '@/application/use-cases/fetch-nearby-gym.usecase'
 
 describe('Create Gym (e2e)', () => {
   let fastify: FastifyAdapter
@@ -24,6 +26,8 @@ describe('Create Gym (e2e)', () => {
     provide('getUserMetricsUseCase', new GetUserMetricsUseCase())
     provide('getUserProfileUseCase', new GetUserProfileUseCase())
     provide('createGymUseCase', new CreateGymUseCase())
+    provide('searchGymsUseCase', new SearchGymsUseCase())
+    provide('fetchNearbyGymsUseCase', new FetchNearbyGymsUseCase())
 
     const port = await getPort()
     fastify = new FastifyAdapter({ port })
