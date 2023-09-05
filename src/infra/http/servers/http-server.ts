@@ -35,12 +35,18 @@ export type HttpHandler = (
   httpHandlerParams: HttpHandlerParams,
 ) => Promise<EitherType<FailResponse<Error>, SuccessResponse<unknown>>>
 
+type Middleware = (...args: any[]) => void
+
+export interface MiddlewareProps {
+  onRequest: Middleware | Middleware[]
+}
+
 export interface HttpServer {
   listen(): Promise<void>
   on(
     method: HTTPMethodTypes,
     route: string,
     handler: HttpHandler,
-    middleware?: object,
+    middleware?: MiddlewareProps,
   ): void
 }
