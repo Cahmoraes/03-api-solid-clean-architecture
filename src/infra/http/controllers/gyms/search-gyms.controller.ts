@@ -7,11 +7,11 @@ import { GymDto } from '@/application/dtos/gym-dto.factory'
 import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
 import { SearchGymsUseCase } from '@/application/use-cases/search-gyms.usecase'
 
-const SearchGymsParamsSchema = z.object({
-  query: z.string(),
+const SearchGymsQuerySchema = z.object({
+  q: z.string(),
   page: z.coerce.number().default(1),
 })
-type SearchGymsParamsDto = z.infer<typeof SearchGymsParamsSchema>
+type SearchGymsQueryDto = z.infer<typeof SearchGymsQuerySchema>
 type SearchGymsControllerOutput = EitherType<
   FailResponse<Error>,
   SuccessResponse<GymDto[]>
@@ -30,16 +30,19 @@ export class SearchGymsController {
   }
 
   public async handleRequest({
-    params,
+    query,
   }: FastifyHttpHandlerParams): Promise<SearchGymsControllerOutput> {
-    const searchDto = this.parseParamsOrThrow(params)
-    const result = await this.searchGymsUseCase.execute(searchDto)
+    const searchDto = this.parseQueryOrThrow(query)
+    const result = await this.searchGymsUseCase.execute({
+      page: searchDto.page,
+      query: searchDto.q,
+    })
     return result.isLeft()
       ? Either.left(FailResponse.internalServerError(result.value))
-      : Either.right(SuccessResponse.created(result.value))
+      : Either.right(SuccessResponse.ok(result.value))
   }
 
-  private parseParamsOrThrow(params: unknown): SearchGymsParamsDto {
-    return SearchGymsParamsSchema.parse(params)
+  private parseQueryOrThrow(params: unknown): SearchGymsQueryDto {
+    return SearchGymsQuerySchema.parse(params)
   }
 }

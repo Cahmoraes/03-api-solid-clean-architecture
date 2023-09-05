@@ -26,6 +26,7 @@ export interface JwtHandlers {
 export interface HttpHandlerParams<TRequest = any, TResponse = any> {
   body: unknown
   params: unknown
+  query: unknown
   jwtHandler: JwtHandlers
   request: TRequest
   reply: TResponse

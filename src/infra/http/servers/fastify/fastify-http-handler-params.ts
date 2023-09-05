@@ -18,6 +18,10 @@ export class FastifyHttpHandlerParams
     return this.request.params
   }
 
+  get query(): unknown {
+    return this.request.query
+  }
+
   get jwtHandler(): JwtHandlers {
     return new FastifyJwtHandlers(this.request, this.reply)
   }
