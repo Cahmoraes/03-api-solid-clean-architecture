@@ -1,7 +1,7 @@
 import { Routes } from './routes.enum'
 import { CreateUserController } from './users/create-user.controller'
 import { AuthenticateController } from './users/authenticate.controller'
-import { ProfileController } from './users/profile.controller'
+import { GetUserProfileController } from './users/get-user-profile.controller'
 import { HTTPMethodTypes, HttpServer } from '../servers/http-server'
 import { jwtVerify } from '../servers/fastify/middleware/jwt-verify.middleware'
 
@@ -36,7 +36,7 @@ export class MainHttpController {
     this.httpServer.on(
       HTTPMethodTypes.POST,
       Routes.ME,
-      new ProfileController().handleRequest,
+      new GetUserProfileController().handleRequest,
       {
         onRequest: jwtVerify,
       },

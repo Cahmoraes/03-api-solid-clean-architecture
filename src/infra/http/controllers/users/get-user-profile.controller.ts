@@ -7,17 +7,17 @@ import { inject } from '@/infra/dependency-inversion/registry'
 import { UserDto } from '@/application/dtos/user-dto.factory'
 import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
 
-const profileBodySchema = z.object({
+const getUserProfileBodySchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
 })
-type ProfileBodyDto = z.infer<typeof profileBodySchema>
-type ProfileControllerOutput = EitherType<
+type GeuUserProfileBodyDto = z.infer<typeof getUserProfileBodySchema>
+type GetUserProfileControllerOutput = EitherType<
   FailResponse<Error>,
   SuccessResponse<UserDto>
 >
 
-export class ProfileController {
+export class GetUserProfileController {
   private readonly authenticateUseCase = inject<AuthenticateUseCase>(
     'authenticateUseCase',
   )
@@ -34,7 +34,7 @@ export class ProfileController {
     body,
     jwtHandler,
     request,
-  }: FastifyHttpHandlerParams): Promise<ProfileControllerOutput> {
+  }: FastifyHttpHandlerParams): Promise<GetUserProfileControllerOutput> {
     try {
       console.log(request)
       // const user = await jwtHandler.verify()
@@ -46,7 +46,7 @@ export class ProfileController {
     }
   }
 
-  private parseBodyOrThrow(body: unknown): ProfileBodyDto {
-    return profileBodySchema.parse(body)
+  private parseBodyOrThrow(body: unknown): GeuUserProfileBodyDto {
+    return getUserProfileBodySchema.parse(body)
   }
 }
