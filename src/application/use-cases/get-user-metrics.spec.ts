@@ -32,6 +32,6 @@ describe('Get User Metrics use case', () => {
       userId,
     })
     expect(result.isRight()).toBeTruthy()
-    expect(result.value).toEqual(SuccessResponse.ok({ checkInsCount: 2 }))
+    expect(result.value).toEqual({ checkInsCount: 2 })
   })
 })
