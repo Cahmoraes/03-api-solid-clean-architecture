@@ -3,6 +3,7 @@ import { isTest } from '@/env'
 type Constructor = { new (): unknown }
 export enum DependencyTypes {
   'createUserUseCase',
+  'createGymUseCase',
   'authenticateUseCase',
   'getUserMetricsUseCase',
   'getUserProfileUseCase',
