@@ -5,6 +5,7 @@ import { Gym } from '../entities/gym.entity'
 import { GymsRepository } from '../repositories/gyms-repository'
 import { inject } from '@/infra/dependency-inversion/registry'
 import { GymDto, GymDtoFactory } from '../dtos/gym-dto.factory'
+import { InternalServerError } from '../errors/internal-server.error'
 
 interface CreateGymUseCaseInput {
   title: string
@@ -15,7 +16,7 @@ interface CreateGymUseCaseInput {
 }
 
 type CreateGymUseCaseOutput = EitherType<
-  FailResponse<unknown>,
+  FailResponse<InternalServerError>,
   SuccessResponse<GymDto>
 >
 
@@ -26,20 +27,20 @@ export class CreateGymUseCase {
     const gym = Gym.create(props)
     const result = await this.performCreateGym(gym)
     if (result.isLeft()) {
-      return Either.left(FailResponse.bad(result.value))
+      return Either.left(FailResponse.bad(new InternalServerError()))
     }
     return Either.right(SuccessResponse.ok(GymDtoFactory.create(gym)))
   }
 
   private async performCreateGym(
     aGym: Gym,
-  ): Promise<EitherType<unknown, SuccessResponse<GymDto>>> {
+  ): Promise<EitherType<Error, boolean>> {
     try {
       await this.gymsRepository.save(aGym)
-      return Either.right(SuccessResponse.ok(GymDtoFactory.create(aGym)))
+      return Either.right(true)
     } catch (error) {
       if (error instanceof Error) {
-        return Either.left(FailResponse.internalServerError(error))
+        return Either.left(error)
       }
       throw error
     }

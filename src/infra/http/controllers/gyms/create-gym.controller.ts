@@ -9,6 +9,7 @@ import { UserDto } from '@/application/dtos/user-dto.factory'
 import { Gym } from '@/application/entities/gym.entity'
 import { CreateGymUseCase } from '@/application/use-cases/create-gym.usecase'
 import { GymDto } from '@/application/dtos/gym-dto.factory'
+import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
 
 const CreateGymBodySchema = z.object({
   title: z.string(),
@@ -23,7 +24,7 @@ const CreateGymBodySchema = z.object({
 })
 type CreateGymBodyDto = z.infer<typeof CreateGymBodySchema>
 type CreateGymControllerOutput = EitherType<
-  FailResponse<unknown>,
+  FailResponse<Error>,
   SuccessResponse<GymDto>
 >
 
@@ -41,13 +42,15 @@ export class CreateGymController {
 
   public async handleRequest({
     body,
-  }: HttpHandlerParams): Promise<CreateGymControllerOutput> {
+  }: FastifyHttpHandlerParams): Promise<CreateGymControllerOutput> {
     try {
       const gymDto = this.parseBodyOrThrow(body)
       return this.createGymUseCase.execute(gymDto)
     } catch (error: unknown) {
       if (error instanceof Error) {
-        return Either.left(FailResponse.internalServerError(error))
+        return Either.left(
+          FailResponse.internalServerError(new Error('Internal Server Error')),
+        )
       }
       throw error
     }
