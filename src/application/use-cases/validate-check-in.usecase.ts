@@ -1,14 +1,17 @@
 import { Either, EitherType } from '@cahmoraes93/either'
-import { CheckIn } from '../entities/check-in.entity'
 import { CheckInsRepository } from '../repositories/check-ins-repository'
 import { inject } from '@/infra/dependency-inversion/registry'
 import { ResourceNotFoundError } from '../errors/resource-not-found.error'
+import { CheckInDto, CheckInDtoFactory } from '../dtos/check-in-dto.factory'
 
 interface ValidateCheckInUseCaseInput {
   checkInId: string
 }
 
-type ValidateCheckInUseCaseOutput = EitherType<ResourceNotFoundError, CheckIn>
+type ValidateCheckInUseCaseOutput = EitherType<
+  ResourceNotFoundError,
+  CheckInDto
+>
 
 export class ValidateCheckInUseCase {
   private checkInsRepository = inject<CheckInsRepository>('checkInsRepository')
@@ -25,6 +28,6 @@ export class ValidateCheckInUseCase {
       return Either.left(isValidated.value)
     }
     await this.checkInsRepository.save(checkIn)
-    return Either.right(checkIn)
+    return Either.right(CheckInDtoFactory.create(checkIn))
   }
 }

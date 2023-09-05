@@ -3,6 +3,7 @@ import { InMemoryCheckInsRepository } from 'tests/repositories/in-memory-check-i
 import { ValidateCheckInUseCase } from './validate-check-in.usecase'
 import { provide } from '@/infra/dependency-inversion/registry'
 import { ResourceNotFoundError } from '../errors/resource-not-found.error'
+import { CheckInDto } from '../dtos/check-in-dto.factory'
 
 describe('Validate Check-in use case', () => {
   let checkInsRepository: InMemoryCheckInsRepository
@@ -31,7 +32,7 @@ describe('Validate Check-in use case', () => {
       checkInId: createdCheckIn.id.toString(),
     })
     expect(result.isRight()).toBeTruthy()
-    const value = result.value as CheckIn
+    const value = result.value as CheckInDto
     expect(value.validatedAt).toEqual(expect.any(Date))
     expect(checkInsRepository.data.toArray()[0].validatedAt).toEqual(
       expect.any(Date),
