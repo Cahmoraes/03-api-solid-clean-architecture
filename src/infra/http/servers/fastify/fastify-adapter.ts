@@ -18,6 +18,16 @@ export class FastifyAdapter implements HttpServer {
   constructor() {
     this.registerJWT()
     this.errorHandler()
+    console.log('*************///*******////*****///')
+    console.log(process.env.DATABASE_URL)
+  }
+
+  public get app() {
+    return this.httpServer
+  }
+
+  public async ready(): Promise<void> {
+    return this.httpServer.ready()
   }
 
   async listen(): Promise<void> {

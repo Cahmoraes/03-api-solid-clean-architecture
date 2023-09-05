@@ -1,11 +1,11 @@
 import { Gym } from '@/application/entities/gym.entity'
 import { Coord } from '@/application/entities/value-objects/coord'
 import { GymsRepository } from '@/application/repositories/gyms-repository'
-import { prisma } from '@/infra/connection/prisma'
-import { Prisma, Gym as PrismaGym } from '@prisma/client'
+import { makePrismaClient } from '@/infra/connection/prisma'
+import { Gym as PrismaGym } from '@prisma/client'
 
 export class PrismaGymsRepository implements GymsRepository {
-  private readonly prisma = prisma
+  private readonly prisma = makePrismaClient()
   private ITEM_PER_PAGE = 20
 
   async save(aGym: Gym): Promise<Gym> {

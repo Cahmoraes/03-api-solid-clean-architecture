@@ -1,10 +1,10 @@
 import { UsersRepository } from '@/application/repositories/users-repository'
 import { User as PrismaUser } from '@prisma/client'
 import { User } from '@/application/entities/user.entity'
-import { prisma } from '@/infra/connection/prisma'
+import { makePrismaClient } from '@/infra/connection/prisma'
 
 export class PrismaUsersRepository implements UsersRepository {
-  private readonly prisma = prisma
+  private readonly prisma = makePrismaClient()
 
   async userOfId(anId: string): Promise<User | null> {
     const prismaUser = await this.prisma.user.findUnique({

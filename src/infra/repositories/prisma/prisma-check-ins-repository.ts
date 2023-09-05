@@ -1,11 +1,11 @@
 import { CheckIn as PrismaCheckIn } from '@prisma/client'
 import { CheckIn } from '@/application/entities/check-in.entity'
 import { CheckInsRepository } from '@/application/repositories/check-ins-repository'
-import { prisma } from '../../connection/prisma'
+import { makePrismaClient } from '../../connection/prisma'
 import { DateHelper } from '@/application/entities/services/date-helper'
 
 export class PrismaCheckInsRepository implements CheckInsRepository {
-  private readonly prisma = prisma
+  private readonly prisma = makePrismaClient()
   private ITEM_PER_PAGE = 20
 
   async checkInOfId(checkInId: string): Promise<CheckIn | null> {
