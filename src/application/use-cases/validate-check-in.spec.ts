@@ -1,5 +1,4 @@
 import { CheckIn } from '../entities/check-in.entity'
-import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { InMemoryCheckInsRepository } from 'tests/repositories/in-memory-check-ins-repository'
 import { ValidateCheckInUseCase } from './validate-check-in.usecase'
 import { provide } from '@/infra/dependency-inversion/registry'
@@ -32,12 +31,12 @@ describe('Validate Check-in use case', () => {
       checkInId: createdCheckIn.id.toString(),
     })
     expect(result.isRight()).toBeTruthy()
-    const value = result.value as SuccessResponse<CheckIn>
-    expect(value.data?.validatedAt).toEqual(expect.any(Date))
+    const value = result.value as CheckIn
+    expect(value.validatedAt).toEqual(expect.any(Date))
     expect(checkInsRepository.data.toArray()[0].validatedAt).toEqual(
       expect.any(Date),
     )
-    expect(value.data?.validatedAt).toEqual(
+    expect(value.validatedAt).toEqual(
       checkInsRepository.data.toArray()[0].validatedAt,
     )
   })
@@ -47,7 +46,7 @@ describe('Validate Check-in use case', () => {
       checkInId: 'inexistent-check-in-id',
     })
     expect(result.isLeft()).toBeTruthy()
-    expect(result.value.data).toBeInstanceOf(ResourceNotFoundError)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 
   it('should not be able to validate the check-in after 20 minutes of its creation', async () => {
