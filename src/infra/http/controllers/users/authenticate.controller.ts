@@ -43,12 +43,16 @@ export class AuthenticateController {
     try {
       const { email, password } = this.parseBodyOrThrow(body)
       const result = await this.authenticateUseCase.execute({ email, password })
-      if (result.isLeft())
+      if (result.isLeft()) {
         return Either.left(FailResponse.bad(result.value.data))
+      }
       const token = await this.createJwtToken(jwtHandler, result.value.data!)
       return Either.right(SuccessResponse.ok({ token }))
-    } catch (error: any) {
-      return Either.left(FailResponse.internalServerError(error))
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return Either.left(FailResponse.internalServerError(error))
+      }
+      throw error
     }
   }
 
