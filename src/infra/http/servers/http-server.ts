@@ -11,6 +11,7 @@ export const enum HTTPMethodTypes {
 }
 
 export interface VerifyUser {
+  role: string
   sub: string
   iat: number
 }

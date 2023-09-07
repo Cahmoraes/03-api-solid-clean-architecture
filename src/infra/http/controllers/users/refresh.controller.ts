@@ -3,10 +3,11 @@ import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { FailResponse } from '../../entities/fail-response'
 import { InvalidCredentialsError } from '@/application/errors/invalid-credentials.error'
 import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
+import { TokenGenerator } from '../../servers/fastify/token-generator'
 import {
-  TokenGenerator,
-  TokenGeneratorProps,
-} from '../../servers/fastify/token-generator'
+  ProductionTokenGenerator,
+  ProductionTokenGeneratorProps,
+} from '../../servers/fastify/production-token-generator'
 
 type OutputDTO = {
   token: string
@@ -53,9 +54,11 @@ export class RefreshController {
     }
   }
 
-  private makeTokenGenerator(props: TokenGeneratorProps): TokenGenerator {
+  private makeTokenGenerator(
+    props: ProductionTokenGeneratorProps,
+  ): TokenGenerator {
     if (!this.tokenGenerator) {
-      this.tokenGenerator = new TokenGenerator(props)
+      this.tokenGenerator = new ProductionTokenGenerator(props)
     }
     return this.tokenGenerator
   }

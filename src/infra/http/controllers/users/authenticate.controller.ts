@@ -7,10 +7,11 @@ import { inject } from '@/infra/dependency-inversion/registry'
 import { UserDto } from '@/application/dtos/user-dto.factory'
 import { InvalidCredentialsError } from '@/application/errors/invalid-credentials.error'
 import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
+import { TokenGenerator } from '../../servers/fastify/token-generator'
 import {
-  TokenGenerator,
-  TokenGeneratorProps,
-} from '../../servers/fastify/token-generator'
+  ProductionTokenGenerator,
+  ProductionTokenGeneratorProps,
+} from '../../servers/fastify/production-token-generator'
 
 const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -74,9 +75,11 @@ export class AuthenticateController {
     return authenticateBodySchema.parse(body)
   }
 
-  private makeTokenGenerator(props: TokenGeneratorProps): TokenGenerator {
+  private makeTokenGenerator(
+    props: ProductionTokenGeneratorProps,
+  ): TokenGenerator {
     if (!this.tokenGenerator) {
-      this.tokenGenerator = new TokenGenerator(props)
+      this.tokenGenerator = new ProductionTokenGenerator(props)
     }
     return this.tokenGenerator
   }
