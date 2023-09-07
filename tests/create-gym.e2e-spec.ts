@@ -4,6 +4,7 @@ import { FastifyAdapter } from '@/infra/http/servers/fastify/fastify-adapter'
 import { MainHttpController } from '@/infra/http/controllers/main-http-controller'
 import { Routes } from '@/infra/http/controllers/routes.enum'
 import { provideDependencies } from './utils/provide-dependencies'
+import { createAndAuthenticateUser } from './utils/create-and-authenticate-user'
 
 describe('Create Gym (e2e)', () => {
   let fastify: FastifyAdapter
@@ -20,13 +21,17 @@ describe('Create Gym (e2e)', () => {
   })
 
   it('should be able to create a gym', async () => {
-    const response = await request(fastify.server).post(Routes.GYMS).send({
-      title: 'Academia TypeScript Gym',
-      latitude: -27.0747279,
-      longitude: -49.4889672,
-      description: 'Fake TypeScript Gym',
-      phone: '00-0000-0000',
-    })
+    const { token } = await createAndAuthenticateUser(fastify)
+    const response = await request(fastify.server)
+      .post(Routes.GYMS)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        title: 'Academia TypeScript Gym',
+        latitude: -27.0747279,
+        longitude: -49.4889672,
+        description: 'Fake TypeScript Gym',
+        phone: '00-0000-0000',
+      })
 
     expect(response.statusCode).toBe(201)
   })

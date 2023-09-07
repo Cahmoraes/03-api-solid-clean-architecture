@@ -4,14 +4,13 @@ import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { FailResponse } from '../../entities/fail-response'
 import { AuthenticateUseCase } from '@/application/use-cases/authenticate.usecase'
 import { inject } from '@/infra/dependency-inversion/registry'
-import { JwtHandlers } from '../../servers/http-server'
 import { UserDto } from '@/application/dtos/user-dto.factory'
 import { InvalidCredentialsError } from '@/application/errors/invalid-credentials.error'
 import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
 import {
   TokenGenerator,
   TokenGeneratorProps,
-} from '@/application/services/token-generator.service'
+} from '../../servers/fastify/token-generator'
 
 const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -30,6 +29,7 @@ type UserControllerOutput = EitherType<
 
 export class AuthenticateController {
   private REFRESH_TOKEN_NAME = 'refreshToken'
+  private tokenGenerator?: TokenGenerator
   private readonly authenticateUseCase = inject<AuthenticateUseCase>(
     'authenticateUseCase',
   )
@@ -53,7 +53,7 @@ export class AuthenticateController {
       if (result.isLeft()) {
         return Either.left(FailResponse.bad(result.value))
       }
-      const tokenGenerator = this.tokenGenerator({
+      const tokenGenerator = this.makeTokenGenerator({
         jwtHandler,
         userId: this.userIdFor(result.value),
         userRole: this.userRoleFor(result.value),
@@ -74,8 +74,11 @@ export class AuthenticateController {
     return authenticateBodySchema.parse(body)
   }
 
-  private tokenGenerator(props: TokenGeneratorProps) {
-    return new TokenGenerator(props)
+  private makeTokenGenerator(props: TokenGeneratorProps): TokenGenerator {
+    if (!this.tokenGenerator) {
+      this.tokenGenerator = new TokenGenerator(props)
+    }
+    return this.tokenGenerator
   }
 
   private userIdFor(aUserDto: UserDto): string {

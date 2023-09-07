@@ -1,13 +1,12 @@
 import { Either, EitherType } from '@cahmoraes93/either'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { FailResponse } from '../../entities/fail-response'
-import { JwtHandlers } from '../../servers/http-server'
 import { InvalidCredentialsError } from '@/application/errors/invalid-credentials.error'
 import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
 import {
   TokenGenerator,
   TokenGeneratorProps,
-} from '@/application/services/token-generator.service'
+} from '../../servers/fastify/token-generator'
 
 type OutputDTO = {
   token: string
@@ -19,6 +18,7 @@ type UserControllerOutput = EitherType<
 >
 
 export class RefreshController {
+  private tokenGenerator?: TokenGenerator
   private REFRESH_TOKEN_NAME = 'refreshToken'
 
   constructor() {
@@ -36,7 +36,7 @@ export class RefreshController {
   }: FastifyHttpHandlerParams): Promise<UserControllerOutput> {
     try {
       await request.jwtVerify({ onlyCookie: true })
-      const tokenGenerator = this.tokenGenerator({
+      const tokenGenerator = this.makeTokenGenerator({
         jwtHandler,
         userId: request.user.sub,
         userRole: request.user.role,
@@ -53,8 +53,11 @@ export class RefreshController {
     }
   }
 
-  private tokenGenerator(props: TokenGeneratorProps) {
-    return new TokenGenerator(props)
+  private makeTokenGenerator(props: TokenGeneratorProps): TokenGenerator {
+    if (!this.tokenGenerator) {
+      this.tokenGenerator = new TokenGenerator(props)
+    }
+    return this.tokenGenerator
   }
 
   private async configureRefreshToken(

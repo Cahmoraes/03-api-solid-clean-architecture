@@ -26,7 +26,7 @@ describe('Create User (e2e)', () => {
       password: '123456',
       role: 'ADMIN',
     })
-    console.log(response.body)
+
     expect(response.statusCode).toBe(201)
     expect(response.body).toEqual({
       id: expect.any(String),
