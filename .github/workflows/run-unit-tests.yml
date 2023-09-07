@@ -8,6 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NODE_ENV: test
+      HOST: '0.0.0.0'
+      DATABASE_URL: 'postgresql://example'
+      PORT: 3333
+      JWT_SECRET: 'SECRET_PASSWORD'
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
