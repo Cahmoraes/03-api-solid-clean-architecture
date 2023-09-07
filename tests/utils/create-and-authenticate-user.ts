@@ -7,6 +7,7 @@ export async function createAndAuthenticateUser(fastify: FastifyAdapter) {
     name: 'John Doe',
     email: 'johm@doe.com',
     password: '123456',
+    role: 'ADMIN',
   })
 
   const sessionResponse = await request(fastify.server)

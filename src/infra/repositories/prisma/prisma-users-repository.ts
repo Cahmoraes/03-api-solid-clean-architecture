@@ -22,6 +22,7 @@ export class PrismaUsersRepository implements UsersRepository {
         email: aPrismaUser.email,
         name: aPrismaUser.name,
         passwordHash: aPrismaUser.password_hash,
+        role: aPrismaUser.role,
       },
       aPrismaUser.id,
     )
@@ -45,6 +46,7 @@ export class PrismaUsersRepository implements UsersRepository {
         password_hash: aUser.passwordHash,
         id: aUser.id.toString(),
         created_at: aUser.createdAt,
+        role: aUser.role,
       },
     })
     return this.createUserFromPrisma(userDto)

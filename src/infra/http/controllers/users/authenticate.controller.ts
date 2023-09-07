@@ -8,7 +8,10 @@ import { JwtHandlers } from '../../servers/http-server'
 import { UserDto } from '@/application/dtos/user-dto.factory'
 import { InvalidCredentialsError } from '@/application/errors/invalid-credentials.error'
 import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
-import { TokenGenerator } from '@/application/services/token-generator.service'
+import {
+  TokenGenerator,
+  TokenGeneratorProps,
+} from '@/application/services/token-generator.service'
 
 const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -50,10 +53,11 @@ export class AuthenticateController {
       if (result.isLeft()) {
         return Either.left(FailResponse.bad(result.value))
       }
-      const tokenGenerator = new TokenGenerator(
+      const tokenGenerator = this.tokenGenerator({
         jwtHandler,
-        this.userIdFor(result.value),
-      )
+        userId: this.userIdFor(result.value),
+        userRole: this.userRoleFor(result.value),
+      })
       const token = await tokenGenerator.jwtToken()
       const refreshToken = await tokenGenerator.refreshToken()
       await this.configureRefreshToken(refreshToken, reply)
@@ -70,8 +74,16 @@ export class AuthenticateController {
     return authenticateBodySchema.parse(body)
   }
 
+  private tokenGenerator(props: TokenGeneratorProps) {
+    return new TokenGenerator(props)
+  }
+
   private userIdFor(aUserDto: UserDto): string {
     return aUserDto.id.toString()
+  }
+
+  private userRoleFor(aUserDto: UserDto): string {
+    return aUserDto.role
   }
 
   private async configureRefreshToken(

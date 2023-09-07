@@ -1,10 +1,11 @@
-import { User } from '../entities/user.entity'
+import { Role, User } from '../entities/user.entity'
 
 export interface UserDto {
   id: string
   name: string
   email: string
   createdAt: string
+  role: Role
 }
 
 export class UserDtoFactory {
@@ -14,6 +15,7 @@ export class UserDtoFactory {
       name: anUser.name,
       email: anUser.email,
       createdAt: anUser.createdAt.toISOString(),
+      role: anUser.role,
     }
   }
 }

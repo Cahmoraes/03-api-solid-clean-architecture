@@ -28,6 +28,7 @@ describe('GetUserProfile use case', () => {
         name,
         email,
         passwordHash: await passwordHash.createHash(password),
+        role: 'ADMIN',
       }),
     )
 

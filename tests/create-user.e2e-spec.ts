@@ -24,13 +24,16 @@ describe('Create User (e2e)', () => {
       name: 'John Doe',
       email: 'johm@doe.com',
       password: '123456',
+      role: 'ADMIN',
     })
+    console.log(response.body)
     expect(response.statusCode).toBe(201)
     expect(response.body).toEqual({
       id: expect.any(String),
       name: 'John Doe',
       email: 'johm@doe.com',
       createdAt: expect.any(String),
+      role: 'ADMIN',
     })
   })
 })

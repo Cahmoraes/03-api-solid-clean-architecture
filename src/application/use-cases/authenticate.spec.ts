@@ -26,6 +26,7 @@ describe('CreateUser use case', () => {
       name,
       email,
       passwordHash: await passwordHash.createHash(password),
+      role: 'ADMIN',
     })
     await usersRepository.save(user)
 
@@ -63,6 +64,7 @@ describe('CreateUser use case', () => {
       name,
       email,
       passwordHash: await passwordHash.createHash('invalid-password'),
+      role: 'ADMIN',
     })
 
     await usersRepository.save(user)

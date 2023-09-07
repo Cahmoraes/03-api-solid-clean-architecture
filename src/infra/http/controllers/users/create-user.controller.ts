@@ -11,6 +11,7 @@ const CreateUserBodySchema = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string().min(6),
+  role: z.enum(['ADMIN', 'MEMBER']).default('MEMBER'),
 })
 type CreateUserBodyDto = z.infer<typeof CreateUserBodySchema>
 type UserControllerOutput = EitherType<

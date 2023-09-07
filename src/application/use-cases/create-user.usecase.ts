@@ -1,6 +1,6 @@
 import { Either, EitherType } from '@cahmoraes93/either'
 import { UsersRepository } from '../repositories/users-repository'
-import { User } from '../entities/user.entity'
+import { Role, User } from '../entities/user.entity'
 import { PasswordHash } from '@/core/entities/password-hash'
 import { inject } from '@/infra/dependency-inversion/registry'
 import { UserAlreadyExistsError } from '../errors/user-already-exists.error'
@@ -12,6 +12,7 @@ export interface CreateUserUseCaseInput {
   name: string
   email: string
   password: string
+  role: Role
 }
 
 export type CreateUserUseCaseOutput = EitherType<
@@ -46,6 +47,7 @@ export class CreateUserUseCase {
     const user = User.create({
       name: aCreateUserInput.name,
       email: aCreateUserInput.email,
+      role: aCreateUserInput.role,
       passwordHash: passwordHashed,
     })
     return this.usersRepository.save(user)

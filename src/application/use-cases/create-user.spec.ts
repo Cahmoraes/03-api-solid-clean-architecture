@@ -20,6 +20,7 @@ describe('CreateUser use case', () => {
       name: 'John Doe',
       email: 'jhon@doe.com',
       password: '123456',
+      role: 'ADMIN',
     })
     expect(result.isRight()).toBeTruthy()
     const value = result.value as UserDto
@@ -41,12 +42,14 @@ describe('CreateUser use case', () => {
       name: 'John Doe',
       email,
       password: '123456',
+      role: 'ADMIN',
     })
 
     const result = await sut.execute({
       name: 'John Doe',
       email,
       password: '123456',
+      role: 'ADMIN',
     })
 
     expect(result.isLeft()).toBeTruthy()
