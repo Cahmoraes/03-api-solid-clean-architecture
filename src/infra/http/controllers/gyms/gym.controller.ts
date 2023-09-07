@@ -1,3 +1,5 @@
+import { jwtVerify } from '../../servers/fastify/middleware/jwt-verify.middleware'
+import { verifyUserRole } from '../../servers/fastify/middleware/verify-user-role.middleware'
 import { HTTPMethodTypes, HttpServer } from '../../servers/http-server'
 import { Routes } from '../routes.enum'
 import { CreateGymController } from './create-gym.controller'
@@ -20,6 +22,9 @@ export class GymController {
       HTTPMethodTypes.POST,
       Routes.GYMS,
       new CreateGymController().handleRequest,
+      {
+        onRequest: [jwtVerify, verifyUserRole('ADMIN')],
+      },
     )
   }
 

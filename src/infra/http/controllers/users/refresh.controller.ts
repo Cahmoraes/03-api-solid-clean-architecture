@@ -36,8 +36,11 @@ export class RefreshController {
   }: FastifyHttpHandlerParams): Promise<UserControllerOutput> {
     try {
       await request.jwtVerify({ onlyCookie: true })
-      const userId = request.user.sub
-      const tokenGenerator = this.tokenGenerator({ jwtHandler, userId })
+      const tokenGenerator = this.tokenGenerator({
+        jwtHandler,
+        userId: request.user.sub,
+        userRole: request.user.role,
+      })
       const token = await tokenGenerator.jwtToken()
       const refreshToken = await tokenGenerator.refreshToken()
       await this.configureRefreshToken(refreshToken, reply)

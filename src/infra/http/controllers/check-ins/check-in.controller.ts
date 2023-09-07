@@ -5,6 +5,7 @@ import { GetUserMetricsController } from '../users/get-user-metrics.controller'
 import { CreateCheckInController } from './create-check-ins.controller'
 import { FetchUserCheckInsHistoryController } from './fetch-user-check-ins-history.controller'
 import { ValidateCheckInController } from './validate-check-in.controller'
+import { verifyUserRole } from '../../servers/fastify/middleware/verify-user-role.middleware'
 
 export class CheckInController {
   constructor(private readonly httpServer: HttpServer) {
@@ -35,7 +36,7 @@ export class CheckInController {
       Routes.CHECKINS_VALIDATE,
       new ValidateCheckInController().handleRequest,
       {
-        onRequest: jwtVerify,
+        onRequest: [jwtVerify, verifyUserRole('ADMIN')],
       },
     )
   }
