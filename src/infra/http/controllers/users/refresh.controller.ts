@@ -4,6 +4,7 @@ import { FailResponse } from '../../entities/fail-response'
 import { JwtHandlers } from '../../servers/http-server'
 import { InvalidCredentialsError } from '@/application/errors/invalid-credentials.error'
 import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
+import { TokenGenerator } from '@/application/services/token-generator.service'
 
 type OutputDTO = {
   token: string
@@ -32,8 +33,11 @@ export class RefreshController {
   }: FastifyHttpHandlerParams): Promise<UserControllerOutput> {
     try {
       await request.jwtVerify({ onlyCookie: true })
-      const token = await this.createJwtToken(jwtHandler, request.user.sub)
-      await this.configureRefreshToken(reply, jwtHandler, request.user.sub)
+      const userId = request.user.sub
+      const tokenGenerator = new TokenGenerator(jwtHandler, userId)
+      const token = await tokenGenerator.jwtToken()
+      const refreshToken = await tokenGenerator.refreshToken()
+      await this.configureRefreshToken(refreshToken, reply)
       return Either.right(SuccessResponse.ok({ token }))
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -43,26 +47,10 @@ export class RefreshController {
     }
   }
 
-  private createJwtToken(
-    jwtHandler: JwtHandlers,
-    userId: string,
-  ): Promise<string> {
-    return jwtHandler.sign(
-      {},
-      {
-        sign: {
-          sub: userId,
-        },
-      },
-    )
-  }
-
   private async configureRefreshToken(
+    refreshToken: string,
     reply: FastifyHttpHandlerParams['reply'],
-    jwtHandler: JwtHandlers,
-    userId: string,
   ): Promise<void> {
-    const refreshToken = await this.createRefreshToken(jwtHandler, userId)
     this.setCookie(reply, refreshToken)
   }
 
@@ -76,20 +64,5 @@ export class RefreshController {
       sameSite: true,
       httpOnly: true,
     })
-  }
-
-  private createRefreshToken(
-    jwtHandler: JwtHandlers,
-    userId: string,
-  ): Promise<string> {
-    return jwtHandler.sign(
-      {},
-      {
-        sign: {
-          sub: userId,
-          expiresIn: '7d',
-        },
-      },
-    )
   }
 }

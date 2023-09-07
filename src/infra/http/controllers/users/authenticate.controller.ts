@@ -8,6 +8,7 @@ import { JwtHandlers } from '../../servers/http-server'
 import { UserDto } from '@/application/dtos/user-dto.factory'
 import { InvalidCredentialsError } from '@/application/errors/invalid-credentials.error'
 import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
+import { TokenGenerator } from '@/application/services/token-generator.service'
 
 const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -49,8 +50,13 @@ export class AuthenticateController {
       if (result.isLeft()) {
         return Either.left(FailResponse.bad(result.value))
       }
-      const token = await this.createJwtToken(jwtHandler, result.value)
-      await this.configureRefreshToken(reply, jwtHandler, result.value)
+      const tokenGenerator = new TokenGenerator(
+        jwtHandler,
+        this.userIdFor(result.value),
+      )
+      const token = await tokenGenerator.jwtToken()
+      const refreshToken = await tokenGenerator.refreshToken()
+      await this.configureRefreshToken(refreshToken, reply)
       return Either.right(SuccessResponse.ok({ token }))
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -64,26 +70,14 @@ export class AuthenticateController {
     return authenticateBodySchema.parse(body)
   }
 
-  private createJwtToken(
-    jwtHandler: JwtHandlers,
-    user: UserDto,
-  ): Promise<string> {
-    return jwtHandler.sign(
-      {},
-      {
-        sign: {
-          sub: user.id.toString(),
-        },
-      },
-    )
+  private userIdFor(aUserDto: UserDto): string {
+    return aUserDto.id.toString()
   }
 
   private async configureRefreshToken(
+    refreshToken: string,
     reply: FastifyHttpHandlerParams['reply'],
-    jwtHandler: JwtHandlers,
-    user: UserDto,
   ): Promise<void> {
-    const refreshToken = await this.createRefreshToken(jwtHandler, user)
     this.setCookie(reply, refreshToken)
   }
 
@@ -97,20 +91,5 @@ export class AuthenticateController {
       sameSite: true,
       httpOnly: true,
     })
-  }
-
-  private createRefreshToken(
-    jwtHandler: JwtHandlers,
-    user: UserDto,
-  ): Promise<string> {
-    return jwtHandler.sign(
-      {},
-      {
-        sign: {
-          sub: user.id.toString(),
-          expiresIn: '7d',
-        },
-      },
-    )
   }
 }
