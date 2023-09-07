@@ -1,4 +1,5 @@
 import Fastify, { FastifyReply, FastifyRequest } from 'fastify'
+import fastifyCookie from '@fastify/cookie'
 import { HTTPMethodTypes, HttpHandlerParams, HttpServer } from '../http-server'
 import { env, isProduction } from '@/env'
 import { ZodError } from 'zod'
@@ -22,11 +23,13 @@ export class FastifyAdapter implements HttpServer {
   private readonly httpServer = Fastify()
   private readonly PORT: number
   private readonly HOST: string
+  private readonly EXPIRES_IN = '10m'
 
   constructor(props?: FastifyAdapterProps) {
     this.PORT = props?.port ?? env.PORT
     this.HOST = props?.host ?? env.HOST
     this.registerJWT()
+    this.registerCookie()
     this.errorHandler()
   }
 
@@ -53,7 +56,18 @@ export class FastifyAdapter implements HttpServer {
   private registerJWT(): void {
     this.httpServer.register(fastifyJwt, {
       secret: env.JWT_SECRET,
+      sign: {
+        expiresIn: this.EXPIRES_IN,
+      },
+      cookie: {
+        cookieName: 'refreshToken',
+        signed: false,
+      },
     })
+  }
+
+  private registerCookie(): void {
+    this.httpServer.register(fastifyCookie)
   }
 
   private errorHandler() {

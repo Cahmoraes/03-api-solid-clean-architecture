@@ -7,6 +7,7 @@ import { inject } from '@/infra/dependency-inversion/registry'
 import { HttpHandlerParams, JwtHandlers } from '../../servers/http-server'
 import { UserDto } from '@/application/dtos/user-dto.factory'
 import { InvalidCredentialsError } from '@/application/errors/invalid-credentials.error'
+import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
 
 const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -24,6 +25,7 @@ type UserControllerOutput = EitherType<
 >
 
 export class AuthenticateController {
+  private REFRESH_TOKEN_NAME = 'refreshToken'
   private readonly authenticateUseCase = inject<AuthenticateUseCase>(
     'authenticateUseCase',
   )
@@ -39,7 +41,8 @@ export class AuthenticateController {
   public async handleRequest({
     body,
     jwtHandler,
-  }: HttpHandlerParams): Promise<UserControllerOutput> {
+    reply,
+  }: FastifyHttpHandlerParams): Promise<UserControllerOutput> {
     try {
       const { email, password } = this.parseBodyOrThrow(body)
       const result = await this.authenticateUseCase.execute({ email, password })
@@ -47,6 +50,7 @@ export class AuthenticateController {
         return Either.left(FailResponse.bad(result.value))
       }
       const token = await this.createJwtToken(jwtHandler, result.value)
+      await this.configureRefreshToken(reply, jwtHandler, result.value)
       return Either.right(SuccessResponse.ok({ token }))
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -60,12 +64,51 @@ export class AuthenticateController {
     return authenticateBodySchema.parse(body)
   }
 
-  private createJwtToken(jwtHandler: JwtHandlers, user: UserDto) {
+  private createJwtToken(
+    jwtHandler: JwtHandlers,
+    user: UserDto,
+  ): Promise<string> {
     return jwtHandler.sign(
       {},
       {
         sign: {
           sub: user.id.toString(),
+        },
+      },
+    )
+  }
+
+  private async configureRefreshToken(
+    reply: FastifyHttpHandlerParams['reply'],
+    jwtHandler: JwtHandlers,
+    user: UserDto,
+  ): Promise<void> {
+    const refreshToken = await this.createRefreshToken(jwtHandler, user)
+    this.setCookie(reply, refreshToken)
+  }
+
+  private setCookie(
+    reply: FastifyHttpHandlerParams['reply'],
+    refreshToken: string,
+  ): void {
+    reply.setCookie(this.REFRESH_TOKEN_NAME, refreshToken, {
+      path: '/',
+      secure: true,
+      sameSite: true,
+      httpOnly: true,
+    })
+  }
+
+  private createRefreshToken(
+    jwtHandler: JwtHandlers,
+    user: UserDto,
+  ): Promise<string> {
+    return jwtHandler.sign(
+      {},
+      {
+        sign: {
+          sub: user.id.toString(),
+          expiresIn: '7d',
         },
       },
     )
