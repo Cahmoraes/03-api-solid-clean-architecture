@@ -1,19 +1,13 @@
-import { z } from 'zod'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { FailResponse } from '../../entities/fail-response'
 import { inject } from '@/infra/dependency-inversion/registry'
-import { HttpHandlerParams } from '../../servers/http-server'
 import { GetUserMetricsUseCase } from '@/application/use-cases/get-user-metrics.usecase'
 import { InvalidCredentialsError } from '@/application/errors/invalid-credentials.error'
-
-const GetUserMetricsBodySchema = z.object({
-  userId: z.string(),
-})
-type GetUserMetricsBodyDto = z.infer<typeof GetUserMetricsBodySchema>
+import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
 
 type OutputDTO = {
-  metrics: number
+  checkInsCount: number
 }
 
 type MetricsControllerOutput = EitherType<
@@ -35,29 +29,30 @@ export class GetUserMetricsController {
   }
 
   public async handleRequest({
-    body,
-    jwtHandler,
-  }: HttpHandlerParams): Promise<MetricsControllerOutput> {
+    request,
+  }: FastifyHttpHandlerParams): Promise<MetricsControllerOutput> {
+    const userId = request.user.sub
+    const result = await this.performGetUserMetrics(userId)
+    return result.isLeft()
+      ? Either.left(FailResponse.bad(result.value))
+      : Either.right(SuccessResponse.ok<OutputDTO>(result.value))
+  }
+
+  private async performGetUserMetrics(
+    userId: string,
+  ): Promise<EitherType<Error, { checkInsCount: number }>> {
     try {
-      await jwtHandler.verify()
-      const { userId } = this.parseBodyOrThrow(body)
       const result = await this.getUserMetricsUseCase.execute({
         userId,
       })
-      if (result.isLeft()) {
-        return Either.left(FailResponse.bad(result.value))
+      return result.isLeft()
+        ? Either.left(result.value)
+        : Either.right(result.value)
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return Either.left(error)
       }
-      return Either.right(
-        SuccessResponse.ok<OutputDTO>({
-          metrics: result.value.checkInsCount,
-        }),
-      )
-    } catch (error: any) {
-      return Either.left(FailResponse.internalServerError(error))
+      throw error
     }
-  }
-
-  private parseBodyOrThrow(body: unknown): GetUserMetricsBodyDto {
-    return GetUserMetricsBodySchema.parse(body)
   }
 }
