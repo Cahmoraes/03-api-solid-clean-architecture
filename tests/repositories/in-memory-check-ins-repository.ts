@@ -22,6 +22,10 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
     return aCheckIn
   }
 
+  async update(aCheckIn: CheckIn): Promise<CheckIn> {
+    return this.save(aCheckIn)
+  }
+
   async countByUserId(userId: string): Promise<number> {
     return this.data.filter((checkIn) => checkIn.userId.toString() === userId)
       .size

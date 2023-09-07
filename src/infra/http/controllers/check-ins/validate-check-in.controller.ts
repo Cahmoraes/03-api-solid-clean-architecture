@@ -13,7 +13,7 @@ const ValidateCheckInParamsSchema = z.object({
 type ValidateCheckInParamsDto = z.infer<typeof ValidateCheckInParamsSchema>
 type ValidateCheckInControllerOutput = EitherType<
   FailResponse<Error>,
-  SuccessResponse<CheckInDto>
+  SuccessResponse<CheckInDto | Error>
 >
 
 export class ValidateCheckInController {
@@ -38,7 +38,7 @@ export class ValidateCheckInController {
     })
     return result.isLeft()
       ? Either.left(FailResponse.internalServerError(result.value))
-      : Either.right(SuccessResponse.ok(result.value))
+      : Either.right(SuccessResponse.noContent())
   }
 
   private parseParamsOrThrow(params: unknown): ValidateCheckInParamsDto {

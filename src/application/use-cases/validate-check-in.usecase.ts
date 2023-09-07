@@ -27,7 +27,7 @@ export class ValidateCheckInUseCase {
     if (isValidated.isLeft()) {
       return Either.left(isValidated.value)
     }
-    await this.checkInsRepository.save(checkIn)
+    await this.checkInsRepository.update(checkIn)
     return Either.right(CheckInDtoFactory.create(checkIn))
   }
 }

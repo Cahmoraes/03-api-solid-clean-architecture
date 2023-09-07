@@ -43,6 +43,21 @@ export class PrismaCheckInsRepository implements CheckInsRepository {
     return aCheckIn
   }
 
+  async update(aCheckIn: CheckIn): Promise<CheckIn> {
+    await this.prisma.checkIn.update({
+      where: {
+        id: aCheckIn.id.toString(),
+      },
+      data: {
+        created_at: aCheckIn.createdAt,
+        gym_id: aCheckIn.gymId.toString(),
+        user_id: aCheckIn.userId.toString(),
+        validated_at: aCheckIn.validatedAt,
+      },
+    })
+    return aCheckIn
+  }
+
   async checkInByUserIdOnDate(
     userId: string,
     aDate: Date,

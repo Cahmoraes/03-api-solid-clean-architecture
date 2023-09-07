@@ -9,4 +9,8 @@ export class SuccessResponse<TData> extends Response<TData> {
   static ok<TData>(aData: TData) {
     return new SuccessResponse<TData>(HTTP_STATUS_CODES.OK, aData)
   }
+
+  static noContent<TData>() {
+    return new SuccessResponse<TData>(HTTP_STATUS_CODES.NO_CONTENT)
+  }
 }
