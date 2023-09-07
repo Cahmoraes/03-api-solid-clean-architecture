@@ -4,7 +4,7 @@ import { FastifyAdapter } from '@/infra/http/servers/fastify/fastify-adapter'
 import { MainHttpController } from '@/infra/http/controllers/main-http-controller'
 import { Routes } from '@/infra/http/controllers/routes.enum'
 import { provideDependencies } from './utils/provide-dependencies'
-import { createAndAuthenticateUser } from './utils/create-and-authenticate-user'
+import { createAndAuthenticateAdmin } from './utils/create-and-authenticate-admin'
 
 describe('Create Gym (e2e)', () => {
   let fastify: FastifyAdapter
@@ -21,7 +21,7 @@ describe('Create Gym (e2e)', () => {
   })
 
   it('should be able to create a gym', async () => {
-    const { token } = await createAndAuthenticateUser(fastify)
+    const { token } = await createAndAuthenticateAdmin(fastify)
     const response = await request(fastify.server)
       .post(Routes.GYMS)
       .set('Authorization', `Bearer ${token}`)

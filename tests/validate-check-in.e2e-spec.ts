@@ -5,11 +5,11 @@ import { MainHttpController } from '@/infra/http/controllers/main-http-controlle
 import { provideDependencies } from './utils/provide-dependencies'
 import { PrismaGymsRepository } from '@/infra/repositories/prisma/prisma-gyms-repository'
 import { Gym } from '@/application/entities/gym.entity'
-import { createAndAuthenticateUser } from './utils/create-and-authenticate-user'
 import { Routes } from '@/infra/http/controllers/routes.enum'
 import { CheckIn } from '@/application/entities/check-in.entity'
 import { makePrismaClient } from '@/infra/connection/prisma'
 import { PrismaCheckInsRepository } from '@/infra/repositories/prisma/prisma-check-ins-repository'
+import { createAndAuthenticateAdmin } from './utils/create-and-authenticate-admin'
 
 describe('Validate CheckIn (e2e)', () => {
   let fastify: FastifyAdapter
@@ -26,7 +26,7 @@ describe('Validate CheckIn (e2e)', () => {
   })
 
   it('should be able to validate a check-in', async () => {
-    const { token } = await createAndAuthenticateUser(fastify)
+    const { token } = await createAndAuthenticateAdmin(fastify)
     const gym = Gym.create({
       title: 'Academia TypeScript Gym',
       latitude: -27.0747279,
