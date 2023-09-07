@@ -13,4 +13,4 @@ jobs:
           node-version: 18
           cache: 'npm'
       - run: npm ci
-      - run: npm run test set NODE_ENV=test
+      - run: npm run test
