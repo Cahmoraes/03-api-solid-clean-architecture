@@ -4,6 +4,7 @@ import { Routes } from '../routes.enum'
 import { AuthenticateController } from './authenticate.controller'
 import { CreateUserController } from './create-user.controller'
 import { GetUserProfileController } from './get-user-profile.controller'
+import { RefreshController } from './refresh.controller'
 
 export class UserController {
   constructor(private readonly httpServer: HttpServer) {
@@ -14,6 +15,7 @@ export class UserController {
     this.handleCreateUser()
     this.handleAuthenticate()
     this.handleMe()
+    this.handleTokenRefresh()
   }
 
   private handleCreateUser(): void {
@@ -40,6 +42,14 @@ export class UserController {
       {
         onRequest: jwtVerify,
       },
+    )
+  }
+
+  private handleTokenRefresh(): void {
+    this.httpServer.on(
+      HTTPMethodTypes.PATCH,
+      Routes.TOKEN_REFRESH,
+      new RefreshController().handleRequest,
     )
   }
 }

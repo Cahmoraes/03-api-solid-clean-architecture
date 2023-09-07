@@ -1,19 +1,9 @@
-import { z } from 'zod'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { FailResponse } from '../../entities/fail-response'
-import { AuthenticateUseCase } from '@/application/use-cases/authenticate.usecase'
-import { inject } from '@/infra/dependency-inversion/registry'
 import { JwtHandlers } from '../../servers/http-server'
-import { UserDto } from '@/application/dtos/user-dto.factory'
 import { InvalidCredentialsError } from '@/application/errors/invalid-credentials.error'
 import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
-
-const authenticateBodySchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-})
-type AuthenticateBodyDto = z.infer<typeof authenticateBodySchema>
 
 type OutputDTO = {
   token: string
@@ -24,11 +14,8 @@ type UserControllerOutput = EitherType<
   SuccessResponse<OutputDTO>
 >
 
-export class AuthenticateController {
+export class RefreshController {
   private REFRESH_TOKEN_NAME = 'refreshToken'
-  private readonly authenticateUseCase = inject<AuthenticateUseCase>(
-    'authenticateUseCase',
-  )
 
   constructor() {
     this.bindMethod()
@@ -39,18 +26,14 @@ export class AuthenticateController {
   }
 
   public async handleRequest({
-    body,
     jwtHandler,
     reply,
+    request,
   }: FastifyHttpHandlerParams): Promise<UserControllerOutput> {
     try {
-      const { email, password } = this.parseBodyOrThrow(body)
-      const result = await this.authenticateUseCase.execute({ email, password })
-      if (result.isLeft()) {
-        return Either.left(FailResponse.bad(result.value))
-      }
-      const token = await this.createJwtToken(jwtHandler, result.value)
-      await this.configureRefreshToken(reply, jwtHandler, result.value)
+      await request.jwtVerify({ onlyCookie: true })
+      const token = await this.createJwtToken(jwtHandler, request.user.sub)
+      await this.configureRefreshToken(reply, jwtHandler, request.user.sub)
       return Either.right(SuccessResponse.ok({ token }))
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -60,19 +43,15 @@ export class AuthenticateController {
     }
   }
 
-  private parseBodyOrThrow(body: unknown): AuthenticateBodyDto {
-    return authenticateBodySchema.parse(body)
-  }
-
   private createJwtToken(
     jwtHandler: JwtHandlers,
-    user: UserDto,
+    userId: string,
   ): Promise<string> {
     return jwtHandler.sign(
       {},
       {
         sign: {
-          sub: user.id.toString(),
+          sub: userId,
         },
       },
     )
@@ -81,9 +60,9 @@ export class AuthenticateController {
   private async configureRefreshToken(
     reply: FastifyHttpHandlerParams['reply'],
     jwtHandler: JwtHandlers,
-    user: UserDto,
+    userId: string,
   ): Promise<void> {
-    const refreshToken = await this.createRefreshToken(jwtHandler, user)
+    const refreshToken = await this.createRefreshToken(jwtHandler, userId)
     this.setCookie(reply, refreshToken)
   }
 
@@ -101,13 +80,13 @@ export class AuthenticateController {
 
   private createRefreshToken(
     jwtHandler: JwtHandlers,
-    user: UserDto,
+    userId: string,
   ): Promise<string> {
     return jwtHandler.sign(
       {},
       {
         sign: {
-          sub: user.id.toString(),
+          sub: userId,
           expiresIn: '7d',
         },
       },

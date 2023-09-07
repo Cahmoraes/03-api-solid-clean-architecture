@@ -10,4 +10,5 @@ export enum Routes {
   CHECKINS_VALIDATE = '/check-ins/:checkInId/validate',
   CHECKINS_HISTORY = '/check-ins/history',
   CHECKINS_METRICS = '/check-ins/metrics',
+  TOKEN_REFRESH = '/token/refresh',
 }
