@@ -3,8 +3,8 @@ import tsconfigPaths from 'vitest-tsconfig-paths'
 
 export default defineConfig({
   test: {
-    include: ['**/*.e2e-spec.ts'],
     globals: true,
+    include: ['**/*.e2e-spec.ts'],
     setupFiles: ['./tests/setup-e2e.ts'],
   },
   plugins: [tsconfigPaths()],

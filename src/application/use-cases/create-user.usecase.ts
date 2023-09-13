@@ -27,9 +27,7 @@ export class CreateUserUseCase {
     aCreateUserInput: CreateUserUseCaseInput,
   ): Promise<CreateUserUseCaseOutput> {
     const existsUser = await this.existsUser(aCreateUserInput.email)
-    if (existsUser) {
-      return Either.left(new UserAlreadyExistsError())
-    }
+    if (existsUser) return Either.left(new UserAlreadyExistsError())
     const user = await this.performCreateUser(aCreateUserInput)
     this.publishUserCreated(user)
     return Either.right(UserDtoFactory.create(user))
