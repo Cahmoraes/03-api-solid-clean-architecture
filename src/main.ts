@@ -16,8 +16,10 @@ import { CreateCheckInUseCase } from './application/use-cases/create-check-in.us
 import { ValidateCheckInUseCase } from './application/use-cases/validate-check-in.usecase'
 import { PrismaCheckInsRepository } from './infra/repositories/prisma/prisma-check-ins-repository'
 import { FetchUserCheckInsHistoryUseCase } from './application/use-cases/fetch-user-check-ins-history.usecase'
+import { GymCreatedSubscriber } from './application/events/gym-created/gym-created-subscriber'
 
 DomainEventPublisher.getInstance().subscribe(new UserCreatedSubscriber())
+DomainEventPublisher.getInstance().subscribe(new GymCreatedSubscriber())
 provide('usersRepository', new PrismaUsersRepository())
 provide('gymsRepository', new PrismaGymsRepository())
 provide('checkInsRepository', new PrismaCheckInsRepository())
