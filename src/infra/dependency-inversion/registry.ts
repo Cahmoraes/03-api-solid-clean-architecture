@@ -1,21 +1,7 @@
 import { isTest } from '@/env'
+import { DependencyTypes } from './dependency-types.enum'
 
 type Constructor = { new (): unknown }
-export enum DependencyTypes {
-  'createUserUseCase',
-  'createGymUseCase',
-  'searchGymsUseCase',
-  'authenticateUseCase',
-  'createCheckInUseCase',
-  'getUserMetricsUseCase',
-  'getUserProfileUseCase',
-  'fetchNearbyGymsUseCase',
-  'validateCheckInUseCase',
-  'fetchUserCheckInsHistoryUseCase',
-  'usersRepository',
-  'checkInsRepository',
-  'gymsRepository',
-}
 type DependencyType = keyof typeof DependencyTypes
 
 class Registry {
