@@ -9,7 +9,7 @@ export class GymCreatedSubscriber implements DomainEventSubscriber {
     this.eventType = DomainEvents.GYM_CREATED
   }
 
-  handleEvent(aDomainEvent: GymCreatedEvent): void {
+  public handleEvent(aDomainEvent: GymCreatedEvent): void {
     console.log(aDomainEvent.data)
   }
 }

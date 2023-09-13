@@ -9,7 +9,7 @@ export class UserCreatedSubscriber implements DomainEventSubscriber {
     this.eventType = DomainEvents.USER_CREATED
   }
 
-  handleEvent(aDomainEvent: UserCreatedEvent): void {
+  public handleEvent(aDomainEvent: UserCreatedEvent): void {
     console.log(aDomainEvent.data)
   }
 }
