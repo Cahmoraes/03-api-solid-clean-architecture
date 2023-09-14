@@ -5,6 +5,7 @@ import { DomainEvents } from '../domain-events.enum'
 export interface UserAuthenticatedProps {
   id: UniqueIdentity
   email: string
+  authenticatedAt: Date
 }
 
 export class UserAuthenticatedEvent implements DomainEvent {

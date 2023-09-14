@@ -49,6 +49,7 @@ export class AuthenticateUseCase {
       new UserAuthenticatedEvent({
         id: aUser.id,
         email: aUser.email,
+        authenticatedAt: new Date(),
       }),
     )
   }

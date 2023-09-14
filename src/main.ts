@@ -18,10 +18,13 @@ import { PrismaCheckInsRepository } from './infra/repositories/prisma/prisma-che
 import { FetchUserCheckInsHistoryUseCase } from './application/use-cases/fetch-user-check-ins-history.usecase'
 import { GymCreatedSubscriber } from './application/events/gym-created/gym-created-subscriber'
 import { UserAuthenticatedSubscriber } from './application/events/user-authenticated/user-authenticated-subscriber'
+import { ProductionLogger } from './infra/logger/production-logger'
 
 DomainEventPublisher.getInstance().subscribe(new UserCreatedSubscriber())
 DomainEventPublisher.getInstance().subscribe(new GymCreatedSubscriber())
-DomainEventPublisher.getInstance().subscribe(new UserAuthenticatedSubscriber())
+DomainEventPublisher.getInstance().subscribe(
+  new UserAuthenticatedSubscriber(new ProductionLogger()),
+)
 provide('usersRepository', new PrismaUsersRepository())
 provide('gymsRepository', new PrismaGymsRepository())
 provide('checkInsRepository', new PrismaCheckInsRepository())

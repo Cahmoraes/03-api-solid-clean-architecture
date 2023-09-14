@@ -1,18 +1,27 @@
 [
   {
     "id": "3ae52a8b-2ca0-49e2-ab39-7ce4f74e0c94",
-    "email": "caique@moraes.com.br"
+    "email": "caique@moraes.com.br",
+    "authenticatedAt": "2023-09-14T09:33:44.475Z"
   },
   {
     "id": "3ae52a8b-2ca0-49e2-ab39-7ce4f74e0c94",
-    "email": "caique@moraes.com.br"
+    "email": "caique@moraes.com.br",
+    "authenticatedAt": "2023-09-14T09:33:47.980Z"
   },
   {
     "id": "3ae52a8b-2ca0-49e2-ab39-7ce4f74e0c94",
-    "email": "caique@moraes.com.br"
+    "email": "caique@moraes.com.br",
+    "authenticatedAt": "2023-09-14T09:33:48.202Z"
   },
   {
     "id": "3ae52a8b-2ca0-49e2-ab39-7ce4f74e0c94",
-    "email": "caique@moraes.com.br"
+    "email": "caique@moraes.com.br",
+    "authenticatedAt": "2023-09-14T09:33:48.363Z"
+  },
+  {
+    "id": "3ae52a8b-2ca0-49e2-ab39-7ce4f74e0c94",
+    "email": "caique@moraes.com.br",
+    "authenticatedAt": "2023-09-14T09:33:48.464Z"
   }
 ]
