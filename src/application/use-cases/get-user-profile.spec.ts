@@ -22,15 +22,13 @@ describe('GetUserProfile use case', () => {
     const name = 'John Doe'
     const email = 'johm@doe.com'
     const password = '123456'
-
-    const { id } = await usersRepository.save(
-      User.create({
-        name,
-        email,
-        passwordHash: await passwordHash.createHash(password),
-        role: 'ADMIN',
-      }),
-    )
+    const user = User.create({
+      name,
+      email,
+      passwordHash: await passwordHash.createHash(password),
+      role: 'ADMIN',
+    })
+    const { id } = await usersRepository.save(user.value as User)
 
     const result = await sut.execute({
       userId: id.toString(),

@@ -1,9 +1,11 @@
 import { Entity } from '@/core/entities/entity'
 import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
 import { Optional } from '@prisma/client/runtime/library'
+import { UserValidator } from './validators/user.validator'
+import { Either, EitherType } from '@cahmoraes93/either'
+import { UserValidatorError } from './errors/user-validator.error'
 
 export type Role = 'MEMBER' | 'ADMIN'
-
 export interface UserProps {
   name: string
   email: string
@@ -11,13 +13,18 @@ export interface UserProps {
   createdAt: Date
   role: Role
 }
+export type UserCreateProps = Optional<UserProps, 'createdAt' | 'role'>
 
 export class User extends Entity<UserProps> {
   static create(
-    props: Optional<UserProps, 'createdAt' | 'role'>,
+    props: UserCreateProps,
     anId?: string | UniqueIdentity,
-  ) {
-    return new User(
+  ): EitherType<UserValidatorError, User> {
+    const userOfError = User.validate(props)
+    if (userOfError.isLeft()) {
+      return Either.left(new UserValidatorError(userOfError.value.join()))
+    }
+    const user = new User(
       {
         createdAt: new Date(),
         role: 'MEMBER',
@@ -25,6 +32,18 @@ export class User extends Entity<UserProps> {
       },
       anId,
     )
+    return Either.right(user)
+  }
+
+  private static validate(
+    props: UserCreateProps,
+  ): EitherType<string[], UserCreateProps> {
+    const userValidator = new UserValidator(props)
+    return userValidator.validate()
+  }
+
+  static restore(props: UserProps, anId: string): User {
+    return new User(props, anId)
   }
 
   get name(): string {

@@ -29,7 +29,6 @@ describe('Check-in Metrics (e2e)', () => {
     const { token } = await createAndAuthenticateUser(fastify)
     const prisma = makePrismaClient()
     const user = await prisma.user.findFirstOrThrow()
-
     const gym = Gym.create({
       title: 'Academia TypeScript Gym',
       latitude: -27.0747279,

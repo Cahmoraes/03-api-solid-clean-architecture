@@ -13,16 +13,17 @@ export class PrismaUsersRepository implements UsersRepository {
       },
     })
     if (!prismaUser) return null
-    return this.createUserFromPrisma(prismaUser)
+    return this.restoreUserFromPrisma(prismaUser)
   }
 
-  private createUserFromPrisma(aPrismaUser: PrismaUser) {
-    return User.create(
+  private restoreUserFromPrisma(aPrismaUser: PrismaUser) {
+    return User.restore(
       {
         email: aPrismaUser.email,
         name: aPrismaUser.name,
         passwordHash: aPrismaUser.password_hash,
         role: aPrismaUser.role,
+        createdAt: aPrismaUser.created_at,
       },
       aPrismaUser.id,
     )
@@ -35,7 +36,7 @@ export class PrismaUsersRepository implements UsersRepository {
       },
     })
     if (!existingUser) return null
-    return this.createUserFromPrisma(existingUser)
+    return this.restoreUserFromPrisma(existingUser)
   }
 
   async save(aUser: User): Promise<User> {
@@ -49,6 +50,6 @@ export class PrismaUsersRepository implements UsersRepository {
         role: aUser.role,
       },
     })
-    return this.createUserFromPrisma(userDto)
+    return this.restoreUserFromPrisma(userDto)
   }
 }

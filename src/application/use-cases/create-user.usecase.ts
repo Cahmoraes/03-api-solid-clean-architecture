@@ -7,6 +7,7 @@ import { UserAlreadyExistsError } from '../errors/user-already-exists.error'
 import { DomainEventPublisher } from '../events/domain-event-publisher'
 import { UserCreatedEvent } from '../events/user-created/user-created.event'
 import { UserDto, UserDtoFactory } from '../dtos/user-dto.factory'
+import { UserValidatorError } from '../entities/errors/user-validator.error'
 
 export interface CreateUserUseCaseInput {
   name: string
@@ -16,7 +17,7 @@ export interface CreateUserUseCaseInput {
 }
 
 export type CreateUserUseCaseOutput = EitherType<
-  UserAlreadyExistsError,
+  UserAlreadyExistsError | UserValidatorError,
   UserDto
 >
 
@@ -28,7 +29,10 @@ export class CreateUserUseCase {
   ): Promise<CreateUserUseCaseOutput> {
     const existsUser = await this.existsUser(aCreateUserInput.email)
     if (existsUser) return Either.left(new UserAlreadyExistsError())
-    const user = await this.performCreateUser(aCreateUserInput)
+    const userOrError = await this.performCreateUser(aCreateUserInput)
+    if (userOrError.isLeft()) return Either.left(userOrError.value)
+    const user = userOrError.value
+    await this.usersRepository.save(user)
     this.publishUserCreated(user)
     return Either.right(UserDtoFactory.create(user))
   }
@@ -40,15 +44,14 @@ export class CreateUserUseCase {
 
   private async performCreateUser(
     aCreateUserInput: CreateUserUseCaseInput,
-  ): Promise<User> {
+  ): Promise<EitherType<UserValidatorError, User>> {
     const passwordHashed = await this.hashPassword(aCreateUserInput.password)
-    const user = User.create({
+    return User.create({
       name: aCreateUserInput.name,
       email: aCreateUserInput.email,
       role: aCreateUserInput.role,
       passwordHash: passwordHashed,
     })
-    return this.usersRepository.save(user)
   }
 
   private hashPassword(aPassword: string): Promise<string> {

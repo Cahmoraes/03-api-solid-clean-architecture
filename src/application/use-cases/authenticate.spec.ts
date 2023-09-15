@@ -1,5 +1,4 @@
 import { InMemoryUsersRepository } from 'tests/repositories/in-memory-users-repository'
-import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { User } from '../entities/user.entity'
 import { AuthenticateUseCase } from './authenticate.usecase'
 import { PasswordHash } from '@/core/entities/password-hash'
@@ -28,7 +27,7 @@ describe('CreateUser use case', () => {
       passwordHash: await passwordHash.createHash(password),
       role: 'ADMIN',
     })
-    await usersRepository.save(user)
+    await usersRepository.save(user.value as User)
 
     const result = await sut.execute({
       email,
@@ -67,7 +66,7 @@ describe('CreateUser use case', () => {
       role: 'ADMIN',
     })
 
-    await usersRepository.save(user)
+    await usersRepository.save(user.value as User)
 
     const result = await sut.execute({
       email,
