@@ -72,4 +72,13 @@ describe('User Entity', async () => {
       }),
     )
   })
+
+  it('should be able to update password', async () => {
+    const result = User.create(userDS)
+    const user = result.value as User
+    const newPasswordOrError = await Password.create('new-password')
+    const newPassword = newPasswordOrError.value as Password
+    user.updatePassword(newPassword)
+    expect(user.passwordHash).toBe(newPassword.toString())
+  })
 })

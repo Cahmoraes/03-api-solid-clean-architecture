@@ -72,4 +72,8 @@ export class User extends Entity<UserProps> {
   async validatePassword(password: string): Promise<boolean> {
     return this.props.password.compare(password)
   }
+
+  public updatePassword(aPassword: Password): void {
+    this.props.password = aPassword
+  }
 }
