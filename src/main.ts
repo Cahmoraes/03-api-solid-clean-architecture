@@ -19,6 +19,7 @@ import { FetchUserCheckInsHistoryUseCase } from './application/use-cases/fetch-u
 import { GymCreatedSubscriber } from './application/events/gym-created/gym-created-subscriber'
 import { UserAuthenticatedSubscriber } from './application/events/user-authenticated/user-authenticated-subscriber'
 import { ProductionLogger } from './infra/logger/production-logger'
+import { UpdatePasswordUseCase } from './application/use-cases/update-password.usecase'
 
 DomainEventPublisher.getInstance().subscribe(new UserCreatedSubscriber())
 DomainEventPublisher.getInstance().subscribe(new GymCreatedSubscriber())
@@ -41,6 +42,7 @@ provide(
   'fetchUserCheckInsHistoryUseCase',
   new FetchUserCheckInsHistoryUseCase(),
 )
+provide('updatePasswordUseCase', new UpdatePasswordUseCase())
 const httpServer = new FastifyAdapter()
 new MainHttpController(httpServer)
 httpServer.listen()

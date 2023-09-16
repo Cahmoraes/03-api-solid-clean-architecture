@@ -1,5 +1,6 @@
 export enum Routes {
   USERS = '/users',
+  USERS_PASSWORD = '/users/password',
   SESSIONS = '/sessions',
   ME = '/me',
   METRICS = '/metrics',

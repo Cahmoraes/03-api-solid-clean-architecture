@@ -9,6 +9,7 @@ export enum DependencyTypes {
   'fetchNearbyGymsUseCase',
   'validateCheckInUseCase',
   'fetchUserCheckInsHistoryUseCase',
+  'updatePasswordUseCase',
   'usersRepository',
   'checkInsRepository',
   'gymsRepository',

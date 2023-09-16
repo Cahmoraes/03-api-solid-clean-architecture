@@ -1,20 +1,27 @@
+import { z } from 'zod'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { FailResponse } from '../../entities/fail-response'
 import { inject } from '@/infra/dependency-inversion/registry'
 import { UserDto } from '@/application/dtos/user-dto.factory'
 import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
-import { GetUserProfileUseCase } from '@/application/use-cases/get-user-profile.usecase'
 import { ResourceNotFoundError } from '@/application/errors/resource-not-found.error'
+import { UpdatePasswordUseCase } from '@/application/use-cases/update-password.usecase'
 
-type GetUserProfileControllerOutput = EitherType<
+const updatePasswordSchema = z.object({
+  password: z.string().min(6),
+})
+
+type updatePasswordDto = z.infer<typeof updatePasswordSchema>
+
+type UpdatePasswordControllerOutput = EitherType<
   FailResponse<Error>,
   SuccessResponse<UserDto>
 >
 
-export class GetUserProfileController {
-  private readonly getUserProfileUseCase = inject<GetUserProfileUseCase>(
-    'getUserProfileUseCase',
+export class UpdatePasswordController {
+  private readonly updatePasswordUseCase = inject<UpdatePasswordUseCase>(
+    'updatePasswordUseCase',
   )
 
   constructor() {
@@ -27,20 +34,27 @@ export class GetUserProfileController {
 
   public async handleRequest({
     request,
-  }: FastifyHttpHandlerParams): Promise<GetUserProfileControllerOutput> {
+  }: FastifyHttpHandlerParams): Promise<UpdatePasswordControllerOutput> {
     const user = request.user
-    const result = await this.performGetUserProfile(user.sub)
+    const { password } = this.parseBodyOrThrow(request.body)
+    const result = await this.performUpdatePassword(user.sub, password)
     return result.isLeft()
       ? Either.left(FailResponse.bad(result.value))
       : Either.right(SuccessResponse.ok(result.value))
   }
 
-  private async performGetUserProfile(
+  private parseBodyOrThrow(body: unknown): updatePasswordDto {
+    return updatePasswordSchema.parse(body)
+  }
+
+  private async performUpdatePassword(
     userId: string,
+    password: string,
   ): Promise<EitherType<Error | ResourceNotFoundError, UserDto>> {
     try {
-      const result = await this.getUserProfileUseCase.execute({
+      const result = await this.updatePasswordUseCase.execute({
         userId,
+        password,
       })
       return result.isLeft()
         ? Either.left(result.value)
