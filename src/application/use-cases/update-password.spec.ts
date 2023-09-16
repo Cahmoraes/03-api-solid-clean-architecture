@@ -1,6 +1,5 @@
 import { InMemoryUsersRepository } from 'tests/repositories/in-memory-users-repository'
 import { User } from '../entities/user.entity'
-import { GetUserProfileUseCase } from './get-user-profile.usecase'
 import { provide } from '@/infra/dependency-inversion/registry'
 import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 import { UserDto } from '../dtos/user-dto.factory'

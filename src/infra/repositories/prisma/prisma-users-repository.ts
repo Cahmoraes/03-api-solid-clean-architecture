@@ -40,15 +40,31 @@ export class PrismaUsersRepository implements UsersRepository {
     return this.restoreUserFromPrisma(existingUser)
   }
 
-  async save(aUser: User): Promise<User> {
+  async save(anUser: User): Promise<User> {
     const userDto = await this.prisma.user.create({
       data: {
-        email: aUser.email,
-        name: aUser.name,
-        password_hash: aUser.passwordHash,
-        id: aUser.id.toString(),
-        created_at: aUser.createdAt,
-        role: aUser.role,
+        email: anUser.email,
+        name: anUser.name,
+        password_hash: anUser.passwordHash,
+        id: anUser.id.toString(),
+        created_at: anUser.createdAt,
+        role: anUser.role,
+      },
+    })
+    return this.restoreUserFromPrisma(userDto)
+  }
+
+  async update(anUser: User): Promise<User> {
+    const userDto = await this.prisma.user.update({
+      where: {
+        id: anUser.id.toString(),
+      },
+      data: {
+        email: anUser.email,
+        name: anUser.name,
+        password_hash: anUser.passwordHash,
+        created_at: anUser.createdAt,
+        role: anUser.role,
       },
     })
     return this.restoreUserFromPrisma(userDto)

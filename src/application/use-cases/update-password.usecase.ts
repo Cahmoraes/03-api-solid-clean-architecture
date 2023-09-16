@@ -28,7 +28,7 @@ export class UpdatePasswordUseCase {
     const passwordOrError = await this.createPassword(password)
     if (passwordOrError.isLeft()) return Either.left(passwordOrError.value)
     user.updatePassword(passwordOrError.value)
-    await this.usersRepository.save(user)
+    await this.usersRepository.update(user)
     return Either.right(UserDtoFactory.create(user))
   }
 

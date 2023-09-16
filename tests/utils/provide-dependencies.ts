@@ -12,6 +12,7 @@ import { ValidateCheckInUseCase } from '@/application/use-cases/validate-check-i
 import { PrismaCheckInsRepository } from '@/infra/repositories/prisma/prisma-check-ins-repository'
 import { PrismaGymsRepository } from '@/infra/repositories/prisma/prisma-gyms-repository'
 import { PrismaUsersRepository } from '@/infra/repositories/prisma/prisma-users-repository'
+import { UpdatePasswordUseCase } from '@/application/use-cases/update-password.usecase'
 
 export function provideDependencies() {
   provide('usersRepository', new PrismaUsersRepository())
@@ -30,4 +31,5 @@ export function provideDependencies() {
     'fetchUserCheckInsHistoryUseCase',
     new FetchUserCheckInsHistoryUseCase(),
   )
+  provide('updatePasswordUseCase', new UpdatePasswordUseCase())
 }
