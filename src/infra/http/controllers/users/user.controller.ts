@@ -8,11 +8,11 @@ import { RefreshController } from './refresh.controller'
 import { UpdatePasswordController } from './update-password.controller'
 
 export class UserController {
-  constructor(private readonly httpServer: HttpServer) {
+  constructor(protected readonly httpServer: HttpServer) {
     this.init()
   }
 
-  private init(): void {
+  protected init(): void {
     this.handleCreateUser()
     this.handleAuthenticate()
     this.handleMe()
@@ -20,7 +20,7 @@ export class UserController {
     this.handleUpdatePassword()
   }
 
-  private handleCreateUser(): void {
+  protected handleCreateUser(): void {
     this.httpServer.on(
       HTTPMethodTypes.POST,
       Routes.USERS,
@@ -28,7 +28,7 @@ export class UserController {
     )
   }
 
-  private handleAuthenticate(): void {
+  protected handleAuthenticate(): void {
     this.httpServer.on(
       HTTPMethodTypes.POST,
       Routes.SESSIONS,
@@ -36,7 +36,7 @@ export class UserController {
     )
   }
 
-  private handleMe(): void {
+  protected handleMe(): void {
     this.httpServer.on(
       HTTPMethodTypes.GET,
       Routes.ME,
@@ -47,7 +47,7 @@ export class UserController {
     )
   }
 
-  private handleTokenRefresh(): void {
+  protected handleTokenRefresh(): void {
     this.httpServer.on(
       HTTPMethodTypes.PATCH,
       Routes.TOKEN_REFRESH,
@@ -55,7 +55,7 @@ export class UserController {
     )
   }
 
-  private handleUpdatePassword(): void {
+  protected handleUpdatePassword(): void {
     this.httpServer.on(
       HTTPMethodTypes.PATCH,
       Routes.USERS_PASSWORD,

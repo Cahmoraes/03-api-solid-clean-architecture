@@ -1,21 +1,19 @@
 import { HttpServer } from '../servers/http-server'
 import { CheckInController } from './check-ins/check-in.controller'
 import { GymController } from './gyms/gym.controller'
+import { HttpController } from './http-controller'
+import { ExpressUserController } from './users/express.user.controller'
 import { UserController } from './users/user.controller'
 
-export class MainHttpController {
-  constructor(private readonly httpServer: HttpServer) {
-    this.init()
-  }
-
-  private init(): void {
+export class ExpressHttpController extends HttpController {
+  protected init(): void {
     this.createUserController()
-    this.createGymController()
-    this.createCheckInController()
+    // this.createGymController()
+    // this.createCheckInController()
   }
 
   private createUserController(): UserController {
-    return new UserController(this.httpServer)
+    return new ExpressUserController(this.httpServer)
   }
 
   private createGymController(): GymController {

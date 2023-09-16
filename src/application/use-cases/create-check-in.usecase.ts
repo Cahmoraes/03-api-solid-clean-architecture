@@ -40,13 +40,13 @@ export class CreateCheckInUseCase {
     userLatitude,
     userLongitude,
   }: CreateCheckInUseCaseInput): Promise<CreateCheckInUseCaseOutput> {
-    const gym = await this.gymsRepository.gymOfId(gymId)
-    if (!gym) return Either.left(new ResourceNotFoundError())
     const coordOrError = Coord.create({
       latitude: userLatitude,
       longitude: userLongitude,
     })
     if (coordOrError.isLeft()) return Either.left(coordOrError.value)
+    const gym = await this.gymsRepository.gymOfId(gymId)
+    if (!gym) return Either.left(new ResourceNotFoundError())
     if (
       this.distanceBetweenUserAndGymIsMoreThanOneHundredMeters(
         coordOrError.value,

@@ -1,5 +1,5 @@
 import { CreateUserUseCase } from './application/use-cases/create-user.usecase'
-import { MainHttpController } from './infra/http/controllers/main-http-controller'
+import { FastifyHttpController } from './infra/http/controllers/fastify-http-controller'
 import { FastifyAdapter } from './infra/http/servers/fastify/fastify-adapter'
 import { AuthenticateUseCase } from './application/use-cases/authenticate.usecase'
 import { provide } from './infra/dependency-inversion/registry'
@@ -20,6 +20,9 @@ import { GymCreatedSubscriber } from './application/events/gym-created/gym-creat
 import { UserAuthenticatedSubscriber } from './application/events/user-authenticated/user-authenticated-subscriber'
 import { ProductionLogger } from './infra/logger/production-logger'
 import { UpdatePasswordUseCase } from './application/use-cases/update-password.usecase'
+import { ExpressAdapter } from './infra/http/servers/express/express-adapter'
+import { ExpressHttpController } from './infra/http/controllers/express-http-controller'
+import { HttpControllerFactory } from './infra/http/controllers/factories/http-controller-factory'
 
 DomainEventPublisher.getInstance().subscribe(new UserCreatedSubscriber())
 DomainEventPublisher.getInstance().subscribe(new GymCreatedSubscriber())
@@ -44,5 +47,7 @@ provide(
 )
 provide('updatePasswordUseCase', new UpdatePasswordUseCase())
 const httpServer = new FastifyAdapter()
-new MainHttpController(httpServer)
+// const httpServer = new ExpressAdapter()
+const HttpController = HttpControllerFactory.create(httpServer)
+new HttpController(httpServer)
 httpServer.listen()
