@@ -1,4 +1,3 @@
-import { PasswordValidatorError } from '../errors/password-validator.error'
 import { ValidatorError } from '../errors/validator.error'
 import { Password } from './password'
 
