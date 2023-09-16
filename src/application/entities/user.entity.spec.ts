@@ -54,12 +54,20 @@ describe('User Entity', () => {
   })
 
   it('should not be able to create an user with invalid props', () => {
-    const result = User.create({ name: '', email: '', passwordHash: '' })
+    const result = User.create({
+      name: '',
+      email: '',
+      passwordHash: '',
+    })
     expect(result.isLeft()).toBeTruthy()
     const error = result.value as UserValidatorError
     expect(error).toBeInstanceOf(UserValidatorError)
     expect(error.message).toEqual(
-      'Name is required,Email is required,Password is required',
+      JSON.stringify({
+        name: ['String must contain at least 6 character(s)'],
+        email: ['Invalid email'],
+        passwordHash: ['String must contain at least 6 character(s)'],
+      }),
     )
   })
 })
