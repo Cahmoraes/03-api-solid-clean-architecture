@@ -2,6 +2,7 @@ import { UsersRepository } from '@/application/repositories/users-repository'
 import { User as PrismaUser } from '@prisma/client'
 import { User } from '@/application/entities/user.entity'
 import { makePrismaClient } from '@/infra/connection/prisma'
+import { Password } from '@/application/entities/value-objects/password'
 
 export class PrismaUsersRepository implements UsersRepository {
   private readonly prisma = makePrismaClient()
@@ -21,7 +22,7 @@ export class PrismaUsersRepository implements UsersRepository {
       {
         email: aPrismaUser.email,
         name: aPrismaUser.name,
-        passwordHash: aPrismaUser.password_hash,
+        password: Password.restore(aPrismaUser.password_hash),
         role: aPrismaUser.role,
         createdAt: aPrismaUser.created_at,
       },

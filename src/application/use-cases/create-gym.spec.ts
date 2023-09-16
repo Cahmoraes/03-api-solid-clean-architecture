@@ -1,4 +1,3 @@
-import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { CreateGymUseCase } from './create-gym.usecase'
 import { InMemoryGymsRepository } from 'tests/repositories/in-memory-gyms-repository'
 import { provide } from '@/infra/dependency-inversion/registry'

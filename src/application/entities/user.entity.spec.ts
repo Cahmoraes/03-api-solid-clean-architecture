@@ -2,12 +2,15 @@ import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
 import { User } from './user.entity'
 import { randomUUID } from 'crypto'
 import { UserValidatorError } from './errors/user-validator.error'
+import { Password } from './value-objects/password'
 
-describe('User Entity', () => {
+describe('User Entity', async () => {
+  const passwordOrError = await Password.create('123456')
+  const password = passwordOrError.value as Password
   const userDS = {
     email: 'jhon@doe.com',
     name: 'John Doe',
-    passwordHash: '123456',
+    password,
   }
 
   it('should create an User', () => {
@@ -16,7 +19,7 @@ describe('User Entity', () => {
     expect(user).toBeInstanceOf(User)
     expect(user.name).toBe(userDS.name)
     expect(user.email).toBe(userDS.email)
-    expect(user.passwordHash).toBe(userDS.passwordHash)
+    expect(user.passwordHash.toString()).toBe(userDS.password.toString())
     expect(user.createdAt).toBeInstanceOf(Date)
     expect(user.id).toBeInstanceOf(UniqueIdentity)
     expect(user.id.toString()).toEqual(expect.any(String))
@@ -47,7 +50,7 @@ describe('User Entity', () => {
     expect(user).toBeInstanceOf(User)
     expect(user.name).toBe(userDS.name)
     expect(user.email).toBe(userDS.email)
-    expect(user.passwordHash).toBe(userDS.passwordHash)
+    expect(user.passwordHash).toBe(userDS.password.toString())
     expect(user.createdAt).toBeInstanceOf(Date)
     expect(user.id).toBeInstanceOf(UniqueIdentity)
     expect(user.role).toEqual('ADMIN')
@@ -57,7 +60,7 @@ describe('User Entity', () => {
     const result = User.create({
       name: '',
       email: '',
-      passwordHash: '',
+      password: userDS.password,
     })
     expect(result.isLeft()).toBeTruthy()
     const error = result.value as UserValidatorError
@@ -66,7 +69,6 @@ describe('User Entity', () => {
       JSON.stringify({
         name: ['String must contain at least 6 character(s)'],
         email: ['Invalid email'],
-        passwordHash: ['String must contain at least 6 character(s)'],
       }),
     )
   })

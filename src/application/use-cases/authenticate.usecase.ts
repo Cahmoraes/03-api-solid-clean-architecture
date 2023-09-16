@@ -1,6 +1,5 @@
 import { Either, EitherType } from '@cahmoraes93/either'
 import { UsersRepository } from '../repositories/users-repository'
-import { PasswordHash } from '@/core/entities/password-hash'
 import { inject } from '@/infra/dependency-inversion/registry'
 import { UserDto, UserDtoFactory } from '../dtos/user-dto.factory'
 import { InvalidCredentialsError } from '../errors/invalid-credentials.error'
@@ -28,8 +27,8 @@ export class AuthenticateUseCase {
     const user = await this.usersRepository.userOfEmail(email)
     if (!user) return Either.left(new InvalidCredentialsError())
     const doesPasswordMatches = await this.comparePasswordAndHash(
+      user,
       password,
-      user.passwordHash,
     )
     if (!doesPasswordMatches) return Either.left(new InvalidCredentialsError())
     this.publishGymCreated(user)
@@ -37,11 +36,10 @@ export class AuthenticateUseCase {
   }
 
   private async comparePasswordAndHash(
+    aUser: User,
     aPassword: string,
-    aHash: string,
   ): Promise<boolean> {
-    const passwordHash = new PasswordHash()
-    return passwordHash.isMatch(aPassword, aHash)
+    return aUser.validatePassword(aPassword)
   }
 
   private publishGymCreated(aUser: User): void {

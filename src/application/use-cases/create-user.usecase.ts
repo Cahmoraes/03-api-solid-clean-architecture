@@ -1,13 +1,13 @@
 import { Either, EitherType } from '@cahmoraes93/either'
 import { UsersRepository } from '../repositories/users-repository'
 import { Role, User } from '../entities/user.entity'
-import { PasswordHash } from '@/core/entities/password-hash'
 import { inject } from '@/infra/dependency-inversion/registry'
 import { UserAlreadyExistsError } from '../errors/user-already-exists.error'
 import { DomainEventPublisher } from '../events/domain-event-publisher'
 import { UserCreatedEvent } from '../events/user-created/user-created.event'
 import { UserDto, UserDtoFactory } from '../dtos/user-dto.factory'
 import { UserValidatorError } from '../entities/errors/user-validator.error'
+import { Password } from '../entities/value-objects/password'
 
 export interface CreateUserUseCaseInput {
   name: string
@@ -45,18 +45,14 @@ export class CreateUserUseCase {
   private async performCreateUser(
     aCreateUserInput: CreateUserUseCaseInput,
   ): Promise<EitherType<UserValidatorError, User>> {
-    const passwordHashed = await this.hashPassword(aCreateUserInput.password)
+    const passwordOrError = await Password.create(aCreateUserInput.password)
+    const password = passwordOrError.value as Password
     return User.create({
       name: aCreateUserInput.name,
       email: aCreateUserInput.email,
       role: aCreateUserInput.role,
-      passwordHash: passwordHashed,
+      password,
     })
-  }
-
-  private hashPassword(aPassword: string): Promise<string> {
-    const passwordHash = new PasswordHash()
-    return passwordHash.createHash(aPassword)
   }
 
   private publishUserCreated(aUser: User) {

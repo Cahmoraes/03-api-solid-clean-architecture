@@ -1,11 +1,8 @@
-import { FailResponse } from '@/infra/http/entities/fail-response'
-import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { UsersRepository } from '../repositories/users-repository'
 import { inject } from '@/infra/dependency-inversion/registry'
 import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 import { UserDto, UserDtoFactory } from '../dtos/user-dto.factory'
-import { User } from '../entities/user.entity'
 
 export interface GetUserProfileUseCaseInput {
   userId: string

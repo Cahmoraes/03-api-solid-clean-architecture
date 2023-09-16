@@ -5,12 +5,13 @@ import { UserValidator } from './validators/user.validator'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { UserValidatorError } from './errors/user-validator.error'
 import { ErrorsMap } from './validators/validator'
+import { Password } from './value-objects/password'
 
 export type Role = 'MEMBER' | 'ADMIN'
 export interface UserProps {
   name: string
   email: string
-  passwordHash: string
+  password: Password
   createdAt: Date
   role: Role
 }
@@ -30,6 +31,7 @@ export class User extends Entity<UserProps> {
         createdAt: new Date(),
         role: 'MEMBER',
         ...props,
+        password: Password.restore(props.password.toString()),
       },
       anId,
     )
@@ -56,7 +58,7 @@ export class User extends Entity<UserProps> {
   }
 
   get passwordHash(): string {
-    return this.props.passwordHash
+    return this.props.password.toString()
   }
 
   get createdAt(): Date {
@@ -65,5 +67,9 @@ export class User extends Entity<UserProps> {
 
   get role(): Role {
     return this.props.role
+  }
+
+  async validatePassword(password: string): Promise<boolean> {
+    return this.props.password.compare(password)
   }
 }

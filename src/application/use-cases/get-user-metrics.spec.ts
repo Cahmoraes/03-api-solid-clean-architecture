@@ -1,5 +1,4 @@
 import { CheckIn } from '../entities/check-in.entity'
-import { SuccessResponse } from '@/infra/http/entities/success-response'
 import { InMemoryCheckInsRepository } from 'tests/repositories/in-memory-check-ins-repository'
 import { GetUserMetricsUseCase } from './get-user-metrics.usecase'
 import { provide } from '@/infra/dependency-inversion/registry'

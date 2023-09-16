@@ -6,7 +6,6 @@ import { z } from 'zod'
 const createUserBodySchema = z.object({
   name: z.string().min(6),
   email: z.string().email('Invalid email'),
-  passwordHash: z.string().min(6),
   role: z.enum(['ADMIN', 'MEMBER']).default('MEMBER'),
 })
 
