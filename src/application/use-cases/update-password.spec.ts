@@ -5,7 +5,7 @@ import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 import { UserDto } from '../dtos/user-dto.factory'
 import { Password } from '../entities/value-objects/password'
 import { UpdatePasswordUseCase } from './update-password.usecase'
-import { PasswordValidatorError } from '../entities/errors/password-validator.error'
+import { ValidatorError } from '../entities/errors/validator.error'
 
 describe('UpdatePassword use case', () => {
   let usersRepository: InMemoryUsersRepository
@@ -64,7 +64,7 @@ describe('UpdatePassword use case', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(PasswordValidatorError)
+    expect(result.value).toBeInstanceOf(ValidatorError)
   })
 
   it('should be able to update to invalid user', async () => {

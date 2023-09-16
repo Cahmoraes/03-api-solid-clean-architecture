@@ -1,8 +1,8 @@
 import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
 import { User } from './user.entity'
 import { randomUUID } from 'crypto'
-import { UserValidatorError } from './errors/user-validator.error'
 import { Password } from './value-objects/password'
+import { ValidatorError } from './errors/validator.error'
 
 describe('User Entity', async () => {
   const passwordOrError = await Password.create('123456')
@@ -63,8 +63,8 @@ describe('User Entity', async () => {
       password: userDS.password,
     })
     expect(result.isLeft()).toBeTruthy()
-    const error = result.value as UserValidatorError
-    expect(error).toBeInstanceOf(UserValidatorError)
+    const error = result.value as ValidatorError
+    expect(error).toBeInstanceOf(ValidatorError)
     expect(error.message).toEqual(
       JSON.stringify({
         name: ['String must contain at least 6 character(s)'],

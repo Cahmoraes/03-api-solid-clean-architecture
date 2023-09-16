@@ -11,6 +11,10 @@ export abstract class Validator<CreateProps> {
     return this._errors
   }
 
+  get stringifyErrors(): string {
+    return JSON.stringify(Object.fromEntries(this.errors))
+  }
+
   public addError(fieldError: string, messages: string[]): void {
     this._errors.set(fieldError, messages)
   }

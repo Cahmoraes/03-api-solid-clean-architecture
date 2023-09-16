@@ -3,7 +3,7 @@ import { InvalidLatitudeError } from '../errors/invalid-latitude.error'
 import { InvalidLongitudeError } from '../errors/invalid-longitude.error'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { CoordValidator } from '../validators/coord.validator'
-import { ErrorsMap } from '../validators/validator'
+import type { ValidatorError } from '../errors/validator.error'
 
 interface CoordProps {
   latitude: number
@@ -19,7 +19,9 @@ export class Coord implements ValueObject {
     this._longitude = coordProps.longitude
   }
 
-  public static create(coordProps: CoordProps): EitherType<ErrorsMap, Coord> {
+  public static create(
+    coordProps: CoordProps,
+  ): EitherType<ValidatorError, Coord> {
     const coordOrError = this.validate(coordProps)
     if (coordOrError.isLeft()) return Either.left(coordOrError.value)
     const coord = new Coord(coordProps)
@@ -32,7 +34,7 @@ export class Coord implements ValueObject {
 
   private static validate(
     coordProps: CoordProps,
-  ): EitherType<ErrorsMap, CoordProps> {
+  ): EitherType<ValidatorError, CoordProps> {
     const coordValidator = new CoordValidator(coordProps)
     return coordValidator.validate()
   }

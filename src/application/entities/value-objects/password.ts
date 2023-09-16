@@ -3,6 +3,7 @@ import { PasswordValidator } from '../validators/password.validator'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { ErrorsMap } from '../validators/validator'
 import { PasswordValidatorError } from '../errors/password-validator.error'
+import { ValidatorError } from '../errors/validator.error'
 
 type PasswordDto = { password: string }
 
@@ -15,17 +16,19 @@ export class Password {
 
   static async create(
     aString: string,
-  ): Promise<EitherType<PasswordValidatorError, Password>> {
+  ): Promise<EitherType<ValidatorError, Password>> {
     const passwordOrError = this.validate(aString)
     if (passwordOrError.isLeft()) {
-      return Either.left(new PasswordValidatorError(passwordOrError.value))
+      return Either.left(passwordOrError.value)
     }
     const passwordHashed = await this.createHash(aString)
     const password = new Password(passwordHashed)
     return Either.right(password)
   }
 
-  private static validate(aString: string): EitherType<ErrorsMap, PasswordDto> {
+  private static validate(
+    aString: string,
+  ): EitherType<ValidatorError, PasswordDto> {
     const passwordValidator = new PasswordValidator({
       password: aString,
     })

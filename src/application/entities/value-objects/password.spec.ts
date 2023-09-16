@@ -1,4 +1,5 @@
 import { PasswordValidatorError } from '../errors/password-validator.error'
+import { ValidatorError } from '../errors/validator.error'
 import { Password } from './password'
 
 describe('Password', () => {
@@ -19,9 +20,8 @@ describe('Password', () => {
     const passwordString = '00'
     const passwordOrError = await Password.create(passwordString)
     expect(passwordOrError.isLeft())
-    expect(passwordOrError.value).toBeInstanceOf(PasswordValidatorError)
-    const passwordValidatorError =
-      passwordOrError.value as PasswordValidatorError
+    expect(passwordOrError.value).toBeInstanceOf(ValidatorError)
+    const passwordValidatorError = passwordOrError.value as ValidatorError
     expect(passwordValidatorError.message).toEqual(
       JSON.stringify({
         password: ['String must contain at least 6 character(s)'],

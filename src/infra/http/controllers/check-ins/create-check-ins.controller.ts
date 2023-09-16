@@ -13,12 +13,8 @@ const CreateCheckInParamsSchema = z.object({
 type CreateCheckInParamsDto = z.infer<typeof CreateCheckInParamsSchema>
 
 const CreateCheckInBodySchema = z.object({
-  userLatitude: z.coerce.number().refine((value) => {
-    return Math.abs(value) <= 90
-  }),
-  userLongitude: z.coerce.number().refine((value) => {
-    return Math.abs(value) <= 180
-  }),
+  userLatitude: z.coerce.number(),
+  userLongitude: z.coerce.number(),
 })
 type CreateCheckInBodyDto = z.infer<typeof CreateCheckInBodySchema>
 type CreateCheckInControllerOutput = EitherType<
@@ -54,9 +50,7 @@ export class CreateCheckInController {
       userLongitude,
     })
     return result.isLeft()
-      ? Either.left(
-          FailResponse.internalServerError(new Error(result.value.toString())),
-        )
+      ? Either.left(FailResponse.bad(result.value))
       : Either.right(SuccessResponse.created(result.value))
   }
 

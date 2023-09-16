@@ -1,6 +1,7 @@
 import { Either, EitherType } from '@cahmoraes93/either'
-import { ErrorsMap, Validator } from './validator'
+import { Validator } from './validator'
 import { z } from 'zod'
+import { ValidatorError } from '../errors/validator.error'
 
 const createCoordSchema = z.object({
   latitude: z.number().min(-90).max(90),
@@ -10,11 +11,11 @@ const createCoordSchema = z.object({
 type CreateCoordDto = z.infer<typeof createCoordSchema>
 
 export class CoordValidator extends Validator<CreateCoordDto> {
-  public validate(): EitherType<ErrorsMap, CreateCoordDto> {
+  public validate(): EitherType<ValidatorError, CreateCoordDto> {
     const result = createCoordSchema.safeParse(this.props)
     if (!result.success) this.formatErrors(result)
     return this.hasErrors()
-      ? Either.left(this.errors)
+      ? Either.left(new ValidatorError(this.stringifyErrors))
       : Either.right(this.props)
   }
 

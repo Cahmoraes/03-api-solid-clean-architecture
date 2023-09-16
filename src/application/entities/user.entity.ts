@@ -4,8 +4,8 @@ import { Optional } from '@prisma/client/runtime/library'
 import { UserValidator } from './validators/user.validator'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { UserValidatorError } from './errors/user-validator.error'
-import { ErrorsMap } from './validators/validator'
 import { Password } from './value-objects/password'
+import type { ValidatorError } from './errors/validator.error'
 
 export type Role = 'MEMBER' | 'ADMIN'
 export interface UserProps {
@@ -21,10 +21,10 @@ export class User extends Entity<UserProps> {
   static create(
     props: UserCreateProps,
     anId?: string | UniqueIdentity,
-  ): EitherType<UserValidatorError, User> {
+  ): EitherType<ValidatorError, User> {
     const userOrError = User.validate(props)
     if (userOrError.isLeft()) {
-      return Either.left(new UserValidatorError(userOrError.value))
+      return Either.left(userOrError.value)
     }
     const user = new User(
       {
@@ -40,7 +40,7 @@ export class User extends Entity<UserProps> {
 
   private static validate(
     props: UserCreateProps,
-  ): EitherType<ErrorsMap, UserCreateProps> {
+  ): EitherType<ValidatorError, UserCreateProps> {
     const userValidator = new UserValidator(props)
     return userValidator.validate()
   }

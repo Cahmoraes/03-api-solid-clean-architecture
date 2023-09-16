@@ -4,8 +4,7 @@ import { provide } from '@/infra/dependency-inversion/registry'
 import { UserAlreadyExistsError } from '../errors/user-already-exists.error'
 import { UserDto } from '../dtos/user-dto.factory'
 import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
-import { PasswordValidatorError } from '../entities/errors/password-validator.error'
-import { UserValidatorError } from '../entities/errors/user-validator.error'
+import { ValidatorError } from '../entities/errors/validator.error'
 
 describe('CreateUser use case', () => {
   let usersRepository: InMemoryUsersRepository
@@ -67,7 +66,7 @@ describe('CreateUser use case', () => {
     })
 
     expect(result.isLeft()).toBeTruthy()
-    expect(result.value).instanceOf(UserValidatorError)
+    expect(result.value).instanceOf(ValidatorError)
   })
 
   it('should not able to create an user with invalid password', async () => {
@@ -79,6 +78,6 @@ describe('CreateUser use case', () => {
     })
 
     expect(result.isLeft()).toBeTruthy()
-    expect(result.value).toBeInstanceOf(PasswordValidatorError)
+    expect(result.value).toBeInstanceOf(ValidatorError)
   })
 })
