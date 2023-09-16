@@ -35,7 +35,7 @@ export interface HttpHandlerParams<TRequest = any, TResponse = any> {
 
 export type HttpHandler = (
   httpHandlerParams: HttpHandlerParams,
-) => Promise<EitherType<FailResponse<Error>, SuccessResponse<unknown>>>
+) => Promise<EitherType<FailResponse<unknown>, SuccessResponse<unknown>>>
 
 type Middleware = (...args: any[]) => void
 

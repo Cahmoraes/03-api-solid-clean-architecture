@@ -1,7 +1,6 @@
 import { InMemoryGymsRepository } from '@/tests/repositories/in-memory-gyms-repository'
 import { Gym } from '../entities/gym.entity'
 import { FetchNearbyGymsUseCase } from './fetch-nearby-gym.usecase'
-import { Coord } from '../entities/value-objects/coord'
 import { provide } from '@/infra/dependency-inversion/registry'
 import { GymDto } from '../dtos/gym-dto.factory'
 
@@ -32,11 +31,11 @@ describe('Fetch Nearby Gyms use case', () => {
       }).value as Gym,
     )
 
-    const userCoord = Coord.create({
+    const userCoord = {
       latitude: -27.2092052,
       longitude: -49.6401091,
-    }).value as Coord
-    const result = await sut.execute({ userCoord })
+    }
+    const result = await sut.execute(userCoord)
     expect(result.isRight()).toBeTruthy()
     const gyms = result.value as GymDto[]
     expect(gyms).toHaveLength(1)

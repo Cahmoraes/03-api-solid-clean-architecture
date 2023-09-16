@@ -3,20 +3,25 @@ import { Coord } from '../entities/value-objects/coord'
 import { GymsRepository } from '../repositories/gyms-repository'
 import { inject } from '@/infra/dependency-inversion/registry'
 import { GymDto, GymDtoFactory } from '../dtos/gym-dto.factory'
+import type { ErrorsMap } from '../entities/validators/validator'
 
 interface FetchNearbyGymsInput {
-  userCoord: Coord
+  latitude: number
+  longitude: number
 }
 
-type FetchNearbyGymsOutput = EitherType<Error, GymDto[]>
+type FetchNearbyGymsOutput = EitherType<ErrorsMap | Error, GymDto[]>
 
 export class FetchNearbyGymsUseCase {
   private gymsRepository = inject<GymsRepository>('gymsRepository')
 
   async execute({
-    userCoord,
+    latitude,
+    longitude,
   }: FetchNearbyGymsInput): Promise<FetchNearbyGymsOutput> {
-    const result = await this.performFetchNearbyGyms(userCoord)
+    const coordOrError = Coord.create({ latitude, longitude })
+    if (coordOrError.isLeft()) return Either.left(coordOrError.value)
+    const result = await this.performFetchNearbyGyms(coordOrError.value)
     return result.isLeft()
       ? Either.left(result.value)
       : Either.right(result.value)

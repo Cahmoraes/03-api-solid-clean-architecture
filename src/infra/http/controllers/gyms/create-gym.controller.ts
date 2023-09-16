@@ -6,6 +6,7 @@ import { inject } from '@/infra/dependency-inversion/registry'
 import { CreateGymUseCase } from '@/application/use-cases/create-gym.usecase'
 import { GymDto } from '@/application/dtos/gym-dto.factory'
 import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
+import type { ErrorsMap } from '@/application/entities/validators/validator'
 
 const CreateGymBodySchema = z.object({
   title: z.string(),
@@ -20,7 +21,7 @@ const CreateGymBodySchema = z.object({
 })
 type CreateGymBodyDto = z.infer<typeof CreateGymBodySchema>
 type CreateGymControllerOutput = EitherType<
-  FailResponse<Error>,
+  FailResponse<Error | ErrorsMap>,
   SuccessResponse<GymDto>
 >
 
@@ -42,7 +43,7 @@ export class CreateGymController {
     const gymDto = this.parseBodyOrThrow(body)
     const result = await this.createGymUseCase.execute(gymDto)
     return result.isLeft()
-      ? Either.left(FailResponse.bad(new Error(result.value.toString())))
+      ? Either.left(FailResponse.bad(result.value))
       : Either.right(SuccessResponse.created(result.value))
   }
 

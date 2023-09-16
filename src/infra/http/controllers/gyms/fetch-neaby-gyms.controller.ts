@@ -6,7 +6,6 @@ import { inject } from '@/infra/dependency-inversion/registry'
 import { GymDto } from '@/application/dtos/gym-dto.factory'
 import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
 import { FetchNearbyGymsUseCase } from '@/application/use-cases/fetch-nearby-gym.usecase'
-import { Coord } from '@/application/entities/value-objects/coord'
 import { ErrorsMap } from '@/application/entities/validators/validator'
 
 const FetchNearbyGymsQuerySchema = z.object({
@@ -19,7 +18,7 @@ const FetchNearbyGymsQuerySchema = z.object({
 })
 type FetchNearbyGymsQueryDto = z.infer<typeof FetchNearbyGymsQuerySchema>
 type FetchNearbyGymsControllerOutput = EitherType<
-  FailResponse<Error>,
+  FailResponse<Error | ErrorsMap>,
   SuccessResponse<GymDto[]>
 >
 
@@ -39,14 +38,10 @@ export class FetchNearbyGymsController {
   public async handleRequest({
     query,
   }: FastifyHttpHandlerParams): Promise<FetchNearbyGymsControllerOutput> {
-    const userCoordOrError = Coord.create(this.parseQueryOrThrow(query))
-    if (userCoordOrError.isLeft()) {
-      return Either.left(
-        FailResponse.bad(new Error(userCoordOrError.value.toString())),
-      )
-    }
+    const coordDto = this.parseQueryOrThrow(query)
     const result = await this.fetchNearbyGymsUseCase.execute({
-      userCoord: userCoordOrError.value,
+      latitude: coordDto.latitude,
+      longitude: coordDto.longitude,
     })
     return result.isLeft()
       ? Either.left(FailResponse.internalServerError(result.value))
