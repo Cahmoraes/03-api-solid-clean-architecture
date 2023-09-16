@@ -8,6 +8,7 @@ import { UserCreatedEvent } from '../events/user-created/user-created.event'
 import { UserDto, UserDtoFactory } from '../dtos/user-dto.factory'
 import { UserValidatorError } from '../entities/errors/user-validator.error'
 import { Password } from '../entities/value-objects/password'
+import { PasswordValidatorError } from '../entities/errors/password-validator.error'
 
 export interface CreateUserUseCaseInput {
   name: string
@@ -44,14 +45,14 @@ export class CreateUserUseCase {
 
   private async performCreateUser(
     aCreateUserInput: CreateUserUseCaseInput,
-  ): Promise<EitherType<UserValidatorError, User>> {
+  ): Promise<EitherType<UserValidatorError | PasswordValidatorError, User>> {
     const passwordOrError = await Password.create(aCreateUserInput.password)
-    const password = passwordOrError.value as Password
+    if (passwordOrError.isLeft()) return Either.left(passwordOrError.value)
     return User.create({
       name: aCreateUserInput.name,
       email: aCreateUserInput.email,
       role: aCreateUserInput.role,
-      password,
+      password: passwordOrError.value,
     })
   }
 

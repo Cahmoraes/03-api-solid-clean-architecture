@@ -20,7 +20,7 @@ describe('Search Gyms use case', () => {
         title: 'JavaScript Gym',
         latitude: -27.0747279,
         longitude: -49.4889672,
-      }),
+      }).value as Gym,
     )
 
     await gymsRepository.save(
@@ -28,7 +28,7 @@ describe('Search Gyms use case', () => {
         title: 'TypeScript Gym',
         latitude: -27.0747279,
         longitude: -49.4889672,
-      }),
+      }).value as Gym,
     )
 
     const result = await sut.execute({
@@ -50,7 +50,7 @@ describe('Search Gyms use case', () => {
           title: `JavaScript Gym ${i}`,
           latitude: -27.0747279,
           longitude: -49.4889672,
-        }),
+        }).value as Gym,
       )
     }
 

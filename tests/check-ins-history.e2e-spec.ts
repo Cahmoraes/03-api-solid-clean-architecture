@@ -36,7 +36,7 @@ describe('Check-in History (e2e)', () => {
       longitude: -49.4889672,
       description: 'Fake TypeScript Gym',
       phone: '00-0000-0000',
-    })
+    }).value as Gym
     const gymsRepository = new PrismaGymsRepository()
     await gymsRepository.save(gym)
 

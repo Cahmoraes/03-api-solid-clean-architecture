@@ -21,7 +21,7 @@ describe('Fetch Nearby Gyms use case', () => {
         title: 'Near Gym',
         latitude: -27.2092052,
         longitude: -49.6401091,
-      }),
+      }).value as Gym,
     )
 
     await gymsRepository.save(
@@ -29,13 +29,13 @@ describe('Fetch Nearby Gyms use case', () => {
         title: 'Far Gym',
         latitude: -27.0610928,
         longitude: -49.5229501,
-      }),
+      }).value as Gym,
     )
 
-    const userCoord = new Coord({
+    const userCoord = Coord.create({
       latitude: -27.2092052,
       longitude: -49.6401091,
-    })
+    }).value as Coord
     const result = await sut.execute({ userCoord })
     expect(result.isRight()).toBeTruthy()
     const gyms = result.value as GymDto[]

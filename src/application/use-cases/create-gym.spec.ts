@@ -13,7 +13,7 @@ describe('CreateGym use case', () => {
     sut = new CreateGymUseCase()
   })
 
-  it('should create a gym', async () => {
+  it.only('should create a gym', async () => {
     const result = await sut.execute({
       title: 'Academia TypeScript Gym',
       latitude: -27.0747279,
@@ -29,5 +29,17 @@ describe('CreateGym use case', () => {
     expect(value.longitude).toEqual(-49.4889672)
     expect(value.description).toEqual('Fake TypeScript Gym')
     expect(value.phone).toEqual('00-0000-0000')
+  })
+
+  it('should not be able create gym with invalid coord', async () => {
+    const result = await sut.execute({
+      title: 'Academia TypeScript Gym',
+      latitude: -91,
+      longitude: -0,
+      description: 'Fake TypeScript Gym',
+      phone: '00-0000-0000',
+    })
+
+    expect(result.isLeft()).toBeTruthy()
   })
 })

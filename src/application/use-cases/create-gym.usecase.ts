@@ -6,6 +6,8 @@ import { GymDto, GymDtoFactory } from '../dtos/gym-dto.factory'
 import { InternalServerError } from '../errors/internal-server.error'
 import { DomainEventPublisher } from '../events/domain-event-publisher'
 import { GymCreatedEvent } from '../events/gym-created/gym-created.event'
+import type { InvalidLongitudeError } from '../entities/errors/invalid-longitude.error'
+import type { InvalidLatitudeError } from '../entities/errors/invalid-latitude.error'
 
 interface CreateGymUseCaseInput {
   title: string
@@ -15,18 +17,22 @@ interface CreateGymUseCaseInput {
   phone?: string | null
 }
 
-type CreateGymUseCaseOutput = EitherType<InternalServerError, GymDto>
+type CreateGymUseCaseOutput = EitherType<
+  InternalServerError | InvalidLongitudeError | InvalidLatitudeError,
+  GymDto
+>
 
 export class CreateGymUseCase {
   private gymsRepository = inject<GymsRepository>('gymsRepository')
 
   async execute(props: CreateGymUseCaseInput): Promise<CreateGymUseCaseOutput> {
-    const gym = Gym.create(props)
-    const result = await this.performCreateGym(gym)
-    this.publishGymCreated(gym)
+    const gymOrError = Gym.create(props)
+    if (gymOrError.isLeft()) return Either.left(gymOrError.value)
+    const result = await this.performCreateGym(gymOrError.value)
+    this.publishGymCreated(gymOrError.value)
     return result.isLeft()
       ? Either.left(new InternalServerError())
-      : Either.right(GymDtoFactory.create(gym))
+      : Either.right(GymDtoFactory.create(gymOrError.value))
   }
 
   private async performCreateGym(
@@ -34,7 +40,6 @@ export class CreateGymUseCase {
   ): Promise<EitherType<Error, boolean>> {
     try {
       await this.gymsRepository.save(aGym)
-
       return Either.right(true)
     } catch (error) {
       if (error instanceof Error) {

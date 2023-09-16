@@ -33,7 +33,7 @@ describe('CheckIn use case', () => {
         longitude,
       },
       gymId,
-    )
+    ).value as Gym
     await gymsRepository.save(gym)
   })
 
@@ -124,7 +124,7 @@ describe('CheckIn use case', () => {
         longitude: -49.4889672,
       },
       gymId,
-    )
+    ).value as Gym
     await gymsRepository.save(gym)
 
     const result = await sut.execute({

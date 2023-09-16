@@ -38,8 +38,15 @@ export class FetchNearbyGymsController {
   public async handleRequest({
     query,
   }: FastifyHttpHandlerParams): Promise<FetchNearbyGymsControllerOutput> {
-    const userCoord = new Coord(this.parseQueryOrThrow(query))
-    const result = await this.fetchNearbyGymsUseCase.execute({ userCoord })
+    const userCoordOrError = Coord.create(this.parseQueryOrThrow(query))
+    if (userCoordOrError.isLeft()) {
+      return Either.left(
+        FailResponse.internalServerError(userCoordOrError.value),
+      )
+    }
+    const result = await this.fetchNearbyGymsUseCase.execute({
+      userCoord: userCoordOrError.value,
+    })
     return result.isLeft()
       ? Either.left(FailResponse.internalServerError(result.value))
       : Either.right(SuccessResponse.ok(result.value))

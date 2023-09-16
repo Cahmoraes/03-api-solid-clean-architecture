@@ -41,10 +41,13 @@ export class PrismaGymsRepository implements GymsRepository {
   }
 
   private createGymFromPrisma(aPrismaGym: PrismaGym): Gym {
-    return Gym.create(
+    const coord = Coord.restore({
+      latitude: aPrismaGym.latitude.toNumber(),
+      longitude: aPrismaGym.longitude.toNumber(),
+    })
+    return Gym.restore(
       {
-        latitude: aPrismaGym.latitude.toNumber(),
-        longitude: aPrismaGym.longitude.toNumber(),
+        coord,
         title: aPrismaGym.title,
         description: aPrismaGym.description,
         phone: aPrismaGym.phone,

@@ -1,6 +1,9 @@
 import { Entity } from '@/core/entities/entity'
 import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
 import { Coord } from './value-objects/coord'
+import { Either, EitherType } from '@cahmoraes93/either'
+import type { InvalidLongitudeError } from './errors/invalid-longitude.error'
+import type { InvalidLatitudeError } from './errors/invalid-latitude.error'
 
 interface GymProps {
   title: string
@@ -19,15 +22,25 @@ export class Gym extends Entity<GymInternalProps> {
     super(props, anId)
   }
 
-  static create(props: GymProps, anId?: string | UniqueIdentity) {
+  static create(
+    props: GymProps,
+    anId?: string | UniqueIdentity,
+  ): EitherType<InvalidLongitudeError | InvalidLatitudeError, Gym> {
     const { latitude, longitude, ...rest } = props
-    return new Gym(
+    const coordOrError = Coord.create({ latitude, longitude })
+    if (coordOrError.isLeft()) return Either.left(coordOrError.value)
+    const gym = new Gym(
       {
         ...rest,
-        coord: new Coord({ latitude, longitude }),
+        coord: coordOrError.value,
       },
       new UniqueIdentity(anId),
     )
+    return Either.right(gym)
+  }
+
+  static restore(props: GymInternalProps, anId: string) {
+    return new Gym(props, anId)
   }
 
   get title(): string {

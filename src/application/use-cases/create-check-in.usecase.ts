@@ -9,6 +9,8 @@ import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 import { MaxDistanceReachedError } from '../errors/max-distance-reached.error'
 import { MaxNumbersOfCheckInsReachedError } from '../errors/max-number-of-check-ins-reached.error'
 import { CheckInDto, CheckInDtoFactory } from '../dtos/check-in-dto.factory'
+import { InvalidLongitudeError } from '../entities/errors/invalid-longitude.error'
+import { InvalidLatitudeError } from '../entities/errors/invalid-latitude.error'
 
 export interface CreateCheckInUseCaseInput {
   userId: string
@@ -19,6 +21,8 @@ export interface CreateCheckInUseCaseInput {
 
 export type CreateCheckInUseCaseOutput = EitherType<
   | ResourceNotFoundError
+  | InvalidLongitudeError
+  | InvalidLatitudeError
   | MaxDistanceReachedError
   | MaxNumbersOfCheckInsReachedError,
   CheckInDto
@@ -37,9 +41,14 @@ export class CreateCheckInUseCase {
   }: CreateCheckInUseCaseInput): Promise<CreateCheckInUseCaseOutput> {
     const gym = await this.gymsRepository.gymOfId(gymId)
     if (!gym) return Either.left(new ResourceNotFoundError())
+    const coordOrError = Coord.create({
+      latitude: userLatitude,
+      longitude: userLongitude,
+    })
+    if (coordOrError.isLeft()) return Either.left(coordOrError.value)
     if (
       this.distanceBetweenUserAndGymIsMoreThanOneHundredMeters(
-        new Coord({ latitude: userLatitude, longitude: userLongitude }),
+        coordOrError.value,
         gym.coord,
       )
     ) {

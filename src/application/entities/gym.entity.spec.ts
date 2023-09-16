@@ -12,7 +12,8 @@ describe('Gym Entity', () => {
   }
 
   it('should create a gym', () => {
-    const gym = Gym.create(gymDS)
+    const gymOrError = Gym.create(gymDS)
+    const gym = gymOrError.value as Gym
     expect(gym).toBeInstanceOf(Gym)
     expect(gym.title).toBe(gymDS.title)
     expect(gym.description).toBe(gymDS.description)
@@ -25,11 +26,13 @@ describe('Gym Entity', () => {
 
   it('should create a gym with specific ID', () => {
     const specificId = 'gym-01'
-    const gym1 = Gym.create(gymDS, specificId)
-    expect(gym1.id.toString()).toBe(specificId)
+    const gym1OrError = Gym.create(gymDS, specificId)
+    const gym = gym1OrError.value as Gym
+    expect(gym.id.toString()).toBe(specificId)
 
     const specificUniqueIdentity = new UniqueIdentity(specificId)
-    const gym2 = Gym.create(gymDS, specificUniqueIdentity)
+    const gym2OrError = Gym.create(gymDS, specificUniqueIdentity)
+    const gym2 = gym2OrError.value as Gym
     expect(gym2.id.equals(specificUniqueIdentity)).toBeTruthy()
   })
 })
