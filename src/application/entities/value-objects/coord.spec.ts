@@ -1,5 +1,4 @@
-import { InvalidLatitudeError } from '../errors/invalid-latitude.error'
-import { InvalidLongitudeError } from '../errors/invalid-longitude.error'
+import type { ErrorsMap } from '../validators/validator'
 import { Coord } from './coord'
 
 describe('Coord test suite', () => {
@@ -38,17 +37,35 @@ describe('Coord test suite', () => {
   })
 
   it('should throw exceptions when trying to create latitude and longitude invalid', () => {
-    expect(Coord.create({ latitude: 91, longitude: 0 }).value).toBeInstanceOf(
-      InvalidLatitudeError,
-    )
-    expect(Coord.create({ latitude: -91, longitude: 0 }).value).toBeInstanceOf(
-      InvalidLatitudeError,
-    )
-    expect(Coord.create({ latitude: 0, longitude: 181 }).value).toBeInstanceOf(
-      InvalidLongitudeError,
-    )
-    expect(Coord.create({ latitude: 0, longitude: -181 }).value).toBeInstanceOf(
-      InvalidLongitudeError,
-    )
+    const coordOrErrorLatitude = Coord.create({ latitude: 91, longitude: 0 })
+    expect(coordOrErrorLatitude.isLeft()).toBeTruthy()
+    const coordErrorLatitude = coordOrErrorLatitude.value as ErrorsMap
+    expect(coordErrorLatitude.get('latitude')).toEqual([
+      'Number must be less than or equal to 90',
+    ])
+
+    const coordOrErrorLatitude2 = Coord.create({ latitude: -91, longitude: 0 })
+    expect(coordOrErrorLatitude2.isLeft()).toBeTruthy()
+    const coordErrorLatitude2 = coordOrErrorLatitude2.value as ErrorsMap
+    expect(coordErrorLatitude2.get('latitude')).toEqual([
+      'Number must be greater than or equal to -90',
+    ])
+
+    const coordOrErrorLongitude = Coord.create({ latitude: 0, longitude: 181 })
+    expect(coordOrErrorLongitude.isLeft()).toBeTruthy()
+    const coordErrorLongitude = coordOrErrorLongitude.value as ErrorsMap
+    expect(coordErrorLongitude.get('longitude')).toEqual([
+      'Number must be less than or equal to 180',
+    ])
+
+    const coordOrErrorLongitude2 = Coord.create({
+      latitude: 0,
+      longitude: -181,
+    })
+    expect(coordOrErrorLongitude2.isLeft()).toBeTruthy()
+    const coordErrorLongitude2 = coordOrErrorLongitude2.value as ErrorsMap
+    expect(coordErrorLongitude2.get('longitude')).toEqual([
+      'Number must be greater than or equal to -180',
+    ])
   })
 })

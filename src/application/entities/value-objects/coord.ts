@@ -2,6 +2,8 @@ import { ValueObject } from '@/core/entities/value-objects/value-object'
 import { InvalidLatitudeError } from '../errors/invalid-latitude.error'
 import { InvalidLongitudeError } from '../errors/invalid-longitude.error'
 import { Either, EitherType } from '@cahmoraes93/either'
+import { CoordValidator } from '../validators/coord.validator'
+import { ErrorsMap } from '../validators/validator'
 
 interface CoordProps {
   latitude: number
@@ -17,10 +19,8 @@ export class Coord implements ValueObject {
     this._longitude = coordProps.longitude
   }
 
-  public static create(
-    coordProps: CoordProps,
-  ): EitherType<InvalidLongitudeError | InvalidLatitudeError, Coord> {
-    const coordOrError = this.validateCoords(coordProps)
+  public static create(coordProps: CoordProps): EitherType<ErrorsMap, Coord> {
+    const coordOrError = this.validate(coordProps)
     if (coordOrError.isLeft()) return Either.left(coordOrError.value)
     const coord = new Coord(coordProps)
     return Either.right(coord)
@@ -28,6 +28,13 @@ export class Coord implements ValueObject {
 
   public static restore(coordProps: CoordProps): Coord {
     return new Coord(coordProps)
+  }
+
+  private static validate(
+    coordProps: CoordProps,
+  ): EitherType<ErrorsMap, CoordProps> {
+    const coordValidator = new CoordValidator(coordProps)
+    return coordValidator.validate()
   }
 
   private static validateCoords(
