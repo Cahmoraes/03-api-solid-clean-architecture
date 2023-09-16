@@ -1,6 +1,6 @@
 import { ValueObject } from '@/core/entities/value-objects/value-object'
-import { LatitudeError } from '../errors/latitude.error'
-import { LongitudeError } from '../errors/longitude.error'
+import { InvalidLatitudeError } from '../errors/invalid-latitude.error'
+import { InvalidLongitudeError } from '../errors/invalid-longitude.error'
 
 interface CoordProps {
   latitude: number
@@ -23,11 +23,11 @@ export class Coord implements ValueObject {
   }
 
   private validateLatitude(latitude: number) {
-    if (latitude < -90 || latitude > 90) throw new LatitudeError()
+    if (latitude < -90 || latitude > 90) throw new InvalidLatitudeError()
   }
 
   private validateLongitude(longitude: number) {
-    if (longitude < -180 || longitude > 180) throw new LongitudeError()
+    if (longitude < -180 || longitude > 180) throw new InvalidLongitudeError()
   }
 
   public get latitude(): number {
