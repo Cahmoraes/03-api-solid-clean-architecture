@@ -1,6 +1,7 @@
 import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
 import { User } from './user.entity'
 import { randomUUID } from 'crypto'
+import { UserValidatorError } from './errors/user-validator.error'
 
 describe('User Entity', () => {
   const userDS = {
@@ -50,5 +51,15 @@ describe('User Entity', () => {
     expect(user.createdAt).toBeInstanceOf(Date)
     expect(user.id).toBeInstanceOf(UniqueIdentity)
     expect(user.role).toEqual('ADMIN')
+  })
+
+  it('should not be able to create an user with invalid props', () => {
+    const result = User.create({ name: '', email: '', passwordHash: '' })
+    expect(result.isLeft()).toBeTruthy()
+    const error = result.value as UserValidatorError
+    expect(error).toBeInstanceOf(UserValidatorError)
+    expect(error.message).toEqual(
+      'Name is required,Email is required,Password is required',
+    )
   })
 })

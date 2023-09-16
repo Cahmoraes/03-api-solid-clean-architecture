@@ -20,9 +20,9 @@ export class User extends Entity<UserProps> {
     props: UserCreateProps,
     anId?: string | UniqueIdentity,
   ): EitherType<UserValidatorError, User> {
-    const userOfError = User.validate(props)
-    if (userOfError.isLeft()) {
-      return Either.left(new UserValidatorError(userOfError.value.join()))
+    const userOrError = User.validate(props)
+    if (userOrError.isLeft()) {
+      return Either.left(new UserValidatorError(userOrError.value))
     }
     const user = new User(
       {
