@@ -12,7 +12,7 @@ interface UpdatePasswordUseCaseInput {
 }
 
 type UpdatePasswordUseCaseOutput = EitherType<
-  Error | ResourceNotFoundError | PasswordValidatorError,
+  ResourceNotFoundError | PasswordValidatorError,
   UserDto
 >
 
