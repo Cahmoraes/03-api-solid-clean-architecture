@@ -18,7 +18,7 @@ export class CoordValidator extends Validator<CreateCoordDto> {
       : Either.right(this.props)
   }
 
-  private formatErrors(parseSafeResult: z.SafeParseError<CreateCoordDto>) {
+  protected formatErrors(parseSafeResult: z.SafeParseError<CreateCoordDto>) {
     const entries = Object.entries(parseSafeResult.error.flatten().fieldErrors)
     for (const [field, errors] of entries) {
       this.addError(field, errors)

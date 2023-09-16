@@ -7,6 +7,7 @@ import { GymDto } from '@/application/dtos/gym-dto.factory'
 import { FastifyHttpHandlerParams } from '../../servers/fastify/fastify-http-handler-params'
 import { FetchNearbyGymsUseCase } from '@/application/use-cases/fetch-nearby-gym.usecase'
 import { Coord } from '@/application/entities/value-objects/coord'
+import { ErrorsMap } from '@/application/entities/validators/validator'
 
 const FetchNearbyGymsQuerySchema = z.object({
   latitude: z.coerce.number().refine((value) => {
@@ -41,7 +42,7 @@ export class FetchNearbyGymsController {
     const userCoordOrError = Coord.create(this.parseQueryOrThrow(query))
     if (userCoordOrError.isLeft()) {
       return Either.left(
-        FailResponse.internalServerError(userCoordOrError.value),
+        FailResponse.bad(new Error(userCoordOrError.value.toString())),
       )
     }
     const result = await this.fetchNearbyGymsUseCase.execute({

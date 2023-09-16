@@ -20,4 +20,6 @@ export abstract class Validator<CreateProps> {
   }
 
   abstract validate(): EitherType<unknown, CreateProps>
+
+  protected abstract formatErrors(parseSafeResult: object): void
 }

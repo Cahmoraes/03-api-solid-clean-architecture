@@ -4,6 +4,7 @@ import { Coord } from './value-objects/coord'
 import { Either, EitherType } from '@cahmoraes93/either'
 import type { InvalidLongitudeError } from './errors/invalid-longitude.error'
 import type { InvalidLatitudeError } from './errors/invalid-latitude.error'
+import { ErrorsMap } from './validators/validator'
 
 interface GymProps {
   title: string
@@ -25,7 +26,7 @@ export class Gym extends Entity<GymInternalProps> {
   static create(
     props: GymProps,
     anId?: string | UniqueIdentity,
-  ): EitherType<InvalidLongitudeError | InvalidLatitudeError, Gym> {
+  ): EitherType<ErrorsMap, Gym> {
     const { latitude, longitude, ...rest } = props
     const coordOrError = Coord.create({ latitude, longitude })
     if (coordOrError.isLeft()) return Either.left(coordOrError.value)

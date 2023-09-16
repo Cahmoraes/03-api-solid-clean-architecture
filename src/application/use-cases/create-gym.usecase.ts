@@ -6,8 +6,7 @@ import { GymDto, GymDtoFactory } from '../dtos/gym-dto.factory'
 import { InternalServerError } from '../errors/internal-server.error'
 import { DomainEventPublisher } from '../events/domain-event-publisher'
 import { GymCreatedEvent } from '../events/gym-created/gym-created.event'
-import type { InvalidLongitudeError } from '../entities/errors/invalid-longitude.error'
-import type { InvalidLatitudeError } from '../entities/errors/invalid-latitude.error'
+import { ErrorsMap } from '../entities/validators/validator'
 
 interface CreateGymUseCaseInput {
   title: string
@@ -18,7 +17,7 @@ interface CreateGymUseCaseInput {
 }
 
 type CreateGymUseCaseOutput = EitherType<
-  InternalServerError | InvalidLongitudeError | InvalidLatitudeError,
+  InternalServerError | ErrorsMap,
   GymDto
 >
 

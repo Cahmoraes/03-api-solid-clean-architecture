@@ -54,7 +54,9 @@ export class CreateCheckInController {
       userLongitude,
     })
     return result.isLeft()
-      ? Either.left(FailResponse.internalServerError(result.value))
+      ? Either.left(
+          FailResponse.internalServerError(new Error(result.value.toString())),
+        )
       : Either.right(SuccessResponse.created(result.value))
   }
 

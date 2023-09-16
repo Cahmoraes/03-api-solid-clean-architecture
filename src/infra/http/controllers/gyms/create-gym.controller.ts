@@ -42,7 +42,7 @@ export class CreateGymController {
     const gymDto = this.parseBodyOrThrow(body)
     const result = await this.createGymUseCase.execute(gymDto)
     return result.isLeft()
-      ? Either.left(FailResponse.internalServerError(result.value))
+      ? Either.left(FailResponse.bad(new Error(result.value.toString())))
       : Either.right(SuccessResponse.created(result.value))
   }
 

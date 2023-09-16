@@ -18,7 +18,7 @@ export class UserValidator extends Validator<UserCreateProps> {
       : Either.right(this.props)
   }
 
-  private formatErrors(parseSafeResult: z.SafeParseError<UserCreateProps>) {
+  protected formatErrors(parseSafeResult: z.SafeParseError<UserCreateProps>) {
     const entries = Object.entries(parseSafeResult.error.flatten().fieldErrors)
     for (const [field, errors] of entries) {
       this.addError(field, errors)

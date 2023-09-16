@@ -11,6 +11,7 @@ import { MaxNumbersOfCheckInsReachedError } from '../errors/max-number-of-check-
 import { CheckInDto, CheckInDtoFactory } from '../dtos/check-in-dto.factory'
 import { InvalidLongitudeError } from '../entities/errors/invalid-longitude.error'
 import { InvalidLatitudeError } from '../entities/errors/invalid-latitude.error'
+import { ErrorsMap } from '../entities/validators/validator'
 
 export interface CreateCheckInUseCaseInput {
   userId: string
@@ -21,8 +22,7 @@ export interface CreateCheckInUseCaseInput {
 
 export type CreateCheckInUseCaseOutput = EitherType<
   | ResourceNotFoundError
-  | InvalidLongitudeError
-  | InvalidLatitudeError
+  | ErrorsMap
   | MaxDistanceReachedError
   | MaxNumbersOfCheckInsReachedError,
   CheckInDto

@@ -17,7 +17,7 @@ export class PasswordValidator extends Validator<CreatePasswordDto> {
       : Either.right(this.props)
   }
 
-  private formatErrors(parseSafeResult: z.SafeParseError<CreatePasswordDto>) {
+  protected formatErrors(parseSafeResult: z.SafeParseError<CreatePasswordDto>) {
     const entries = Object.entries(parseSafeResult.error.flatten().fieldErrors)
     for (const [field, errors] of entries) {
       this.addError(field, errors)
