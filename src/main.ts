@@ -20,7 +20,6 @@ import { UserAuthenticatedSubscriber } from './application/events/user-authentic
 import { ProductionLogger } from './infra/logger/production-logger'
 import { UpdatePasswordUseCase } from './application/use-cases/update-password.usecase'
 import { HttpControllerFactory } from './infra/http/controllers/factories/http-controller-factory'
-import { ExpressAdapter } from './infra/http/servers/express/express-adapter'
 import { HttpServerFactory } from './infra/http/servers/factories/http-server-factory'
 import { env } from './env'
 

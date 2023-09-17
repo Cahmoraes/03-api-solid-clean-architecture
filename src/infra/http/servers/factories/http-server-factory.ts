@@ -4,7 +4,7 @@ import { HttpServer } from '../http-server'
 type ServerType = 'FASTIFY' | 'EXPRESS'
 
 export class HttpServerFactory {
-  static create(aServer: ServerType): HttpServer {
+  static create(aServer: ServerType = 'FASTIFY'): HttpServer {
     switch (aServer) {
       case 'FASTIFY':
         return new FastifyAdapter()
