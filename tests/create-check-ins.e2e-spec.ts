@@ -1,12 +1,12 @@
 import getPort from 'get-port'
 import request from 'supertest'
 import { FastifyAdapter } from '@/infra/http/servers/fastify/fastify-adapter'
-import { MainHttpController } from '@/infra/http/controllers/main-http-controller'
 import { provideDependencies } from './utils/provide-dependencies'
 import { PrismaGymsRepository } from '@/infra/repositories/prisma/prisma-gyms-repository'
 import { Gym } from '@/application/entities/gym.entity'
 import { createAndAuthenticateUser } from './utils/create-and-authenticate-user'
 import { Routes } from '@/infra/http/controllers/routes.enum'
+import { FastifyHttpController } from '@/infra/http/controllers/fastify-http-controller'
 
 describe('Create CheckIn (e2e)', () => {
   let fastify: FastifyAdapter
@@ -14,7 +14,7 @@ describe('Create CheckIn (e2e)', () => {
     provideDependencies()
     const port = await getPort()
     fastify = new FastifyAdapter({ port })
-    new MainHttpController(fastify)
+    new FastifyHttpController(fastify)
     await fastify.listen()
   })
 

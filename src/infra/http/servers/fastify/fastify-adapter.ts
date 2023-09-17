@@ -92,7 +92,9 @@ export class FastifyAdapter implements HttpServer {
 
   private async performListen(): Promise<void> {
     await this.httpServer.listen({ port: this.PORT, host: this.HOST })
-    console.log(`🚀 Server is running on http://${this.HOST}:${this.PORT}`)
+    console.log(
+      `[FASTIFY] 🚀 Server is running on http://${this.HOST}:${this.PORT}`,
+    )
   }
 
   public on(

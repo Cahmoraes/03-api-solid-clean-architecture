@@ -24,17 +24,5 @@ export class ExpressHttpHandlerParams
 
   get jwtHandler(): JwtHandlers {
     return new ExpressJwtHandlers(this.request)
-    // return {
-    //   async sign(payload, options) {
-    //     return ''
-    //   },
-    //   async verify(options) {
-    //     return {
-    //       iat: 123,
-    //       role: '0',
-    //       sub: '123',
-    //     }
-    //   },
-    // }
   }
 }

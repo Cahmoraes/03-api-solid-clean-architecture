@@ -1,10 +1,10 @@
 import getPort from 'get-port'
 import request from 'supertest'
 import { FastifyAdapter } from '@/infra/http/servers/fastify/fastify-adapter'
-import { MainHttpController } from '@/infra/http/controllers/main-http-controller'
 import { Routes } from '@/infra/http/controllers/routes.enum'
 import { provideDependencies } from './utils/provide-dependencies'
 import { createAndAuthenticateAdmin } from './utils/create-and-authenticate-admin'
+import { FastifyHttpController } from '@/infra/http/controllers/fastify-http-controller'
 
 describe('Create Gym (e2e)', () => {
   let fastify: FastifyAdapter
@@ -12,7 +12,7 @@ describe('Create Gym (e2e)', () => {
     provideDependencies()
     const port = await getPort()
     fastify = new FastifyAdapter({ port })
-    new MainHttpController(fastify)
+    new FastifyHttpController(fastify)
     await fastify.listen()
   })
 

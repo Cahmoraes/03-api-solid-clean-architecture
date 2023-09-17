@@ -6,8 +6,8 @@ import { UserController } from './users/user.controller'
 export class FastifyHttpController extends HttpController {
   protected init(): void {
     this.createUserController()
-    // this.createGymController()
-    // this.createCheckInController()
+    this.createGymController()
+    this.createCheckInController()
   }
 
   private createUserController(): UserController {

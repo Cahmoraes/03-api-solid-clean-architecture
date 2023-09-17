@@ -38,7 +38,9 @@ export class ExpressAdapter implements HttpServer {
 
   private async performListen(): Promise<void> {
     this.httpServer.listen(this.PORT, () => {
-      console.log(`🚀 Server is running on http://${this.HOST}:${this.PORT}`)
+      console.log(
+        `[EXPRESS] 🚀 Server is running on http://${this.HOST}:${this.PORT}`,
+      )
     })
   }
 
@@ -48,7 +50,6 @@ export class ExpressAdapter implements HttpServer {
     handler: HttpHandler,
     middleware: MiddlewareProps,
   ): void {
-    console.log(...this.createMiddlewares(middleware))
     this.httpServer[method](
       route,
       ...this.createMiddlewares(middleware),
