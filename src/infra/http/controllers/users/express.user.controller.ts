@@ -7,6 +7,7 @@ import { UserController } from './user.controller'
 export class ExpressUserController extends UserController {
   protected init(): void {
     this.handleCreateUser()
+    this.handleAuthenticate()
     this.handleMe()
   }
 

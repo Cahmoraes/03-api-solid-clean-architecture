@@ -103,7 +103,7 @@ export class AuthenticateController {
     reply: FastifyHttpHandlerParams['reply'],
     refreshToken: string,
   ): void {
-    reply.setCookie(this.REFRESH_TOKEN_NAME, refreshToken, {
+    reply.cookie(this.REFRESH_TOKEN_NAME, refreshToken, {
       path: '/',
       secure: true,
       sameSite: true,

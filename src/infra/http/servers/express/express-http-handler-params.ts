@@ -1,5 +1,6 @@
 import { HttpHandlerParams, JwtHandlers } from '../http-server'
 import { Request, Response } from 'express'
+import { ExpressJwtHandlers } from './express-jwt-handlers'
 
 export class ExpressHttpHandlerParams
   implements HttpHandlerParams<Request, Response>
@@ -22,17 +23,18 @@ export class ExpressHttpHandlerParams
   }
 
   get jwtHandler(): JwtHandlers {
-    return {
-      async sign(payload, options) {
-        return ''
-      },
-      async verify(options) {
-        return {
-          iat: 123,
-          role: '0',
-          sub: '123',
-        }
-      },
-    }
+    return new ExpressJwtHandlers(this.request)
+    // return {
+    //   async sign(payload, options) {
+    //     return ''
+    //   },
+    //   async verify(options) {
+    //     return {
+    //       iat: 123,
+    //       role: '0',
+    //       sub: '123',
+    //     }
+    //   },
+    // }
   }
 }

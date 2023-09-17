@@ -14,7 +14,6 @@ export async function expressJwtVerifyMiddleware(
     request.user = result
     return next()
   } catch {
-    console.log('catch')
     return response.status(401).send({ message: 'Unauthorized' })
   }
 

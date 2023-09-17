@@ -1,4 +1,3 @@
-import { HttpServer } from '../servers/http-server'
 import { CheckInController } from './check-ins/check-in.controller'
 import { GymController } from './gyms/gym.controller'
 import { HttpController } from './http-controller'
