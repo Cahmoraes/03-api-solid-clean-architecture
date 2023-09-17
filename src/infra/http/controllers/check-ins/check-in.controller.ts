@@ -4,7 +4,6 @@ import {
   HttpServer,
   MiddlewareProps,
 } from '../../servers/http-server'
-import { Routes } from '../routes.enum'
 import { GetUserMetricsController } from '../users/get-user-metrics.controller'
 import { CreateCheckInController } from './create-check-ins.controller'
 import { FetchUserCheckInsHistoryController } from './fetch-user-check-ins-history.controller'

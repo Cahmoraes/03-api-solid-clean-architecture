@@ -5,7 +5,6 @@ import {
   HttpServer,
   MiddlewareProps,
 } from '../../servers/http-server'
-import { Routes } from '../routes.enum'
 import { GymsRoutes } from '../routes/gyms.enum'
 import { CreateGymController } from './create-gym.controller'
 import { FetchNearbyGymsController } from './fetch-neaby-gyms.controller'

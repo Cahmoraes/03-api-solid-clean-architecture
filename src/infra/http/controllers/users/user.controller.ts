@@ -4,7 +4,6 @@ import {
   HttpServer,
   MiddlewareProps,
 } from '../../servers/http-server'
-import { Routes } from '../routes.enum'
 import { UsersRoutes } from '../routes/users-routes.enum'
 import { AuthenticateController } from './authenticate.controller'
 import { CreateUserController } from './create-user.controller'
