@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express'
+import express, { Request, Response, RequestHandler } from 'express'
 import {
   HTTPMethodTypes,
   HttpHandler,
@@ -57,7 +57,7 @@ export class ExpressAdapter implements HttpServer {
     )
   }
 
-  private createMiddlewares(middleware: MiddlewareProps) {
+  private createMiddlewares(middleware: MiddlewareProps): RequestHandler[] {
     if (!middleware) return []
     return Object.values(middleware).reduce(
       (middlewares, middleware) => middlewares.concat(middleware),

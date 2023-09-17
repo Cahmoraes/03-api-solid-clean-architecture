@@ -21,7 +21,6 @@ import { ProductionLogger } from './infra/logger/production-logger'
 import { UpdatePasswordUseCase } from './application/use-cases/update-password.usecase'
 import { HttpControllerFactory } from './infra/http/controllers/factories/http-controller-factory'
 import { HttpServerFactory } from './infra/http/servers/factories/http-server-factory'
-import { env } from './env'
 import { serverArgv } from './argv'
 
 DomainEventPublisher.getInstance().subscribe(new UserCreatedSubscriber())

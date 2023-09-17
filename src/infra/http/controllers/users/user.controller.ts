@@ -5,6 +5,7 @@ import {
   MiddlewareProps,
 } from '../../servers/http-server'
 import { Routes } from '../routes.enum'
+import { UsersRoutes } from '../routes/users-routes.enum'
 import { AuthenticateController } from './authenticate.controller'
 import { CreateUserController } from './create-user.controller'
 import { GetUserProfileController } from './get-user-profile.controller'
@@ -27,7 +28,7 @@ export class UserController {
   private handleCreateUser(): void {
     this.httpServer.on(
       HTTPMethodTypes.POST,
-      Routes.USERS,
+      UsersRoutes.USERS,
       new CreateUserController().handleRequest,
     )
   }
@@ -35,7 +36,7 @@ export class UserController {
   private handleAuthenticate(): void {
     this.httpServer.on(
       HTTPMethodTypes.POST,
-      Routes.SESSIONS,
+      UsersRoutes.SESSIONS,
       new AuthenticateController().handleRequest,
     )
   }
@@ -43,7 +44,7 @@ export class UserController {
   private handleMe(): void {
     this.httpServer.on(
       HTTPMethodTypes.GET,
-      Routes.ME,
+      UsersRoutes.ME,
       new GetUserProfileController().handleRequest,
       this.createMiddleware(),
     )
@@ -58,7 +59,7 @@ export class UserController {
   private handleTokenRefresh(): void {
     this.httpServer.on(
       HTTPMethodTypes.PATCH,
-      Routes.TOKEN_REFRESH,
+      UsersRoutes.TOKEN_REFRESH,
       new RefreshController().handleRequest,
     )
   }
@@ -66,7 +67,7 @@ export class UserController {
   private handleUpdatePassword(): void {
     this.httpServer.on(
       HTTPMethodTypes.PATCH,
-      Routes.USERS_PASSWORD,
+      UsersRoutes.USERS_PASSWORD,
       new UpdatePasswordController().handleRequest,
       this.createMiddleware(),
     )

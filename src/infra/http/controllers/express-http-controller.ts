@@ -1,4 +1,5 @@
 import { CheckInController } from './check-ins/check-in.controller'
+import { ExpressCheckInController } from './check-ins/express-check-in.controller'
 import { ExpressGymController } from './gyms/express-gym.controller'
 import { GymController } from './gyms/gym.controller'
 import { HttpController } from './http-controller'
@@ -9,7 +10,7 @@ export class ExpressHttpController extends HttpController {
   protected init(): void {
     this.createUserController()
     this.createGymController()
-    // this.createCheckInController()
+    this.createCheckInController()
   }
 
   private createUserController(): UserController {
@@ -21,6 +22,6 @@ export class ExpressHttpController extends HttpController {
   }
 
   private createCheckInController(): CheckInController {
-    return new CheckInController(this.httpServer)
+    return new ExpressCheckInController(this.httpServer)
   }
 }

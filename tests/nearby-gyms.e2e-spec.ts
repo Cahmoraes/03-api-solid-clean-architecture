@@ -1,10 +1,10 @@
 import getPort from 'get-port'
 import request from 'supertest'
 import { FastifyAdapter } from '@/infra/http/servers/fastify/fastify-adapter'
-import { Routes } from '@/infra/http/controllers/routes.enum'
 import { provideDependencies } from './utils/provide-dependencies'
 import { createAndAuthenticateAdmin } from './utils/create-and-authenticate-admin'
 import { FastifyHttpController } from '@/infra/http/controllers/fastify-http-controller'
+import { GymsRoutes } from '@/infra/http/controllers/routes/gyms.enum'
 
 describe('Nearby Gyms (e2e)', () => {
   let fastify: FastifyAdapter
@@ -24,7 +24,7 @@ describe('Nearby Gyms (e2e)', () => {
     const { token } = await createAndAuthenticateAdmin(fastify)
 
     await request(fastify.server)
-      .post(Routes.GYMS)
+      .post(GymsRoutes.GYMS)
       .set('Authorization', `Bearer ${token}`)
       .send({
         title: 'Academia JavaScript Gym',
@@ -35,7 +35,7 @@ describe('Nearby Gyms (e2e)', () => {
       })
 
     await request(fastify.server)
-      .post(Routes.GYMS)
+      .post(GymsRoutes.GYMS)
       .set('Authorization', `Bearer ${token}`)
       .send({
         title: 'Academia TypeScript Gym',
@@ -46,7 +46,7 @@ describe('Nearby Gyms (e2e)', () => {
       })
 
     const response = await request(fastify.server)
-      .get(Routes.GYMS_NEARBY)
+      .get(GymsRoutes.GYMS_NEARBY)
       .query({
         latitude: -27.2092052,
         longitude: -49.6401091,

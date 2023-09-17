@@ -1,7 +1,6 @@
 import getPort from 'get-port'
 import request from 'supertest'
 import { FastifyAdapter } from '@/infra/http/servers/fastify/fastify-adapter'
-import { Routes } from '@/infra/http/controllers/routes.enum'
 import { provideDependencies } from './utils/provide-dependencies'
 import { PrismaGymsRepository } from '@/infra/repositories/prisma/prisma-gyms-repository'
 import { Gym } from '@/application/entities/gym.entity'
@@ -10,6 +9,7 @@ import { PrismaCheckInsRepository } from '@/infra/repositories/prisma/prisma-che
 import { CheckIn } from '@/application/entities/check-in.entity'
 import { makePrismaClient } from '@/infra/connection/prisma'
 import { FastifyHttpController } from '@/infra/http/controllers/fastify-http-controller'
+import { CheckInsRoutes } from '@/infra/http/controllers/routes/check-ins-routes.enum'
 
 describe('Check-in History (e2e)', () => {
   let fastify: FastifyAdapter
@@ -53,7 +53,7 @@ describe('Check-in History (e2e)', () => {
     await checkInRepository.save(checkIn2)
 
     const response = await request(fastify.server)
-      .get(Routes.CHECKINS_HISTORY)
+      .get(CheckInsRoutes.CHECKINS_HISTORY)
       .set('Authorization', `Bearer ${token}`)
       .send()
 

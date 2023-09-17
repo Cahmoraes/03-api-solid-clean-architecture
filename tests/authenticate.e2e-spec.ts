@@ -1,9 +1,9 @@
 import getPort from 'get-port'
 import request from 'supertest'
 import { FastifyAdapter } from '@/infra/http/servers/fastify/fastify-adapter'
-import { Routes } from '@/infra/http/controllers/routes.enum'
 import { provideDependencies } from './utils/provide-dependencies'
 import { FastifyHttpController } from '@/infra/http/controllers/fastify-http-controller'
+import { UsersRoutes } from '@/infra/http/controllers/routes/users-routes.enum'
 
 describe('Authenticate (e2e)', () => {
   let fastify: FastifyAdapter
@@ -20,16 +20,18 @@ describe('Authenticate (e2e)', () => {
   })
 
   it.only('should be able to authenticate an user', async () => {
-    await request(fastify.server).post(Routes.USERS).send({
+    await request(fastify.server).post(UsersRoutes.USERS).send({
       name: 'John Doe',
       email: 'johm@doe.com',
       password: '123456',
     })
 
-    const response = await request(fastify.server).post(Routes.SESSIONS).send({
-      email: 'johm@doe.com',
-      password: '123456',
-    })
+    const response = await request(fastify.server)
+      .post(UsersRoutes.SESSIONS)
+      .send({
+        email: 'johm@doe.com',
+        password: '123456',
+      })
 
     expect(response.statusCode).toBe(200)
     expect(response.body).toHaveProperty('token')
@@ -37,10 +39,12 @@ describe('Authenticate (e2e)', () => {
   })
 
   it('should not be able to authenticate a non-existing user', async () => {
-    const response = await request(fastify.server).post(Routes.SESSIONS).send({
-      email: 'non-existing@user.com',
-      password: '123456',
-    })
+    const response = await request(fastify.server)
+      .post(UsersRoutes.SESSIONS)
+      .send({
+        email: 'non-existing@user.com',
+        password: '123456',
+      })
     expect(response.statusCode).toBe(400)
     expect(response.body.data).toBe('Invalid credentials.')
   })

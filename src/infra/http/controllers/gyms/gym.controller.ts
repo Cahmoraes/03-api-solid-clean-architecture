@@ -6,6 +6,7 @@ import {
   MiddlewareProps,
 } from '../../servers/http-server'
 import { Routes } from '../routes.enum'
+import { GymsRoutes } from '../routes/gyms.enum'
 import { CreateGymController } from './create-gym.controller'
 import { FetchNearbyGymsController } from './fetch-neaby-gyms.controller'
 import { SearchGymsController } from './search-gyms.controller'
@@ -24,7 +25,7 @@ export class GymController {
   private handleCreateGym(): void {
     this.httpServer.on(
       HTTPMethodTypes.POST,
-      Routes.GYMS,
+      GymsRoutes.GYMS,
       new CreateGymController().handleRequest,
       this.createMiddlewares(),
     )
@@ -39,7 +40,7 @@ export class GymController {
   private handleSearchGyms(): void {
     this.httpServer.on(
       HTTPMethodTypes.GET,
-      Routes.GYMS_SEARCH,
+      GymsRoutes.GYMS_SEARCH,
       new SearchGymsController().handleRequest,
     )
   }
@@ -47,7 +48,7 @@ export class GymController {
   private handleNearbyGyms(): void {
     this.httpServer.on(
       HTTPMethodTypes.GET,
-      Routes.GYMS_NEARBY,
+      GymsRoutes.GYMS_NEARBY,
       new FetchNearbyGymsController().handleRequest,
     )
   }

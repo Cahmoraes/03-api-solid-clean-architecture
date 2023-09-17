@@ -1,10 +1,10 @@
 import getPort from 'get-port'
 import request from 'supertest'
 import { FastifyAdapter } from '@/infra/http/servers/fastify/fastify-adapter'
-import { Routes } from '@/infra/http/controllers/routes.enum'
 import { provideDependencies } from './utils/provide-dependencies'
 import { createAndAuthenticateUser } from './utils/create-and-authenticate-user'
 import { FastifyHttpController } from '@/infra/http/controllers/fastify-http-controller'
+import { UsersRoutes } from '@/infra/http/controllers/routes/users-routes.enum'
 
 describe('Refresh Token (e2e)', () => {
   let fastify: FastifyAdapter
@@ -24,7 +24,7 @@ describe('Refresh Token (e2e)', () => {
     await createAndAuthenticateUser(fastify)
 
     const authResponse = await request(fastify.server)
-      .post(Routes.SESSIONS)
+      .post(UsersRoutes.SESSIONS)
       .send({
         email: 'johm@doe.com',
         password: '123456',
@@ -33,7 +33,7 @@ describe('Refresh Token (e2e)', () => {
     const cookies = authResponse.get('Set-Cookie')
 
     const refreshTokenResponse = await request(fastify.server)
-      .patch(Routes.TOKEN_REFRESH)
+      .patch(UsersRoutes.TOKEN_REFRESH)
       .set('Cookie', cookies)
       .send()
 

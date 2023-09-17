@@ -1,13 +1,13 @@
 import request from 'supertest'
-import { Routes } from '@/infra/http/controllers/routes.enum'
 import { FastifyAdapter } from '@/infra/http/servers/fastify/fastify-adapter'
+import { UsersRoutes } from '@/infra/http/controllers/routes/users-routes.enum'
 
 export async function createAndAuthenticateUser(
   fastify: FastifyAdapter,
   isAdmin = false,
 ) {
   await request(fastify.server)
-    .post(Routes.USERS)
+    .post(UsersRoutes.USERS)
     .send({
       name: 'John Doe',
       email: 'johm@doe.com',
@@ -16,7 +16,7 @@ export async function createAndAuthenticateUser(
     })
 
   const sessionResponse = await request(fastify.server)
-    .post(Routes.SESSIONS)
+    .post(UsersRoutes.SESSIONS)
     .send({
       email: 'johm@doe.com',
       password: '123456',

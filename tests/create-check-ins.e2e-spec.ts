@@ -5,8 +5,8 @@ import { provideDependencies } from './utils/provide-dependencies'
 import { PrismaGymsRepository } from '@/infra/repositories/prisma/prisma-gyms-repository'
 import { Gym } from '@/application/entities/gym.entity'
 import { createAndAuthenticateUser } from './utils/create-and-authenticate-user'
-import { Routes } from '@/infra/http/controllers/routes.enum'
 import { FastifyHttpController } from '@/infra/http/controllers/fastify-http-controller'
+import { CheckInsRoutes } from '@/infra/http/controllers/routes/check-ins-routes.enum'
 
 describe('Create CheckIn (e2e)', () => {
   let fastify: FastifyAdapter
@@ -34,7 +34,10 @@ describe('Create CheckIn (e2e)', () => {
     await gymsRepository.save(gym)
     const { token } = await createAndAuthenticateUser(fastify)
     const gymId = gym.id.toString()
-    const createCheckInRoute = Routes.CHECKINS_CREATE.replace(':gymId', gymId)
+    const createCheckInRoute = CheckInsRoutes.CHECKINS_CREATE.replace(
+      ':gymId',
+      gymId,
+    )
     const response = await request(fastify.server)
       .post(createCheckInRoute)
       .set('Authorization', `Bearer ${token}`)

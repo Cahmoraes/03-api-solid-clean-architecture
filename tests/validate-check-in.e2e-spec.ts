@@ -4,12 +4,12 @@ import { FastifyAdapter } from '@/infra/http/servers/fastify/fastify-adapter'
 import { provideDependencies } from './utils/provide-dependencies'
 import { PrismaGymsRepository } from '@/infra/repositories/prisma/prisma-gyms-repository'
 import { Gym } from '@/application/entities/gym.entity'
-import { Routes } from '@/infra/http/controllers/routes.enum'
 import { CheckIn } from '@/application/entities/check-in.entity'
 import { makePrismaClient } from '@/infra/connection/prisma'
 import { PrismaCheckInsRepository } from '@/infra/repositories/prisma/prisma-check-ins-repository'
 import { createAndAuthenticateAdmin } from './utils/create-and-authenticate-admin'
 import { FastifyHttpController } from '@/infra/http/controllers/fastify-http-controller'
+import { CheckInsRoutes } from '@/infra/http/controllers/routes/check-ins-routes.enum'
 
 describe('Validate CheckIn (e2e)', () => {
   let fastify: FastifyAdapter
@@ -50,7 +50,7 @@ describe('Validate CheckIn (e2e)', () => {
     await checkInRepository.save(checkIn)
 
     const checkInId = checkIn.id.toString()
-    const createCheckInValidateRoute = Routes.CHECKINS_VALIDATE.replace(
+    const createCheckInValidateRoute = CheckInsRoutes.CHECKINS_VALIDATE.replace(
       ':checkInId',
       checkInId,
     )
