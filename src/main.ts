@@ -21,6 +21,8 @@ import { ProductionLogger } from './infra/logger/production-logger'
 import { UpdatePasswordUseCase } from './application/use-cases/update-password.usecase'
 import { HttpControllerFactory } from './infra/http/controllers/factories/http-controller-factory'
 import { ExpressAdapter } from './infra/http/servers/express/express-adapter'
+import { HttpServerFactory } from './infra/http/servers/factories/http-server-factory'
+import { env } from './env'
 
 DomainEventPublisher.getInstance().subscribe(new UserCreatedSubscriber())
 DomainEventPublisher.getInstance().subscribe(new GymCreatedSubscriber())
@@ -44,8 +46,7 @@ provide(
   new FetchUserCheckInsHistoryUseCase(),
 )
 provide('updatePasswordUseCase', new UpdatePasswordUseCase())
-// const httpServer = new FastifyAdapter()
-const httpServer = new ExpressAdapter()
+const httpServer = HttpServerFactory.create('EXPRESS')
 const HttpController = HttpControllerFactory.create(httpServer)
 new HttpController(httpServer)
 httpServer.listen()

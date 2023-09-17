@@ -1,5 +1,9 @@
 import { jwtVerify } from '../../servers/fastify/middleware/jwt-verify.middleware'
-import { HTTPMethodTypes, HttpServer } from '../../servers/http-server'
+import {
+  HTTPMethodTypes,
+  HttpServer,
+  MiddlewareProps,
+} from '../../servers/http-server'
 import { Routes } from '../routes.enum'
 import { AuthenticateController } from './authenticate.controller'
 import { CreateUserController } from './create-user.controller'
@@ -41,9 +45,7 @@ export class UserController {
       HTTPMethodTypes.GET,
       Routes.ME,
       new GetUserProfileController().handleRequest,
-      {
-        onRequest: jwtVerify,
-      },
+      this.createMiddleware(),
     )
   }
 
@@ -60,9 +62,13 @@ export class UserController {
       HTTPMethodTypes.PATCH,
       Routes.USERS_PASSWORD,
       new UpdatePasswordController().handleRequest,
-      {
-        onRequest: jwtVerify,
-      },
+      this.createMiddleware(),
     )
+  }
+
+  protected createMiddleware(): MiddlewareProps {
+    return {
+      onRequest: jwtVerify,
+    }
   }
 }

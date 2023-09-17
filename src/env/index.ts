@@ -7,6 +7,7 @@ const envSchema = z.object({
   HOST: z.string().default('0.0.0.0'),
   JWT_SECRET: z.string().default('SECRET_PASSWORD'),
   DATABASE_URL: z.string().url(),
+  SERVER: z.enum(['FASTIFY', 'EXPRESS']).default('FASTIFY'),
 })
 
 const _env = envSchema.safeParse(process.env)
