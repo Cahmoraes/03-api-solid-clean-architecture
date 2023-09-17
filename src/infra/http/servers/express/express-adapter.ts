@@ -1,4 +1,4 @@
-import express, { Request, Response, RequestHandler } from 'express'
+import express, { Request, Response, RequestHandler, Express } from 'express'
 import {
   HTTPMethodTypes,
   HttpHandler,
@@ -26,6 +26,10 @@ export class ExpressAdapter implements HttpServer {
 
   private registerJSON() {
     this.httpServer.use(express.json())
+  }
+
+  public get server(): Express {
+    return this.httpServer
   }
 
   async listen(): Promise<void> {
