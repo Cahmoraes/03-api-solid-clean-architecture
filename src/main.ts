@@ -22,6 +22,7 @@ import { UpdatePasswordUseCase } from './application/use-cases/update-password.u
 import { HttpControllerFactory } from './infra/http/controllers/factories/http-controller-factory'
 import { HttpServerFactory } from './infra/http/servers/factories/http-server-factory'
 import { env } from './env'
+import { serverArgv } from './argv'
 
 DomainEventPublisher.getInstance().subscribe(new UserCreatedSubscriber())
 DomainEventPublisher.getInstance().subscribe(new GymCreatedSubscriber())
@@ -45,7 +46,7 @@ provide(
   new FetchUserCheckInsHistoryUseCase(),
 )
 provide('updatePasswordUseCase', new UpdatePasswordUseCase())
-const httpServer = HttpServerFactory.create('EXPRESS')
+const httpServer = HttpServerFactory.create(serverArgv)
 const HttpController = HttpControllerFactory.create(httpServer)
 new HttpController(httpServer)
 httpServer.listen()
