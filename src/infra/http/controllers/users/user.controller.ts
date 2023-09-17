@@ -49,6 +49,12 @@ export class UserController {
     )
   }
 
+  protected createMiddleware(): MiddlewareProps {
+    return {
+      onRequest: jwtVerify,
+    }
+  }
+
   private handleTokenRefresh(): void {
     this.httpServer.on(
       HTTPMethodTypes.PATCH,
@@ -64,11 +70,5 @@ export class UserController {
       new UpdatePasswordController().handleRequest,
       this.createMiddleware(),
     )
-  }
-
-  protected createMiddleware(): MiddlewareProps {
-    return {
-      onRequest: jwtVerify,
-    }
   }
 }

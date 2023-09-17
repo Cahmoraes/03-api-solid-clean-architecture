@@ -1,6 +1,10 @@
 import { jwtVerify } from '../../servers/fastify/middleware/jwt-verify.middleware'
 import { verifyUserRole } from '../../servers/fastify/middleware/verify-user-role.middleware'
-import { HTTPMethodTypes, HttpServer } from '../../servers/http-server'
+import {
+  HTTPMethodTypes,
+  HttpServer,
+  MiddlewareProps,
+} from '../../servers/http-server'
 import { Routes } from '../routes.enum'
 import { CreateGymController } from './create-gym.controller'
 import { FetchNearbyGymsController } from './fetch-neaby-gyms.controller'
@@ -22,10 +26,14 @@ export class GymController {
       HTTPMethodTypes.POST,
       Routes.GYMS,
       new CreateGymController().handleRequest,
-      {
-        onRequest: [jwtVerify, verifyUserRole('ADMIN')],
-      },
+      this.createMiddlewares(),
     )
+  }
+
+  protected createMiddlewares(): MiddlewareProps {
+    return {
+      onRequest: [jwtVerify, verifyUserRole('ADMIN')],
+    }
   }
 
   private handleSearchGyms(): void {
