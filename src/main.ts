@@ -13,7 +13,6 @@ DomainEventPublisher.getInstance().subscribe(new GymCreatedSubscriber())
 DomainEventPublisher.getInstance().subscribe(
   new UserAuthenticatedSubscriber(new ProductionLogger()),
 )
-
 const httpServer = HttpServerFactory.create(serverArgv)
 const HttpController = HttpControllerFactory.create(httpServer)
 new HttpController(httpServer)
