@@ -6,6 +6,7 @@ import { Gym } from '../entities/gym.entity'
 import { MaxDistanceReachedError } from '../errors/max-distance-reached.error'
 import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 import { CheckInDto } from '../dtos/check-in-dto.factory'
+import { ValidatorError } from '../entities/errors/validator.error'
 
 describe('CheckIn use case', () => {
   let checkInsRepository: InMemoryCheckInsRepository
@@ -135,5 +136,18 @@ describe('CheckIn use case', () => {
     })
     expect(result.isLeft()).toBeTruthy()
     expect(result.value).toBeInstanceOf(MaxDistanceReachedError)
+  })
+
+  it('should not be able to check in with a invalid coord', async () => {
+    await gymsRepository.deleteById(gymId)
+
+    const result = await sut.execute({
+      userId,
+      gymId,
+      userLatitude: -91,
+      userLongitude: 0,
+    })
+    expect(result.isLeft()).toBeTruthy()
+    expect(result.value).toBeInstanceOf(ValidatorError)
   })
 })
