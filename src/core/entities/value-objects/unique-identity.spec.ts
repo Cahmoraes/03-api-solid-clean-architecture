@@ -36,4 +36,11 @@ describe('UniqueIdentity', () => {
     const differentObject: any = {}
     expect(uniqueIdentity1.equals(differentObject)).toBeFalsy()
   })
+
+  it('should return false when equals is called with null', () => {
+    const id1 = 'fake-id-1'
+    const uniqueIdentity1 = new UniqueIdentity(id1)
+    const anyObject: any = {}
+    expect(uniqueIdentity1.equals(anyObject)).toBeFalsy()
+  })
 })
