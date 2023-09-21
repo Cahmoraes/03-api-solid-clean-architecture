@@ -1,6 +1,4 @@
 import { ValueObject } from '@/core/entities/value-objects/value-object'
-import { InvalidLatitudeError } from '../errors/invalid-latitude.error'
-import { InvalidLongitudeError } from '../errors/invalid-longitude.error'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { CoordValidator } from '../validators/coord.validator'
 import type { ValidatorError } from '../errors/validator.error'
@@ -37,27 +35,6 @@ export class Coord implements ValueObject {
   ): EitherType<ValidatorError, CoordProps> {
     const coordValidator = new CoordValidator(coordProps)
     return coordValidator.validate()
-  }
-
-  private static validateCoords(
-    coordProps: CoordProps,
-  ): EitherType<InvalidLongitudeError | InvalidLatitudeError, null> {
-    try {
-      this.validateLatitude(coordProps.latitude)
-      this.validateLongitude(coordProps.longitude)
-      return Either.right(null)
-    } catch (error) {
-      if (error instanceof Error) return Either.left(error)
-      throw error
-    }
-  }
-
-  private static validateLatitude(latitude: number) {
-    if (latitude < -90 || latitude > 90) throw new InvalidLatitudeError()
-  }
-
-  private static validateLongitude(longitude: number) {
-    if (longitude < -180 || longitude > 180) throw new InvalidLongitudeError()
   }
 
   public get latitude(): number {
