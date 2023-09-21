@@ -12,7 +12,7 @@ interface GymProps {
   description?: string | null
 }
 
-type GymInternalProps = Omit<GymProps, 'latitude' | 'longitude'> & {
+export type GymInternalProps = Omit<GymProps, 'latitude' | 'longitude'> & {
   coord: Coord
 }
 
