@@ -3,7 +3,7 @@ import { Either, EitherType } from '@cahmoraes93/either'
 import { CoordValidator } from '../validators/coord.validator'
 import type { ValidatorError } from '../errors/validator.error'
 
-interface CoordProps {
+export interface CoordProps {
   latitude: number
   longitude: number
 }

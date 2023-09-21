@@ -1,6 +1,5 @@
 import { ValidatorError } from '../errors/validator.error'
-import type { ErrorsMap } from '../validators/validator'
-import { Coord } from './coord'
+import { Coord, CoordProps } from './coord'
 
 describe('Coord test suite', () => {
   const latitude = -27.2092052
@@ -68,5 +67,14 @@ describe('Coord test suite', () => {
     expect(coordErrorLongitude2.message).toEqual(
       '{"longitude":["Number must be greater than or equal to -180"]}',
     )
+  })
+
+  it('should be able to restore a coord', () => {
+    const coordProps: CoordProps = {
+      latitude,
+      longitude,
+    }
+    const coord = Coord.restore(coordProps)
+    expect(coord).toBeInstanceOf(Coord)
   })
 })
