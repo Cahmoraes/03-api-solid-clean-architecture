@@ -3,7 +3,7 @@ import { ErrorsMap } from '../validators/validator'
 export class PasswordValidatorError extends Error {
   constructor(messages: ErrorsMap) {
     super(PasswordValidatorError.parse(messages))
-    this.name = 'PasswordValidatorError'
+    this.name = PasswordValidatorError.name
   }
 
   private static parse(messages: ErrorsMap) {
