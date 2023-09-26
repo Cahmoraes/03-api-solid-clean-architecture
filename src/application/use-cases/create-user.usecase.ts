@@ -28,19 +28,16 @@ export class CreateUserUseCase {
   async execute(
     aCreateUserInput: CreateUserUseCaseInput,
   ): Promise<CreateUserUseCaseOutput> {
-    const existsUser = await this.existsUser(aCreateUserInput.email)
-    if (existsUser) return Either.left(new UserAlreadyExistsError())
+    const existingUser = await this.usersRepository.userOfEmail(
+      aCreateUserInput.email,
+    )
+    if (existingUser) return Either.left(new UserAlreadyExistsError())
     const userOrError = await this.performCreateUser(aCreateUserInput)
     if (userOrError.isLeft()) return Either.left(userOrError.value)
     const user = userOrError.value
     await this.usersRepository.save(user)
     this.publishUserCreated(user)
     return Either.right(UserDtoFactory.create(user))
-  }
-
-  private async existsUser(email: string): Promise<boolean> {
-    const existsUser = await this.usersRepository.userOfEmail(email)
-    return !!existsUser
   }
 
   private async performCreateUser(
