@@ -48,7 +48,7 @@ export class CreateCheckInUseCase {
     const gym = await this.gymsRepository.gymOfId(gymId)
     if (!gym) return Either.left(new ResourceNotFoundError())
     if (
-      this.distanceBetweenUserAndGymIsMoreThanOneHundredMeters(
+      this.distanceBetweenUserAndGymIsGreaterThanOneHundredMeters(
         coordOrError.value,
         gym.coord,
       )
@@ -66,7 +66,7 @@ export class CreateCheckInUseCase {
     return Either.right(CheckInDtoFactory.create(checkIn))
   }
 
-  private distanceBetweenUserAndGymIsMoreThanOneHundredMeters(
+  private distanceBetweenUserAndGymIsGreaterThanOneHundredMeters(
     userLocation: Coord,
     gymLocation: Coord,
   ): boolean {

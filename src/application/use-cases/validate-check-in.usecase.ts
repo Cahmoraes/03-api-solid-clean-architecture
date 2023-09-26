@@ -20,13 +20,9 @@ export class ValidateCheckInUseCase {
     checkInId,
   }: ValidateCheckInUseCaseInput): Promise<ValidateCheckInUseCaseOutput> {
     const checkIn = await this.checkInsRepository.checkInOfId(checkInId)
-    if (!checkIn) {
-      return Either.left(new ResourceNotFoundError())
-    }
-    const isValidated = checkIn.validate()
-    if (isValidated.isLeft()) {
-      return Either.left(isValidated.value)
-    }
+    if (!checkIn) return Either.left(new ResourceNotFoundError())
+    const validateOrError = checkIn.validate()
+    if (validateOrError.isLeft()) return Either.left(validateOrError.value)
     await this.checkInsRepository.update(checkIn)
     return Either.right(CheckInDtoFactory.create(checkIn))
   }

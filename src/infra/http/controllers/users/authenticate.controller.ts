@@ -48,27 +48,18 @@ export class AuthenticateController {
     jwtHandler,
     reply,
   }: FastifyHttpHandlerParams): Promise<UserControllerOutput> {
-    try {
-      const { email, password } = this.parseBodyOrThrow(body)
-      const result = await this.authenticateUseCase.execute({ email, password })
-      if (result.isLeft()) {
-        return Either.left(FailResponse.bad(result.value))
-      }
-      const tokenGenerator = this.makeTokenGenerator({
-        jwtHandler,
-        userId: this.userIdFor(result.value),
-        userRole: this.userRoleFor(result.value),
-      })
-      const token = await tokenGenerator.jwtToken()
-      const refreshToken = await tokenGenerator.refreshToken()
-      await this.configureRefreshToken(refreshToken, reply)
-      return Either.right(SuccessResponse.ok({ token }))
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        return Either.left(FailResponse.internalServerError(error))
-      }
-      throw error
-    }
+    const { email, password } = this.parseBodyOrThrow(body)
+    const result = await this.authenticateUseCase.execute({ email, password })
+    if (result.isLeft()) return Either.left(FailResponse.bad(result.value))
+    const tokenGenerator = this.makeTokenGenerator({
+      jwtHandler,
+      userId: this.userIdFor(result.value),
+      userRole: this.userRoleFor(result.value),
+    })
+    const token = await tokenGenerator.jwtToken()
+    const refreshToken = await tokenGenerator.refreshToken()
+    await this.configureRefreshToken(refreshToken, reply)
+    return Either.right(SuccessResponse.ok({ token }))
   }
 
   private parseBodyOrThrow(body: unknown): AuthenticateBodyDto {
