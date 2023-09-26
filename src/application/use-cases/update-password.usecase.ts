@@ -25,16 +25,10 @@ export class UpdatePasswordUseCase {
   }: UpdatePasswordUseCaseInput): Promise<UpdatePasswordUseCaseOutput> {
     const user = await this.usersRepository.userOfId(userId)
     if (!user) return Either.left(new ResourceNotFoundError())
-    const passwordOrError = await this.createPassword(password)
+    const passwordOrError = await Password.create(password)
     if (passwordOrError.isLeft()) return Either.left(passwordOrError.value)
     user.updatePassword(passwordOrError.value)
     await this.usersRepository.update(user)
     return Either.right(UserDtoFactory.create(user))
-  }
-
-  private async createPassword(
-    aPassword: string,
-  ): Promise<EitherType<PasswordValidatorError, Password>> {
-    return Password.create(aPassword)
   }
 }
