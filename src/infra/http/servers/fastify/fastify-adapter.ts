@@ -81,11 +81,7 @@ export class FastifyAdapter implements HttpServer {
           .status(400)
           .send({ message: 'Validation error', issues: error.format() })
       }
-
-      if (!isProduction()) {
-        console.error(error)
-      }
-
+      if (!isProduction()) console.error(error)
       return reply.status(500).send({ message: 'Internal Server Error' })
     })
   }
