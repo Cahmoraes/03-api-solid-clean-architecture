@@ -9,9 +9,6 @@ import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 import { MaxDistanceReachedError } from '../errors/max-distance-reached.error'
 import { MaxNumbersOfCheckInsReachedError } from '../errors/max-number-of-check-ins-reached.error'
 import { CheckInDto, CheckInDtoFactory } from '../dtos/check-in-dto.factory'
-import { InvalidLongitudeError } from '../entities/errors/invalid-longitude.error'
-import { InvalidLatitudeError } from '../entities/errors/invalid-latitude.error'
-import { ErrorsMap } from '../entities/validators/validator'
 import { ValidatorError } from '../entities/errors/validator.error'
 
 export interface CreateCheckInUseCaseInput {
