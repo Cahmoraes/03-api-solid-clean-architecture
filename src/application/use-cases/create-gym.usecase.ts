@@ -28,10 +28,9 @@ export class CreateGymUseCase {
     const gymOrError = Gym.create(props)
     if (gymOrError.isLeft()) return Either.left(gymOrError.value)
     const result = await this.performCreateGym(gymOrError.value)
+    if (result.isLeft()) return Either.left(new InternalServerError())
     this.publishGymCreated(gymOrError.value)
-    return result.isLeft()
-      ? Either.left(new InternalServerError())
-      : Either.right(GymDtoFactory.create(gymOrError.value))
+    return Either.right(GymDtoFactory.create(gymOrError.value))
   }
 
   private async performCreateGym(
