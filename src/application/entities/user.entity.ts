@@ -3,7 +3,6 @@ import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
 import { Optional } from '@prisma/client/runtime/library'
 import { UserValidator } from './validators/user.validator'
 import { Either, EitherType } from '@cahmoraes93/either'
-import { UserValidatorError } from './errors/user-validator.error'
 import { Password } from './value-objects/password'
 import type { ValidatorError } from './errors/validator.error'
 
