@@ -1,8 +1,6 @@
 import * as bcrypt from 'bcrypt'
 import { PasswordValidator } from '../validators/password.validator'
 import { Either, EitherType } from '@cahmoraes93/either'
-import { ErrorsMap } from '../validators/validator'
-import { PasswordValidatorError } from '../errors/password-validator.error'
 import { ValidatorError } from '../errors/validator.error'
 
 type PasswordDto = { password: string }
