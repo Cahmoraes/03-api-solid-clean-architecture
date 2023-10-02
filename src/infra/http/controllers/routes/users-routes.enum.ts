@@ -1,4 +1,4 @@
-export enum UsersRoutes {
+export const enum UsersRoutes {
   USERS = '/users',
   USERS_PASSWORD = '/users/password',
   ME = '/me',

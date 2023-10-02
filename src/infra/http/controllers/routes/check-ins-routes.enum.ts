@@ -1,4 +1,4 @@
-export enum CheckInsRoutes {
+export const enum CheckInsRoutes {
   CHECKINS_CREATE = '/gyms/:gymId/check-ins',
   CHECKINS_VALIDATE = '/check-ins/:checkInId/validate',
   CHECKINS_HISTORY = '/check-ins/history',

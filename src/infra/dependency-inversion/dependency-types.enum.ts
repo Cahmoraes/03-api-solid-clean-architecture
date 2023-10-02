@@ -1,4 +1,4 @@
-export enum DependencyTypes {
+export const enum DependencyTypes {
   'createUserUseCase',
   'createGymUseCase',
   'searchGymsUseCase',
