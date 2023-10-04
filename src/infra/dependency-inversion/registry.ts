@@ -1,11 +1,10 @@
 import { isTest } from '@/env'
-import { DependencyTypes } from './dependency-types.enum'
+import { DependencyTypes, DependencyType } from './dependency-types.enum'
 
 type Constructor = { new (): unknown }
-type DependencyType = keyof typeof DependencyTypes
 
 class Registry {
-  protected readonly dependencies = new Map<DependencyTypes, unknown>()
+  protected readonly dependencies = new Map<DependencyType, unknown>()
   static instance: Registry
 
   protected constructor() {}
