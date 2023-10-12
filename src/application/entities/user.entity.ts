@@ -1,10 +1,10 @@
 import { Entity } from '@/core/entities/entity'
 import { UniqueIdentity } from '@/core/entities/value-objects/unique-identity'
-import { Optional } from '@prisma/client/runtime/library'
 import { UserValidator } from './validators/user.validator'
 import { Either, EitherType } from '@cahmoraes93/either'
 import { Password } from './value-objects/password'
 import type { ValidatorError } from './errors/validator.error'
+import { Optional } from '@/core/types/optional'
 
 export type Role = 'MEMBER' | 'ADMIN'
 export interface UserProps {
