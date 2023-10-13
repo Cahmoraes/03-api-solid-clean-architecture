@@ -25,7 +25,7 @@ export type CreateUserUseCaseOutput = EitherType<
 export class CreateUserUseCase {
   private readonly usersRepository = inject<UsersRepository>('usersRepository')
 
-  async execute(
+  public async execute(
     aCreateUserInput: CreateUserUseCaseInput,
   ): Promise<CreateUserUseCaseOutput> {
     const existingUser = await this.usersRepository.userOfEmail(
