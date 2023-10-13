@@ -53,11 +53,11 @@ export class CreateUserUseCase {
     })
   }
 
-  private publishUserCreated(aUser: User) {
+  private publishUserCreated(anUser: User) {
     DomainEventPublisher.getInstance().publish(
       new UserCreatedEvent({
-        id: aUser.id,
-        email: aUser.email,
+        id: anUser.id,
+        email: anUser.email,
       }),
     )
   }
