@@ -7,6 +7,8 @@ Marcos implementados:
 - Criação de um container de injeção de dependências utilizando os padrões Singleton e Registry.
 - 100% testes de unidade.
 - docker compose
+- Redis
+- Opção para alternar entre Fastify e Express
 
 ## Requisitos
 
