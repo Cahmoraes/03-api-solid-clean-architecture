@@ -15,6 +15,10 @@ export class RedisRepository implements CacheRepository {
     })
   }
 
+  async clear(): Promise<void> {
+    this.redisService.flushall()
+  }
+
   async set(key: string, value: string): Promise<void> {
     this.redisService.set(key, value, 'EX', this.FIFTEEN_MINUTES)
   }

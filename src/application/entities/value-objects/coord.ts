@@ -13,8 +13,8 @@ export class Coord implements ValueObject {
   private readonly _longitude: number
 
   private constructor(coordProps: CoordProps) {
-    this._latitude = coordProps.latitude
-    this._longitude = coordProps.longitude
+    this._latitude = Number(coordProps.latitude)
+    this._longitude = Number(coordProps.longitude)
   }
 
   public static create(

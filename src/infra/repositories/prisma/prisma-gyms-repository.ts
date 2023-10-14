@@ -46,8 +46,8 @@ export class PrismaGymsRepository implements GymsRepository {
 
   private createGymFromPrisma(aPrismaGym: PrismaGym): Gym {
     const coord = Coord.restore({
-      latitude: aPrismaGym.latitude.toNumber(),
-      longitude: aPrismaGym.longitude.toNumber(),
+      latitude: Number(aPrismaGym.latitude),
+      longitude: Number(aPrismaGym.longitude),
     })
     return Gym.restore(
       {
@@ -61,13 +61,8 @@ export class PrismaGymsRepository implements GymsRepository {
   }
 
   async searchMany(query: string, page: number): Promise<Gym[]> {
-    const cacheHit = await this.cacheRepository.get(
-      `gyms:${query}${page}:details`,
-    )
-    if (cacheHit) {
-      const cachedData = JSON.parse(cacheHit)
-      return cachedData.map(this.createGymFromPrisma)
-    }
+    const cacheHit = await this.getFromCache(`${query}${page}`)
+    if (cacheHit) return this.parseFromCache(cacheHit)
     const prismaGymsPersisted = await this.prisma.gym.findMany({
       where: {
         title: {
@@ -77,12 +72,21 @@ export class PrismaGymsRepository implements GymsRepository {
       skip: (page - 1) * this.ITEM_PER_PAGE,
       take: 20,
     })
-    prismaGymsPersisted.map(this.createGymFromPrisma)
-    await this.cacheRepository.set(
-      `gyms:${query}${page}:details`,
-      JSON.stringify(prismaGymsPersisted),
-    )
+    await this.setFromCache(`gyms:${query}${page}:details`, prismaGymsPersisted)
+    console.log(`gyms:${query}${page}:details`)
     return prismaGymsPersisted.map(this.createGymFromPrisma)
+  }
+
+  private async getFromCache(key: string) {
+    return this.cacheRepository.get(`gyms:${key}:details`)
+  }
+
+  private parseFromCache(cacheHit: string) {
+    return JSON.parse(cacheHit).map(this.createGymFromPrisma)
+  }
+
+  private async setFromCache(key: string, value: object) {
+    await this.cacheRepository.set(key, JSON.stringify(value))
   }
 
   async findManyNearby(aCoord: Coord): Promise<Gym[]> {

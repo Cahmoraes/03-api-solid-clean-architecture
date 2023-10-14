@@ -5,15 +5,21 @@ import { provideDependencies } from './utils/provide-dependencies'
 import { createAndAuthenticateAdmin } from './utils/create-and-authenticate-admin'
 import { FastifyHttpController } from '@/infra/http/controllers/fastify-http-controller'
 import { GymsRoutes } from '@/infra/http/controllers/routes/gyms.enum'
+import { inject } from '@/infra/dependency-inversion/registry'
+import { CacheRepository } from '@/infra/cache/cache-repository'
 
 describe('Search Gyms (e2e)', () => {
   let fastify: FastifyAdapter
+  let cacheRepository: CacheRepository
+
   beforeAll(async () => {
     provideDependencies()
     const port = await getPort()
     fastify = new FastifyAdapter({ port })
     new FastifyHttpController(fastify)
     await fastify.listen()
+    cacheRepository = inject<CacheRepository>('cacheRepository')
+    cacheRepository.clear()
   })
 
   afterAll(async () => {
@@ -56,5 +62,47 @@ describe('Search Gyms (e2e)', () => {
     expect(response.statusCode).toBe(200)
     expect(response.body).toBeInstanceOf(Array)
     expect(response.body).toHaveLength(1)
+  })
+
+  it('should be able to return cache gyms details by title on subsequent calls', async () => {
+    const { token } = await createAndAuthenticateAdmin(fastify)
+
+    const response = await request(fastify.server)
+      .get(GymsRoutes.GYMS_SEARCH)
+      .query({
+        q: 'Academia JavaScript Gym',
+      })
+      .set('Authorization', `Bearer ${token}`)
+      .send()
+
+    await request(fastify.server)
+      .get(GymsRoutes.GYMS_SEARCH)
+      .query({
+        q: 'Academia JavaScript Gym',
+      })
+      .set('Authorization', `Bearer ${token}`)
+      .send()
+
+    await request(fastify.server)
+      .get(GymsRoutes.GYMS_SEARCH)
+      .query({
+        q: 'Academia JavaScript Gym',
+      })
+      .set('Authorization', `Bearer ${token}`)
+      .send()
+
+    const cached = await cacheRepository.get(
+      `gyms:${'Academia JavaScript Gym'}${1}:details`,
+    )
+
+    expect(JSON.parse(cached!)).toEqual([
+      expect.objectContaining({
+        id: response.body[0].id,
+        title: response.body[0].title,
+        description: response.body[0].description,
+        phone: response.body[0].phone,
+      }),
+    ])
+    expect(response.statusCode).toBe(200)
   })
 })
