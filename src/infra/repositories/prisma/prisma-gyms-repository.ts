@@ -22,7 +22,7 @@ export class PrismaGymsRepository implements GymsRepository {
         phone: aGym.phone,
       },
     })
-    this.cacheRepository.delete(`gyms:*:details`)
+    await this.cacheRepository.delete('gyms:*:details')
     return aGym
   }
 
@@ -73,7 +73,6 @@ export class PrismaGymsRepository implements GymsRepository {
       take: 20,
     })
     await this.setFromCache(`gyms:${query}${page}:details`, prismaGymsPersisted)
-    console.log(`gyms:${query}${page}:details`)
     return prismaGymsPersisted.map(this.createGymFromPrisma)
   }
 
