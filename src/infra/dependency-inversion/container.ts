@@ -13,7 +13,9 @@ import { PrismaCheckInsRepository } from '../repositories/prisma/prisma-check-in
 import { PrismaGymsRepository } from '../repositories/prisma/prisma-gyms-repository'
 import { PrismaUsersRepository } from '../repositories/prisma/prisma-users-repository'
 import { provide } from './registry'
+import { RedisRepository } from '../cache/redis/redis-cache-repository'
 
+provide('cacheRepository', new RedisRepository())
 provide('usersRepository', new PrismaUsersRepository())
 provide('gymsRepository', new PrismaGymsRepository())
 provide('checkInsRepository', new PrismaCheckInsRepository())

@@ -1,12 +1,15 @@
 import { Gym } from '@/application/entities/gym.entity'
 import { Coord } from '@/application/entities/value-objects/coord'
 import { GymsRepository } from '@/application/repositories/gyms-repository'
+import { CacheRepository } from '@/infra/cache/cache-repository'
 import { makePrismaClient } from '@/infra/connection/prisma'
-import { Gym as PrismaGym } from '@prisma/client'
+import { inject } from '@/infra/dependency-inversion/registry'
+import { PrismaClient, Gym as PrismaGym } from '@prisma/client'
 
 export class PrismaGymsRepository implements GymsRepository {
-  private readonly prisma = makePrismaClient()
-  private ITEM_PER_PAGE = 20
+  private readonly prisma: PrismaClient = makePrismaClient()
+  private readonly ITEM_PER_PAGE = 20
+  private readonly cacheRepository = inject<CacheRepository>('cacheRepository')
 
   async save(aGym: Gym): Promise<Gym> {
     await this.prisma.gym.create({
@@ -19,6 +22,7 @@ export class PrismaGymsRepository implements GymsRepository {
         phone: aGym.phone,
       },
     })
+    this.cacheRepository.delete(`gyms:*:details`)
     return aGym
   }
 
@@ -57,7 +61,14 @@ export class PrismaGymsRepository implements GymsRepository {
   }
 
   async searchMany(query: string, page: number): Promise<Gym[]> {
-    const prismaGyms = await this.prisma.gym.findMany({
+    const cacheHit = await this.cacheRepository.get(
+      `gyms:${query}${page}:details`,
+    )
+    if (cacheHit) {
+      const cachedData = JSON.parse(cacheHit)
+      return cachedData.map(this.createGymFromPrisma)
+    }
+    const prismaGymsPersisted = await this.prisma.gym.findMany({
       where: {
         title: {
           contains: query,
@@ -66,7 +77,12 @@ export class PrismaGymsRepository implements GymsRepository {
       skip: (page - 1) * this.ITEM_PER_PAGE,
       take: 20,
     })
-    return prismaGyms.map(this.createGymFromPrisma)
+    prismaGymsPersisted.map(this.createGymFromPrisma)
+    await this.cacheRepository.set(
+      `gyms:${query}${page}:details`,
+      JSON.stringify(prismaGymsPersisted),
+    )
+    return prismaGymsPersisted.map(this.createGymFromPrisma)
   }
 
   async findManyNearby(aCoord: Coord): Promise<Gym[]> {

@@ -1,7 +1,8 @@
 version: '3'
 
 services:
-  api-solid-pg:
+  postgres:
+    container_name: api-solid-pg
     image: bitnami/postgresql
     ports:
       - 5432:5432
@@ -9,3 +10,11 @@ services:
       - POSTGRESQL_USERNAME=docker
       - POSTGRESQL_PASSWORD=docker
       - POSTGRESQL_DATABASE=ignitenode03
+
+  cache:
+    container_name: api-solid-cache
+    image: bitnami/redis:latest
+    ports:
+      - 6379:6379
+    environment:
+      - REDIS_PASSWORD=masterpassword123

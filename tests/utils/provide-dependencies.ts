@@ -13,8 +13,10 @@ import { PrismaCheckInsRepository } from '@/infra/repositories/prisma/prisma-che
 import { PrismaGymsRepository } from '@/infra/repositories/prisma/prisma-gyms-repository'
 import { PrismaUsersRepository } from '@/infra/repositories/prisma/prisma-users-repository'
 import { UpdatePasswordUseCase } from '@/application/use-cases/update-password.usecase'
+import { RedisRepository } from '@/infra/cache/redis/redis-cache-repository'
 
 export function provideDependencies() {
+  provide('cacheRepository', new RedisRepository())
   provide('usersRepository', new PrismaUsersRepository())
   provide('gymsRepository', new PrismaGymsRepository())
   provide('checkInsRepository', new PrismaCheckInsRepository())

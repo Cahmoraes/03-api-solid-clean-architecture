@@ -13,6 +13,7 @@ export const DependencyTypes = {
   usersRepository: 'usersRepository',
   checkInsRepository: 'checkInsRepository',
   gymsRepository: 'gymsRepository',
+  cacheRepository: 'cacheRepository',
 } as const
 
 export type DependencyType =
