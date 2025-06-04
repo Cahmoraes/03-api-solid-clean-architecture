@@ -1,4 +1,7 @@
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+
+dayjs.extend(utc)
 
 export class DateHelper {
   public distanceInMinutesFromDate(aDate: Date): number {
@@ -6,8 +9,8 @@ export class DateHelper {
   }
 
   public isOnSameDate(initialDate: Date, targetDate: Date): boolean {
-    const startOfTheDay = dayjs(initialDate).startOf('date')
-    const endOfTheDay = dayjs(initialDate).endOf('date')
+    const startOfTheDay = dayjs(initialDate).utc().startOf('day')
+    const endOfTheDay = dayjs(initialDate).utc().endOf('day')
     const targetDateDayJs = dayjs(targetDate)
     return (
       targetDateDayJs.isAfter(startOfTheDay) &&
@@ -16,10 +19,10 @@ export class DateHelper {
   }
 
   public startOfTheDay(aDate: Date): Date {
-    return dayjs(aDate).startOf('date').toDate()
+    return dayjs(aDate).utc().startOf('day').toDate()
   }
 
   public endOfTheDay(aDate: Date): Date {
-    return dayjs(aDate).endOf('date').toDate()
+    return dayjs(aDate).utc().endOf('day').toDate()
   }
 }

@@ -27,13 +27,13 @@ describe('DateHelper test suite', () => {
   it('should return start of date', () => {
     const date = new Date(2023, 0, 1, 13, 40, 0)
     const startOfDay = dateHelper.startOfTheDay(date)
-    expect(startOfDay).toEqual(new Date('2023-01-01T03:00:00.000Z'))
+    expect(startOfDay).toEqual(new Date('2023-01-01T00:00:00.000Z'))
   })
 
   it('should return end of date', () => {
     const date = new Date(2023, 0, 1, 13, 40, 0)
     const startOfDay = dateHelper.endOfTheDay(date)
-    expect(startOfDay).toEqual(new Date('2023-01-02T02:59:59.999Z'))
+    expect(startOfDay).toEqual(new Date('2023-01-01T23:59:59.999Z'))
   })
 
   it('should return distance in minutes', () => {
