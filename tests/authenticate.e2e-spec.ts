@@ -19,7 +19,7 @@ describe('Authenticate (e2e)', () => {
     await fastify.close()
   })
 
-  it.only('should be able to authenticate an user', async () => {
+  it('should be able to authenticate an user', async () => {
     await request(fastify.server).post(Routes.USERS).send({
       name: 'John Doe',
       email: 'johm@doe.com',

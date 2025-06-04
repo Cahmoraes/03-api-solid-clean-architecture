@@ -13,7 +13,7 @@ describe('CreateGym use case', () => {
     sut = new CreateGymUseCase()
   })
 
-  it.only('should create a gym', async () => {
+  it('should create a gym', async () => {
     const result = await sut.execute({
       title: 'Academia TypeScript Gym',
       latitude: -27.0747279,
